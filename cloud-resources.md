@@ -2,10 +2,10 @@ Note: There are a ton of individual resources, even down to the webhook level in
 
 # Shared
 
-| thing | dev | prod | description
+| Resource | dev | prod | description
 | -- | -- | -- | --
-| Search Service | [Link](https://portal.azure.com/#@clearlydefinedoutlook.onmicrosoft.com/resource/subscriptions/e05584a1-ed97-4676-aec9-d82ba4c36c93/resourceGroups/clearlydefined-dev/providers/Microsoft.Search/searchServices/clearlydefined-dev/overview) | | Used to index curations by facet
-| Redis | [Link](https://portal.azure.com/#@clearlydefinedoutlook.onmicrosoft.com/resource/subscriptions/e05584a1-ed97-4676-aec9-d82ba4c36c93/resourceGroups/clearlydefined-dev/providers/Microsoft.Cache/Redis/clearlydefined-dev/overview) | | Used by most other applications to share data at the service instance level
+| Search Service | [Link](https://portal.azure.com/#@clearlydefinedoutlook.onmicrosoft.com/resource/subscriptions/e05584a1-ed97-4676-aec9-d82ba4c36c93/resourceGroups/clearlydefined-dev/providers/Microsoft.Search/searchServices/clearlydefined-dev/overview) | [Link](https://portal.azure.com/#@clearlydefinedoutlook.onmicrosoft.com/resource/subscriptions/e05584a1-ed97-4676-aec9-d82ba4c36c93/resourceGroups/clearlydefined-prod/providers/Microsoft.Search/searchServices/clearlydefinedprod/overview) | Used to index curations by facet
+| Redis | [Link](https://portal.azure.com/#@clearlydefinedoutlook.onmicrosoft.com/resource/subscriptions/e05584a1-ed97-4676-aec9-d82ba4c36c93/resourceGroups/clearlydefined-dev/providers/Microsoft.Cache/Redis/clearlydefined-dev/overview) | [Link](https://portal.azure.com/#@clearlydefinedoutlook.onmicrosoft.com/resource/subscriptions/e05584a1-ed97-4676-aec9-d82ba4c36c93/resourceGroups/clearlydefined-prod/providers/Microsoft.Cache/Redis/clearlydefined-prod/overview)| Used by most other applications to share data at the service instance level
 
 # Website
 
