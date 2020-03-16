@@ -1,6 +1,6 @@
-# Operational home for Clearly Defined
+# Operational home for ClearlyDefined
 
-This repo is dedicated to operational concerns for clearly defined, including the layout on Azure and DevOps implications.
+This repo is dedicated to operational concerns for ClearlyDefined, including the layout on Azure and DevOps implications.
 
 Some high level subpages exist:  
 [ClearlyDefined's identities in other systems](./clearly-defined-identities.md)  
@@ -21,7 +21,7 @@ Some high level subpages exist:
 Contact info:   
 * [Discord](https://discord.gg/wEzHJku)
 * [Mailing List / Discussion Group](https://groups.google.com/forum/#!forum/clearlydefined)
-* [Operations / Alerts Group](https://groups.google.com/forum/#!forum/clearlydefinedsupport) -- Invite only, login as clearly defined and invite yourself (or get someone else to invite you)
+* [Operations / Alerts Group](https://groups.google.com/forum/#!forum/clearlydefinedsupport) -- Invite only, login as clearlyddefined and invite yourself (or get someone else to invite you)
 
 ### Repos  
 [Service](https://github.com/clearlydefined/service)  
