@@ -11,12 +11,7 @@ This page should indicate what monitoring exists (and maybe more importantly, wh
 
 # Other alerts
 
-- Monitor Azure Search indexer for errors
-- Monitor Redis for max capacity
-- Monitor CosmosDB for any problems or errors
-- Monitor crawlers for high usage of disk space and CPU
-
-# Existing alerts
-
-- Number of messages in the queues
-- Failed curation PR checks
+| Alert | Primary resource
+| -- | --
+| [Redis instance at max capacity ( more than 95 percent mem utilization )](https://portal.azure.com/#blade/Microsoft_Azure_Monitoring/UpdateVNextAlertRuleBlade/ruleInputs/%7B%22alertId%22%3A%22%2Fsubscriptions%2Fe05584a1-ed97-4676-aec9-d82ba4c36c93%2FresourceGroups%2Fclearlydefined-prod%2Fproviders%2Fmicrosoft.insights%2Fscheduledqueryrules%2FRedis%20instance%20at%20max%20capacity%20(%20more%20than%2095%20percent%20mem%20utilization%20)%22%7D) | Redis instance shared by services
+| [Cosmos DB Service Availability (less than 95 percent)](https://portal.azure.com/#blade/Microsoft_Azure_Monitoring/UpdateVNextAlertRuleBlade/ruleInputs/%7B%22alertId%22%3A%22%2Fsubscriptions%2Fe05584a1-ed97-4676-aec9-d82ba4c36c93%2FresourceGroups%2Fclearlydefined-prod%2Fproviders%2Fmicrosoft.insights%2FmetricAlerts%2FCosmos%2520DB%2520Service%2520Availability%2520(less%2520than%252095%2520percent)%22%7D) | Cosmos DB availability
