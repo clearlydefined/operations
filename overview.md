@@ -38,7 +38,7 @@ This resource group groups the resources for Clearly Defined infrastructure that
 
 Let's start off by taking a closer look at the **clearlydefined-dev** resource group.
 
-## Clearly Defined Dev Resource Group
+## ClearlyDefined Dev Resource Group
 
 ### Overview
 
@@ -645,3 +645,35 @@ These are likely webhooks someone was using for testing some time ago. They can 
 * cdcrawlertest1184231
 * cdcrawlertesting194720
 * webappcrawlertest
+
+## ClearlyDefined Prod Resource Group
+
+TODO
+
+## ClearlyDefined Prod Europe Resource Group
+
+TODO
+
+## Auxiliary Jobs Resource Group
+
+TODO
+
+## Backup Resource Group
+
+TODO
+
+## Cloud Shell Storage West US Resource Group
+
+TODO
+
+## Dashboards Resource Group
+
+TODO
+
+## Default Activity Log Alerts Resource Group
+
+TODO
+
+## Network Watcher Resource Group
+
+TODO
