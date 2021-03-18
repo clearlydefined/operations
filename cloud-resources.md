@@ -1,5 +1,7 @@
 Note: There are a ton of individual resources, even down to the webhook level in Azure. The easiest place to start is probably the resource groups themselves, but Big Things are included here.
 
+For a more thorough list and discussion of our cloud resources, see the [infrastructure overview](./overview.md).
+
 # Shared
 
 | Resource | dev | prod | description
