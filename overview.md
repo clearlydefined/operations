@@ -760,7 +760,7 @@ An [Azure Traffic Manager](https://docs.microsoft.com/en-us/azure/traffic-manage
 
 **clearlydefined-api-prod**
 
-This traffic manager load balances activity to the **clearlydefined-api-prod** App Service (ClearlyDefined backend/api). The DNS for this traffic manager is http://clearlydefined-api-prod.trafficmanager.net.
+This traffic manager load balances activity to the **clearlydefined-api-prod** App Service (ClearlyDefined backend/api) AND the **clearlydefined-api-prod-europe** App Service. The DNS for this traffic manager is http://clearlydefined-api-prod.trafficmanager.net.
 
 In our Cloudflare account, we direct requests to api.clearlydefined.io to http://clearlydefined-api-prod.trafficmanager.net.
 
@@ -798,7 +798,15 @@ We have a Service Bus Namespace instance called **cdcrawlerprod** - it's not cle
 
 ## ClearlyDefined Prod Europe Resource Group
 
-TODO
+### App Service Plan
+
+The App Service plan for the ClearlyDefined Prod Europe environment is **clearlydefined-prod-europe**.
+
+### App Services
+
+The App Services in **clearlydefined-prod-europe** include
+* clearlydefined-api-prod-europe (the service/backend api)
+* clearlydefined-prod-europe (the website/front end UI)
 
 ## Auxiliary Jobs Resource Group
 
