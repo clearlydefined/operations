@@ -810,11 +810,104 @@ The App Services in **clearlydefined-prod-europe** include
 
 ## Auxiliary Jobs Resource Group
 
-TODO
+These resources are all related to [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview).
+
+When you upload an Azure Function to Azure, it creates the following resources:
+* Resource group - logical container for related resources - in this case, the **auxiliaryjobs** resource group
+* Azure Storage Account - maintains state and other information
+* Consumption Plan - defines the underlying host for the serverless function app
+* Function app - provides the environment for executing the function code
+* Applications Insights instance - connected to the function app, tracks usage of the serverless function
+
+### App Service Plan
+
+**EastUS2Plan** is an Azure Service Plan for the **auxiliary-jobs** function app
+
+### Function App
+
+**auxiliary-jobs** is a function app that runs the **QueuesMessageCountChecker**. The **QueuesMessageCountChecker** logs Azure Storage Queues' message counts to Application Insights so that alerts can be set up.
+
+The code for this function lives [in this GitHub repository](https://github.com/clearlydefined/auxiliary-jobs).
+
+### Storage Account
+
+The **auxiliaryjobs** storage account holds two blob containers:
+
+* azure-webjobs-hosts
+* azure-webjobs-secrets
+
+### Application Insights
+
+The **auxiliaryjobs** Application insights instance tracks usage of the **auxiliaryjobs** function app.
 
 ## Backup Resource Group
 
-TODO
+These resources are used for taking backups of ClearlyDefined's resources.
+
+### Data Factory
+
+[More about Azure Data Factory](https://docs.microsoft.com/en-us/azure/data-factory/introduction)
+
+This sets up backups for BOTH the dev and prod environments.
+
+Click on "Author and Monitor" to see details.
+
+When you are brought to the Azure Data Factory UI, click on "Author" (the pencil icon in the left menu).
+
+**Pipelines**
+
+This Data factory includes the following pipelines:
+
+* backup-dev-definitions
+* backup-dev-harvest
+* backup-prod-definition
+* backup-prod-harvest
+
+**backup-dev-definitions**
+
+Source: Azure Blob Storage - clearlydefineddev/develop-definition
+Sink (Destination):  Azure Blob Storage - clearlydefineddevbackup/develop-definition
+
+The source lives in the **clearlydefineddev** Storage Account in the **clearlydefined-dev** Resource Group.
+
+The sink lives in the **clearlydefineddevbackup** Storage Account in the **backup** resource group.
+
+**backup-dev-harvest**
+
+Source: AzureBlobStorage - clearlydefineddev/develop
+Sink (Destination): Azure Blob Storage - clearlydefineddevbackup/develop
+
+The source lives in the **clearlydefineddev** Storage Account in the **clearlydefined-dev** Resource Group.
+
+The sink lives in the **clearlydefineddevbackup** Storage Account in the **backup** resource group.
+
+**backup-prod-definition**
+
+Source: Azure Blob Storage - clearlydefinedprod/production-definition
+Sink (Destination): Azure Blob Storage - clearlydefinedprodbackup/production-definition 
+
+The source lives in the **clearlydefinedprod** Storage Account in the **clearlydefinedprod** Resource Group.
+
+The sink lives in the **clearlydefinedprodbackup** Storage account in the **backup** resource group.
+
+**backup-prod-harvest**
+
+Source: Azure Blob Storage - clearlydefinedprod/production
+Sink (Destination): Azure Blob Storage - clearlydefinedprodbackup/production
+
+The source lives in the **clearlydefinedprod** Storage Account in the **clearlydefinedprod** Resource Group.
+
+The sink lives in the **clearlydefinedprodbackup** Storage account in the **backup** resource group.
+
+### Storage Accounts
+
+**clearlydefineddevbackup**
+
+This stores the backup Azure Blobs for the development environment.
+
+**clearlydefinedprodbackup**
+
+This stores the backup Azure Blobs for the production environment.
 
 ## Cloud Shell Storage West US Resource Group
 
