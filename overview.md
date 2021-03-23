@@ -648,32 +648,299 @@ These are likely webhooks someone was using for testing some time ago. They can 
 
 ## ClearlyDefined Prod Resource Group
 
-TODO
+The **clearlydefined-prod** resource group is very similar to the **clearlydefined-dev** resource group. For more information about the Azure Services and more context for how they are used (and how they relate to each other), please see the corresponding sections in the [ClearlyDefined Dev Resource Group documentation](clearlydefined-dev-resource-group).
+
+### App Service Plan
+
+The App Service plan for the ClearlyDefined prod environment is **clearlydefined-prod**.
+
+### App Services
+
+The App Services in clearlydefined-prod include:
+* cdcrawler-prod (the crawler)
+* clearlydefined-api-prod (the service/backend api)
+* clearlydefined-prod (the website/front end UI)
+
+***cdcrawler-prod**
+
+This App Service is currently stopped.
+
+We run instances of the crawler in three different clouds:
+* Azure
+* Google Cloud
+* AWS
+
+The instance running in Azure is in a different account than the ClearlyDefined Azure account. It is run in an account that is used for internal MSFT tools (reach out to Jeff Mendoza for more information).
+
+### Application Insights
+
+We have to instances of Application insights set up - one for the api (backend) and one for the crawler
+
+* cdcrawler-prod
+* clearlydefined-api-prod
+
+### Availability tests
+
+These are [URL ping tests](https://docs.microsoft.com/en-us/azure/azure-monitor/app/monitor-web-app-availability#create-a-url-ping-test) associated with the **clearlydefined-api-prod** Application Insights instance.
+
+These include:
+* homepage loads-clearlydefined-api-prod
+* service availability-clearlydefined-api-prod
+* service get definition-clearlydefined-api-prod
+
+### Azure Cache for Redis
+
+This is where the ClearlyDefined Service (backend/api) caches definitions.
+
+### Azure Cosmos DB account
+
+This is where we keep the **clearlydefined** Mongo DB for our production environment.
+
+**Actively used collections**
+
+* curations-20190227 - this is where we keep information about curations (this is used in the by the **clearlydefined-api-prod** App Service through the 'CURATIONS_MONGO_COLLECTION_NAME environmental variable)
+* definitions-paged - this is where we keep information about definitions (this is also used by the **clearlydefined-api-prod** App Service through the 'DEFINITION_MONGO_COLLECTION_NAME' environmental variable)
+
+**Non-actively used collections**
+
+* curations (this is a legacy collection that is no longer used)
+* definitions (this is also a legacy collection from before we transitioned to using a paged definitions collection)
+
+### Container Registry
+
+This is where keep container images used by these two app services:
+
+* clearlydefined-api-prod (the service/backend api)
+* clearlydefined-prod (the website/front end UI)
+
+The image used by the production crawlers lives in [Docker Hub](https://hub.docker.com/r/clearlydefined/crawler), not Azure.
+
+### Container Registry Webhooks
+
+These are used by the corresponding App services to redeploy them when an updated image is pushed to the **clearlydefined-prod** container registry.
+
+* **webappclearlydefinedapiprod** is used by the **clearlydefined-api-prod** App Service.
+* **webappclearlydefinedprod** is used by the **clearlydefined-prod** App Service.
+
+### Logic Apps
+
+These include:
+* curation-prod-webhook
+* curation-sync
+
+**curation-prod-webhook**
+
+This is used to put messages on the **curations** Azure Storage Queue in the **clearlydefinedprod** Storage account. This is equivalent to the **curation-dev-webhook** in the ClearlyDefined Dev Resource Group.
+
+**curation-sync**
+
+Every hour, this Logic App makes a POST to https://api.clearlydefined.io/curations/sync, presumably to sync curations. 
+
+TODO: This currently appears to have failed the last several times and should be investigated. ([Issue opened](https://github.com/clearlydefined/service/issues/820))
+
+### Search Service
+
+**clearlydefinedprod** is an instance of Azure Cognitive Search that powers ClearlyDefine's Search Service.
+
+### Shared DashBoards
+
+These Dashboard display metrics about ClearlyDefined services, including:
+* clearlydefined-api-prod
+* cdcrawler-prod
+
+Note that the cdcrawler-prod dashboard does show some failures, exceptions, and server response times.
+
+### Storage Account
+
+The **clearlyydefinedprod** storage account includes both Azure blobs and Azure Storage Queues, it is set up similarly to the **clearlydefineddev** storage account in the ClearlyDefined Dev resource group.
+
+### Traffic Manager Profiles
+
+An [Azure Traffic Manager](https://docs.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview) is a DNS-based load balancer.
+
+**clearlydefined-api-prod**
+
+This traffic manager load balances activity to the **clearlydefined-api-prod** App Service (ClearlyDefined backend/api) AND the **clearlydefined-api-prod-europe** App Service. The DNS for this traffic manager is http://clearlydefined-api-prod.trafficmanager.net.
+
+In our Cloudflare account, we direct requests to api.clearlydefined.io to http://clearlydefined-api-prod.trafficmanager.net.
+
+**clearlydefined-prod**
+
+This traffic manager load balances activity to the **clearlydefined-prod** App Service (Front End/UI) AND the **clearlydefined-prod-europe** App Service (which will be discussed more when we cover the ClearlyDefined Prod Europe Resource Group).
+
+### Unaccounted for infra
+
+**API connection**
+
+We have an API connection called **azurequeues**.
+
+API connections are used to connect Logic apps to SaaS services.
+
+When I look at **azurequeues** in the Azure Portal and click on "Edit API connection", it appears to be connected to (or set up to be connected to) the **clearlydefinedprod** Storage Account. However, there is no Shared Storage Key.
+
+I cannot confirm whether **azurequeues** is currently connected to anything. It's possible it was set up as an experiment, but is not currently connected to any Logic Apps.
+
+**Log Analytics Workspaces**
+
+[More information about Azure Log Analytics Workspaces](https://docs.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace#:~:text=%20Create%20a%20Log%20Analytics%20workspace%20in%20the,and%20region%20as%20in%20the%20deleted...%20More)
+
+**RedisLogs**
+
+This is connected to the clearlycontained-dev infrastructure in the **clearlydefined-dev** resource group. This can likely be removed.
+
+**SearchIndexerLogs**
+
+This is connected to the clearlycontained-dev infrastructure in the **clearlydefined-dev** resource group. This can likely be removed.
+
+**Service Bus Namepace**
+
+We have a Service Bus Namespace instance called **cdcrawlerprod** - it's not clear what it is used for, though it has received activity in the last 30 days.
 
 ## ClearlyDefined Prod Europe Resource Group
 
-TODO
+### App Service Plan
+
+The App Service plan for the ClearlyDefined Prod Europe environment is **clearlydefined-prod-europe**.
+
+### App Services
+
+The App Services in **clearlydefined-prod-europe** include
+* clearlydefined-api-prod-europe (the service/backend api)
+* clearlydefined-prod-europe (the website/front end UI)
 
 ## Auxiliary Jobs Resource Group
 
-TODO
+These resources are all related to [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview).
+
+When you upload an Azure Function to Azure, it creates the following resources:
+* Resource group - logical container for related resources - in this case, the **auxiliaryjobs** resource group
+* Azure Storage Account - maintains state and other information
+* Consumption Plan - defines the underlying host for the serverless function app
+* Function app - provides the environment for executing the function code
+* Applications Insights instance - connected to the function app, tracks usage of the serverless function
+
+### App Service Plan
+
+**EastUS2Plan** is an Azure Service Plan for the **auxiliary-jobs** function app
+
+### Function App
+
+**auxiliary-jobs** is a function app that runs the **QueuesMessageCountChecker**. The **QueuesMessageCountChecker** logs Azure Storage Queues' message counts to Application Insights so that alerts can be set up.
+
+The code for this function lives [in this GitHub repository](https://github.com/clearlydefined/auxiliary-jobs).
+
+### Storage Account
+
+The **auxiliaryjobs** storage account holds two blob containers:
+
+* azure-webjobs-hosts
+* azure-webjobs-secrets
+
+### Application Insights
+
+The **auxiliaryjobs** Application insights instance tracks usage of the **auxiliaryjobs** function app.
 
 ## Backup Resource Group
 
-TODO
+These resources are used for taking backups of ClearlyDefined's resources.
+
+### Data Factory
+
+[More about Azure Data Factory](https://docs.microsoft.com/en-us/azure/data-factory/introduction)
+
+This sets up backups for BOTH the dev and prod environments.
+
+Click on "Author and Monitor" to see details.
+
+When you are brought to the Azure Data Factory UI, click on "Author" (the pencil icon in the left menu).
+
+**Pipelines**
+
+This Data factory includes the following pipelines:
+
+* backup-dev-definitions
+* backup-dev-harvest
+* backup-prod-definition
+* backup-prod-harvest
+
+**backup-dev-definitions**
+
+Source: Azure Blob Storage - clearlydefineddev/develop-definition
+Sink (Destination):  Azure Blob Storage - clearlydefineddevbackup/develop-definition
+
+The source lives in the **clearlydefineddev** Storage Account in the **clearlydefined-dev** Resource Group.
+
+The sink lives in the **clearlydefineddevbackup** Storage Account in the **backup** resource group.
+
+**backup-dev-harvest**
+
+Source: AzureBlobStorage - clearlydefineddev/develop
+Sink (Destination): Azure Blob Storage - clearlydefineddevbackup/develop
+
+The source lives in the **clearlydefineddev** Storage Account in the **clearlydefined-dev** Resource Group.
+
+The sink lives in the **clearlydefineddevbackup** Storage Account in the **backup** resource group.
+
+**backup-prod-definition**
+
+Source: Azure Blob Storage - clearlydefinedprod/production-definition
+Sink (Destination): Azure Blob Storage - clearlydefinedprodbackup/production-definition 
+
+The source lives in the **clearlydefinedprod** Storage Account in the **clearlydefinedprod** Resource Group.
+
+The sink lives in the **clearlydefinedprodbackup** Storage account in the **backup** resource group.
+
+**backup-prod-harvest**
+
+Source: Azure Blob Storage - clearlydefinedprod/production
+Sink (Destination): Azure Blob Storage - clearlydefinedprodbackup/production
+
+The source lives in the **clearlydefinedprod** Storage Account in the **clearlydefinedprod** Resource Group.
+
+The sink lives in the **clearlydefinedprodbackup** Storage account in the **backup** resource group.
+
+### Storage Accounts
+
+**clearlydefineddevbackup**
+
+This stores the backup Azure Blobs for the development environment.
+
+**clearlydefinedprodbackup**
+
+This stores the backup Azure Blobs for the production environment.
 
 ## Cloud Shell Storage West US Resource Group
 
-TODO
+This contains two Azure Storage Accounts:
+* cs4100320005f7789e0
+* cs4e05584a1ed97x4676xaec
+
+TODO: Investigate what these are used for.
+
+**cs4100320005f7789e0**
+
+Contains one file share - **cs-jeffmendoza-clearlydefinedoutlook-onmicroso-100320005f7789e0** - it's unclear what this is used for.
+
+**cs4e05584a1ed97x4676xaec**
+
+Contains four file shares - it's unclear what they are used for.
+* cs-clearlydefined-outlook-com-10030000a724de63
+* cs-jeffmcaffer-clearlydefinedoutlook-onmicroso-1003bffda6ff8525
+* cs-jeffmcaffer-outlook-com-1003bffd89b315ad
+* cs-wdb-willbar-com-10033fffa701040f
 
 ## Dashboards Resource Group
 
-TODO
+This resource group just contains the API Prod Dashboard.
 
 ## Default Activity Log Alerts Resource Group
 
-TODO
+This resource group contains no resources, it can likely be removed.
 
 ## Network Watcher Resource Group
 
-TODO
+### Network Watcher
+
+[More about Azure Network Watcher](https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview)
+
+There is one Network Watcher in this resource group, **NetworkWatcher_eastus2**. It's not clear whether this is connected to any other Azure resource, it may be able to be removed.
