@@ -911,16 +911,36 @@ This stores the backup Azure Blobs for the production environment.
 
 ## Cloud Shell Storage West US Resource Group
 
-TODO
+This contains two Azure Storage Accounts:
+* cs4100320005f7789e0
+* cs4e05584a1ed97x4676xaec
+
+TODO: Investigate what these are used for.
+
+**cs4100320005f7789e0**
+
+Contains one file share - **cs-jeffmendoza-clearlydefinedoutlook-onmicroso-100320005f7789e0** - it's unclear what this is used for.
+
+**cs4e05584a1ed97x4676xaec**
+
+Contains four file shares - it's unclear what they are used for.
+* cs-clearlydefined-outlook-com-10030000a724de63
+* cs-jeffmcaffer-clearlydefinedoutlook-onmicroso-1003bffda6ff8525
+* cs-jeffmcaffer-outlook-com-1003bffd89b315ad
+* cs-wdb-willbar-com-10033fffa701040f
 
 ## Dashboards Resource Group
 
-TODO
+This resource group just contains the API Prod Dashboard.
 
 ## Default Activity Log Alerts Resource Group
 
-TODO
+This resource group contains no resources, it can likely be removed.
 
 ## Network Watcher Resource Group
 
-TODO
+### Network Watcher
+
+[More about Azure Network Watcher](https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview)
+
+There is one Network Watcher in this resource group, **NetworkWatcher_eastus2**. It's not clear whether this is connected to any other Azure resource, it may be able to be removed.
