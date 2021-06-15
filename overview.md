@@ -671,7 +671,7 @@ We run production instances of the crawler in three different clouds:
 * Google Cloud
 * AWS
 
-See [Crawler Contacts](./crawler-contacts) for more information.
+See [Crawler Contacts](./crawler-contacts.md) for more information.
 
 ### Application Insights
 
