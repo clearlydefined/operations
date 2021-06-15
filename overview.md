@@ -663,17 +663,15 @@ The App Services in clearlydefined-prod include:
 
 **cdcrawler-prod**
 
-This App Service is currently stopped.
+This App Service is currently stopped. We don't run the production crawler instances in the ClearlyDefined Azure Subscription.
 
-We run instances of the crawler in three different clouds:
+We run production instances of the crawler in three different clouds:
 
 * Azure
 * Google Cloud
 * AWS
 
-The instances running in Azure live in the "OSPO Non-production" Azure subscription, not the ClearlyDefined Azure subscription. Reach out to the Microsoft Open Source Programs Office and/or Open Source Engineering for more information.
-
-TODO: Figure out who our contacts are for Google Cloud and AWS.
+See [Crawler Contacts](./crawler-contacts) for more information.
 
 ### Application Insights
 
