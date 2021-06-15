@@ -661,16 +661,17 @@ The App Services in clearlydefined-prod include:
 * clearlydefined-api-prod (the service/backend api)
 * clearlydefined-prod (the website/front end UI)
 
-***cdcrawler-prod**
+**cdcrawler-prod**
 
-This App Service is currently stopped.
+This App Service is currently stopped. We don't run the production crawler instances in the ClearlyDefined Azure Subscription.
 
-We run instances of the crawler in three different clouds:
+We run production instances of the crawler in three different clouds:
+
 * Azure
 * Google Cloud
 * AWS
 
-The instance running in Azure is in a different account than the ClearlyDefined Azure account. It is run in an account that is used for internal MSFT tools (reach out to Jeff Mendoza for more information).
+See [Crawler Contacts](./crawler-contacts.md) for more information.
 
 ### Application Insights
 
