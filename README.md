@@ -3,9 +3,9 @@
 This repo is dedicated to operational concerns for ClearlyDefined, including the layout on Azure and DevOps implications.
 
 Some high level subpages exist:  
+* [Thorough Infrastucture Overview](./overview.md)
 * [ClearlyDefined's identities in other systems](./clearly-defined-identities.md)  
 * [Cloud resources](./cloud-resources.md)
-* [Infrastucture Overview](./overview.md)
 * [Alerts](./alerts.md)  
 
 ## Consumer resources
