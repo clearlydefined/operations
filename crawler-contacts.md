@@ -12,8 +12,12 @@ The instances running in Azure live in the "OSPO Non-production" Azure subscript
 
 ## Google Cloud
 
-TODO: Figure out who our contact is
+The Google Cloud contact is Matt Gaunt mattgaunt@google.com
+
+NOTE: The Google Cloud crawlers are currently turned off. Nell Shamrell-Harrington will be following up with them at the beginning of next year (2022).
 
 ## AWS
 
-TODO: Figure out who our contact is
+The AWS contact is James Siri jamesiri@amazon.com
+
+NOTE: The AWS crawlers are currently turned off, they need to be able to build the Docker image themselves. Nell will be following up with them on this in Q4 2021.
