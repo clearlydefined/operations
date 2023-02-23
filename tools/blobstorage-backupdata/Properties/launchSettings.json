@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BackupData": {
+      "commandName": "Project",
+      "commandLineArgs": "{cosmodb-connectionstring} {blobstorage-connectionstring}"
+    }
+  }
+}

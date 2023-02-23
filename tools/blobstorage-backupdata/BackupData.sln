@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupData", "BackupData.csproj", "{F17AEC78-76E7-40E5-A42C-3C2397486F16}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F17AEC78-76E7-40E5-A42C-3C2397486F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17AEC78-76E7-40E5-A42C-3C2397486F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17AEC78-76E7-40E5-A42C-3C2397486F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17AEC78-76E7-40E5-A42C-3C2397486F16}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F58552DD-6FAB-440C-B717-D0FE54B78548}
+	EndGlobalSection
+EndGlobal
