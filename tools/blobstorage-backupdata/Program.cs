@@ -33,7 +33,6 @@ internal sealed class Program
                 new FindOptions<BsonDocument>
             {
                 BatchSize = BatchSize,
-                Limit = BatchSize,
                 NoCursorTimeout = false,
                 Projection = Builders<BsonDocument>.Projection
                     .Exclude("_mongo")
