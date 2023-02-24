@@ -15,6 +15,7 @@ internal sealed class Program
     private const string DateTimeFormat = "yyyy-MM-dd-HH";
     private const int BatchSize = 10000;
     private const string UpdatedFieldName = "_meta.updated";
+    private const string MetaFieldName = "_meta";
 
     internal static async Task Main(string[] args)
     {
@@ -26,11 +27,12 @@ internal sealed class Program
             .GetDatabase("clearlydefined")
             .GetCollection<BsonDocument>("definitions-paged")
             .FindAsync(
-                existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Exists(UpdatedFieldName)
+                existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Exists(MetaFieldName)
                                            & Builders<BsonDocument>.Filter.Gte(
                                                UpdatedFieldName,
-                                               new BsonDateTime(DateTime.ParseExact(existingIndex[^1], DateTimeFormat, null)))
-                    : Builders<BsonDocument>.Filter.Exists(UpdatedFieldName),
+                                               new BsonDateTime(DateTime.ParseExact(existingIndex[^1], DateTimeFormat, null))
+                                                   .ToString())
+                    : Builders<BsonDocument>.Filter.Exists(MetaFieldName),
                 new FindOptions<BsonDocument>
             {
                 BatchSize = BatchSize,
