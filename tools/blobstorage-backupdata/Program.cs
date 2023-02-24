@@ -13,7 +13,8 @@ internal sealed class Program
     private static int counter;
     private static string[] existingIndex;
     private const string DateTimeFormat = "yyyy-MM-dd-HH";
-    private const int BatchSize = 100000;
+    private const int BatchSize = 10000;
+    private const string UpdatedFieldName = "_meta.updated";
 
     internal static async Task Main(string[] args)
     {
@@ -25,11 +26,10 @@ internal sealed class Program
             .GetDatabase("clearlydefined")
             .GetCollection<BsonDocument>("definitions-paged")
             .FindAsync(
-                existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Exists("_meta")
-                              & Builders<BsonDocument>.Filter.Gte(
-                                  "_meta.updated",
+                existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Gte(
+                                  UpdatedFieldName,
                                   DateTime.ParseExact(existingIndex[^1], DateTimeFormat, null))
-                              : Builders<BsonDocument>.Filter.Exists("_meta"),
+                              : Builders<BsonDocument>.Filter.Exists(UpdatedFieldName),
                 new FindOptions<BsonDocument>
             {
                 BatchSize = BatchSize,
@@ -37,7 +37,8 @@ internal sealed class Program
                 Projection = Builders<BsonDocument>.Projection
                     .Exclude("_mongo")
                     .Exclude("files")
-                    .Exclude("coordinates")
+                    .Exclude("coordinates"),
+                Sort = Builders<BsonDocument>.Sort.Ascending(UpdatedFieldName)
                 });
 
         await SaveData(cursor, connections, changesIndex);
