@@ -26,10 +26,11 @@ internal sealed class Program
             .GetDatabase("clearlydefined")
             .GetCollection<BsonDocument>("definitions-paged")
             .FindAsync(
-                existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Gte(
-                                  UpdatedFieldName,
-                                  DateTime.ParseExact(existingIndex[^1], DateTimeFormat, null))
-                              : Builders<BsonDocument>.Filter.Exists(UpdatedFieldName),
+                existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Exists(UpdatedFieldName)
+                                           & Builders<BsonDocument>.Filter.Gte(
+                                               UpdatedFieldName,
+                                               new BsonDateTime(DateTime.ParseExact(existingIndex[^1], DateTimeFormat, null)))
+                    : Builders<BsonDocument>.Filter.Exists(UpdatedFieldName),
                 new FindOptions<BsonDocument>
             {
                 BatchSize = BatchSize,
