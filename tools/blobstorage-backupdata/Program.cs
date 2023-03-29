@@ -25,7 +25,7 @@ internal sealed class Program
 
         var cursor = await connections.mongoClient
             .GetDatabase("clearlydefined")
-            .GetCollection<BsonDocument>("definitions-paged")
+            .GetCollection<BsonDocument>("definitions-trimmed")
             .FindAsync(
                 existingIndex.Length > 0 ? Builders<BsonDocument>.Filter.Exists(MetaFieldName)
                                            & Builders<BsonDocument>.Filter.Gte(
