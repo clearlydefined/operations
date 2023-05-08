@@ -39,7 +39,6 @@ internal sealed class Program
                 NoCursorTimeout = false,
                 Projection = Builders<BsonDocument>.Projection
                     .Exclude("_mongo")
-                    .Exclude("files")
                     .Exclude("coordinates"),
                 Sort = Builders<BsonDocument>.Sort.Ascending(UpdatedFieldName)
                 });
