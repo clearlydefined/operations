@@ -454,13 +454,13 @@ The **Curation Queue** is where we queue up curations for ClearlyDefined to proc
 
 We use multiple services to store definition information.
 
-If you look at the value of this environmental variable, you will see that it is **"dispatch+azure+mongo"**
+If you look at the value of this environmental variable, you will see that it is **"dispatch+azure+mongoTrimmed"**
 
 **dispatch** indicates that we use multiple memory stores - we need to dispatch requests to both of them.
 
 **azure** indicates that we store definitions in **Azure Blob Storage** in the **clearlydefineddev** **Azure Storage Account**.
 
-**mongo** indicates that we store definitions in a Mongo collection as well, in this case in the **definitions-paged** collection in the **clearlydefined** database in the **clearlydefined-dev** Azure Cosmos DB account.
+**mongoTrimmed** indicates that we store definitions in a Mongo collection as well, in this case in the **definitions-trimmed** collection in the **clearlydefined** database in the **clearlydefined-dev** Azure Cosmos DB account.
 
 I once was making a change to the definition in the mongo definition store, but not in the azure store. The change didn't seem to be taking affect, so I asked Jeff McAffer (original ClearlyDefined engineer) about it. This was his response:
 
@@ -468,9 +468,13 @@ I once was making a change to the definition in the mongo definition store, but 
 
 The key takeaway here is that blob is the golden store. Everything else should be derived from that."
 
+**DEFINITION_MONGO_TRIMMED_COLLECTION_NAME**
+
+This is the Mongo collection which stores definition without file information, in this case the **definitions-trimmed** collection in the **clearlydefined** database in the **clearlydefined-dev** Azure Cosmos DB account.
+
 **DEFINITION_MONGO_COLLECTION_NAME**
 
-This is the Mongo collection which stores definition information, in this case the **definitions-paged** collection in the **clearlydefined** database in the **clearlydefined-dev** Azure Cosmos DB account.
+This was the Mongo collection which stores the entire definition information in paged format, in this case the **definitions-paged** collection in the **clearlydefined** database in the **clearlydefined-dev** Azure Cosmos DB account.  To store definition information in its entirety, use **mongo** in DEFINITION_STORE_PROVIDER (e.g. **"dispatch+azure+mongo"**) and use this variable to specify the collection for storage.
 
 **DEFINITION_MONGO_CONNECTION_STRING**
 
@@ -700,12 +704,11 @@ This is where we keep the **clearlydefined** Mongo DB for our production environ
 **Actively used collections**
 
 * curations-20190227 - this is where we keep information about curations (this is used in the by the **clearlydefined-api-prod** App Service through the 'CURATIONS_MONGO_COLLECTION_NAME environmental variable)
-* definitions-paged - this is where we keep information about definitions (this is also used by the **clearlydefined-api-prod** App Service through the 'DEFINITION_MONGO_COLLECTION_NAME' environmental variable)
+* definitions-trimmed - this is where we keep information about definitions (this is also used by the **clearlydefined-api-prod** App Service through the 'DEFINITION_MONGO_TRIMMED_COLLECTION_NAME' environmental variable)
 
 **Non-actively used collections**
 
 * curations (this is a legacy collection that is no longer used)
-* definitions (this is also a legacy collection from before we transitioned to using a paged definitions collection)
 
 ### Container Registry
 
