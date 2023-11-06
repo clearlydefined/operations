@@ -18,7 +18,7 @@ Some high level subpages exist:
 | API Swagger | [Link](https://dev-api.clearlydefined.io/api-docs/) | [Link](https://api.clearlydefined.io/api-docs/)
 
 ## Contributor resources
-[Github Org](https://github.com/clearlydefined)  
+[GitHub Org](https://github.com/clearlydefined)  
 
 Contact info:   
 * [Discord](https://discord.gg/wEzHJku)
