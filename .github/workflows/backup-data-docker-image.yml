@@ -3,7 +3,7 @@ name: Build and publish ClearlyDefined backup-data Docker image
 on:
   workflow_dispatch:
   push:
-   branches: [master]
+   branches: [main]
 
 env:
     DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}/backup-data
