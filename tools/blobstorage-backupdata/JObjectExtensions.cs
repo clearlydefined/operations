@@ -22,15 +22,6 @@ internal static class JObjectExtensions
     /// <returns>returns the updated datetime from the meta field</returns>
     internal static DateTime GetDateTime(this JObject jObject)
     {
-        try
-        {
-            return DateTime.Parse(jObject["_meta"]?["updated"]?.ToString()!);
-        }
-        catch
-        {
-            // ignored
-        }
-
-        return DateTime.MinValue;
+        return DateTime.Parse(jObject["_meta"]?["updated"]?.ToString()!);
     }
 }
