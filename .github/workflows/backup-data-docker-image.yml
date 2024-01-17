@@ -28,13 +28,13 @@ jobs:
 
       - name: Login to ghcr.io
         run: |
-          echo ""**********   logging in to Docker for ghcr.io"
+          echo "**********   logging in to Docker for ghcr.io"
           docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build docker image
         run: |
           echo "**********   building ${{env.DOCKER_IMAGE_NAME}} image"
-          echo "**********   cmd: docker build ./tools/blobstorage-backupdata --tag ${{ env.DOCKER_IMAGE_TAG }}"
+          echo "**********   cmd: docker build --tag ${{ env.DOCKER_IMAGE_TAG }} ."
           docker build --tag ${{ env.DOCKER_IMAGE_TAG }} .
 
       - name: Push to ghcr.io
