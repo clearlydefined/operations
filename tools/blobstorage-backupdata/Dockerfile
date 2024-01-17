@@ -1,6 +1,7 @@
 # Use the official image as a parent image
 FROM mcr.microsoft.com/dotnet/runtime:7.0-alpine AS base
 LABEL org.opencontainers.image.source="https://github.com/clearlydefined/operations"
+LABEL org.opencontainers.image.description="ClearlyDefined publish changes job"
 WORKDIR /app
 
 # Use the SDK image to build the app
