@@ -78,7 +78,9 @@ internal sealed class BackupJob
     {
         var retryPolicy = Policy
             .Handle<MongoConnectionException>()
+            .Or<MongoExecutionTimeoutException>()
             .Or<TimeoutException>()
+            .Or<AggregateException>()
             .WaitAndRetryAsync(new[]
             {
                 TimeSpan.FromSeconds(1),
