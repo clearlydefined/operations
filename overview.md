@@ -561,6 +561,10 @@ This is the URL used to access the ClearlyDefined Service, in this case it is ht
 
 The DNS for dev-api.clearlydefined.io lives in our Cloudflare account.
 
+**TEMPDIR**
+
+This is the location where temporary files are stored in the crawler.  In deployment, it is the crawlerdev-file-share in the **clearlydefineddev** Azure Storage Account.  The mount path is configured in the cdcrawler-dev App Service.
+
 **WEBHOOK_CRAWLER_SECRET**
 
 This is what the Crawler uses to authenticate to the ClearlyDefined Service API.
