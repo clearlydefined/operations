@@ -10,13 +10,13 @@ const sinon = require('sinon')
 
 describe('Integration test against dev deployment', function () {
   it('should get harvest for a component', async function () {
-    const coordinates = 'nuget/nuget/-/HotChocolate/13.8.1'
+    const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
     const result = await callFetch(`${devApiBaseUrl}/harvest/${coordinates}?form=list`).then(r => r.json())
     expect(result.length).to.be.greaterThan(0)
   })
 
   it('should harvest a component', async function () {
-    const coordinates = 'nuget/nuget/-/HotChocolate/13.8.1'
+    const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
     const harvester = new Harvester(devApiBaseUrl)
     const result = await harvester.harvest([coordinates])
     expect(result.status).to.be.equal(201)
@@ -24,7 +24,7 @@ describe('Integration test against dev deployment', function () {
 })
 
 describe('Tests for Harvester', function () {
-  const coordinates = 'nuget/nuget/-/HotChocolate/13.8.1'
+  const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
   let harvester
   beforeEach(function () {
     harvester = new Harvester(devApiBaseUrl)
@@ -51,7 +51,7 @@ describe('Tests for Harvester', function () {
 })
 
 describe('Integration tests for Harvester and Poller', function () {
-  const coordinates = 'nuget/nuget/-/HotChocolate/13.8.1'
+  const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
   const interval = 10 * 1
   const maxTime = 10 * 2
   let poller
