@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const expect = require('chai').expect
+const { expect } = require('chai')
 const { callFetch } = require('../../lib/fetch')
 const Poller = require('../../lib/poller')
 const Harvester = require('../../lib/harvester')

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { omit, isEqual } = require('lodash')
-const expect = require('chai').expect
+const { expect } = require('chai')
 const { callFetch } = require('../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('./testConfig')
 
