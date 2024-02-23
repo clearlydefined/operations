@@ -6,16 +6,46 @@ const { expect } = require('chai')
 const { callFetch } = require('../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('./testConfig')
 
-describe('Validate definitions between dev and prod', function () {
+describe('Validation between dev and prod', function () {
   this.timeout(definition.timeout)
 
   //Rest a bit to avoid overloading the servers
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
-  components.forEach(coordinates => {
-    it(`should return the same definition as prod for ${coordinates}`, () => fetchAndCompareDefinition(coordinates))
+  describe('Validate definitions', function () {
+    components.forEach(coordinates => {
+      it(`should return the same definition as prod for ${coordinates}`, () => fetchAndCompareDefinition(coordinates))
+    })
+  })
+
+  describe('Validate attachments', function () {
+    components.forEach(coordinates => {
+      it(`should have the same attachement as prod for ${coordinates}`, () => fetchAndCompareAttachments(coordinates))
+    })
   })
 })
+
+async function fetchAndCompareAttachments(coordinates) {
+  const expectedAttachments = await findAttachments(coordinates)
+  for (const sha256 of expectedAttachments) {
+    await compareAttachment(sha256)
+  }
+}
+
+async function findAttachments(coordinates) {
+  const apiBaseUrl = prodApiBaseUrl
+  const definition = await callFetch(`${apiBaseUrl}/definitions/${coordinates}`).then(r => r.json())
+  return definition.files.filter(f => f.natures || [].includes('license')).map(f => f.hashes.sha256)
+}
+
+async function compareAttachment(sha256) {
+  const [devAttachment, prodAttachment] = await Promise.all(
+    [callFetch(`${devApiBaseUrl}/attachments/${sha256}`), callFetch(`${prodApiBaseUrl}/attachments/${sha256}`)].map(p =>
+      p.then(r => r.text())
+    )
+  )
+  expect(devAttachment).to.be.equal(prodAttachment)
+}
 
 async function fetchAndCompareDefinition(coordinates) {
   const [recomputedDef, expectedDef] = await Promise.all(
