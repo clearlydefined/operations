@@ -3,7 +3,7 @@
 
 const { omit, isEqual } = require('lodash')
 const { expect } = require('chai')
-const { callFetch } = require('../lib/fetch')
+const { callFetch, buildPostOpts } = require('../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('./testConfig')
 
 describe('Validation between dev and prod', function () {
@@ -28,39 +28,76 @@ describe('Validation between dev and prod', function () {
 describe('Validate curation on dev', function () {
   this.timeout(definition.timeout)
 
-  const coordinates = components[0]
-  const [type, provider, namespace, name, revision] = coordinates.split('/')
-  const curation = {
-    described: {
-      releaseDate: new Date().toISOString().substring(0, 10) //yyyy-mm-dd
+  describe('Propose curation', function () {
+    const coordinates = components[0]
+    const [type, provider, namespace, name, revision] = coordinates.split('/')
+    const curation = {
+      described: {
+        releaseDate: new Date().toISOString().substring(0, 10) //yyyy-mm-dd
+      }
     }
-  }
-  let prNumber
+    let prNumber
 
-  before(async function () {
-    const response = await callFetch(
-      `${devApiBaseUrl}/curations`,
-      buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
-    ).then(r => r.json())
-    prNumber = response.prNumber
+    before(async function () {
+      const response = await callFetch(
+        `${devApiBaseUrl}/curations`,
+        buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
+      ).then(r => r.json())
+      prNumber = response.prNumber
+    })
+
+    it('should create the PR via curation', async function () {
+      expect(prNumber).to.be.ok
+    })
+
+    it('should get the curation by PR', async function () {
+      const fetchedCuration = await callFetch(
+        `${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
+      ).then(r => r.json())
+      expect(fetchedCuration).to.be.deep.equal(curation)
+    })
+
+    it('should reflect the PR in definition preview', async function () {
+      const curatedDefinition = await callFetch(
+        `${devApiBaseUrl}/definitions/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
+      ).then(r => r.json())
+      expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
+    })
+
+    it('should get of list of PRs for component', async function () {
+      const response = await callFetch(`${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}`).then(r =>
+        r.json()
+      )
+      const proposedPR = response.contributions.filter(c => c.prNumber === prNumber)
+      expect(proposedPR).to.be.ok
+    })
+
+    it('should get PRs for components', async function () {
+      const coordinates = `${type}/${provider}/${namespace}/${name}`
+      const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([coordinates])).then(r => r.json())
+      const proposedPR = response[coordinates].contributions.filter(c => c.prNumber === prNumber)
+      expect(proposedPR).to.be.ok
+    })
   })
 
-  it('should create the PR via curation', async function () {
-    expect(prNumber).to.be.ok
-  })
+  describe('Merged curation', function () {
+    const curatedCoordinates = 'npm/npmjs/@nestjs/platform-express/6.2.2'
+    const expected = {
+      licensed: {
+        declared: 'Apache-2.0'
+      }
+    }
+    it('should get merged curation for coordinates', async function () {
+      const response = await callFetch(`${devApiBaseUrl}/curations/${curatedCoordinates}`).then(r => r.json())
+      expect(response).to.be.deep.equal(expected)
+    })
 
-  it('should get the curation by PR', async function () {
-    const fetchedCuration = await callFetch(
-      `${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
-    ).then(r => r.json())
-    expect(fetchedCuration).to.be.deep.equal(curation)
-  })
-
-  it('should reflect the PR in definition preview', async function () {
-    const curatedDefinition = await callFetch(
-      `${devApiBaseUrl}/definitions/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
-    ).then(r => r.json())
-    expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
+    it('should reflect merged curation in definition for coordinates', async function () {
+      const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${curatedCoordinates}`).then(r =>
+        r.json()
+      )
+      expect(curatedDefinition.licensed.declared).to.be.deep.equal(expected.licensed.declared)
+    })
   })
 })
 
