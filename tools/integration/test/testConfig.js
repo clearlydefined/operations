@@ -8,6 +8,8 @@ const pollingInterval = 1000 * 60 * 5 // 5 minutes
 const pollingMaxTime = 1000 * 60 * 30 // 30 minutes
 
 //Havest results to check for harvest completeness
+//The versions correspond to the schema versions of the tools which are used in /harvest/{type}/{provider}/{namespace}/{name}/{revision}/{tool}/{toolVersion}
+//See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
 const harvestToolVersions = [
   ['licensee', '9.14.0'],
   ['scancode', '30.3.0'],
