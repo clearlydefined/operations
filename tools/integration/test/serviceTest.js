@@ -25,6 +25,64 @@ describe('Validation between dev and prod', function () {
   })
 })
 
+describe('Validate curation on dev', function () {
+  this.timeout(definition.timeout)
+
+  const coordinates = components[0]
+  const [type, provider, namespace, name, revision] = coordinates.split('/')
+  const curation = {
+    described: {
+      releaseDate: new Date().toISOString().substring(0, 10) //yyyy-mm-dd
+    }
+  }
+  let prNumber
+
+  before(async function () {
+    const response = await callFetch(
+      `${devApiBaseUrl}/curations`,
+      buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
+    ).then(r => r.json())
+    prNumber = response.prNumber
+  })
+
+  it('should create the PR via curation', async function () {
+    expect(prNumber).to.be.ok
+  })
+
+  it('should get the curation by PR', async function () {
+    const fetchedCuration = await callFetch(
+      `${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
+    ).then(r => r.json())
+    expect(fetchedCuration).to.be.deep.equal(curation)
+  })
+
+  it('should reflect the PR in definition preview', async function () {
+    const curatedDefinition = await callFetch(
+      `${devApiBaseUrl}/definitions/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
+    ).then(r => r.json())
+    expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
+  })
+})
+
+function buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation) {
+  const contributionInfo = {
+    type: 'other',
+    summary: `test ${coordinates}`
+  }
+  const patch = {
+    coordinates: { type, provider, namespace, name },
+    revisions: {
+      [revision]: curation
+    }
+  }
+  const curationBody = { contributionInfo, patches: [patch] }
+  return {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(curationBody)
+  }
+}
+
 async function fetchAndCompareAttachments(coordinates) {
   const expectedAttachments = await findAttachments(coordinates)
   for (const sha256 of expectedAttachments) {
