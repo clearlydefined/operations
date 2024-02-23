@@ -1,0 +1,27 @@
+{
+  "name": "integration",
+  "version": "1.0.0",
+  "description": "Integration tests and related tools for ClearlyDefined",
+  "scripts": {
+    "test": "npm run mocha && npm run lint",
+    "mocha": "mocha --exit \"test/lib/**/*.js\"",
+    "lint": "npm run prettier:check && npm run eslint",
+    "lint:fix": "npm run prettier:write && npm run eslint:fix",
+    "eslint": "eslint .",
+    "eslint:fix": "eslint . --fix",
+    "prettier:check": "prettier . --check",
+    "prettier:write": "prettier . --write"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "lodash": "^4.17.21",
+    "mocha": "^10.3.0",
+    "node-fetch": "^3.3.2",
+    "prettier": "^3.2.5",
+    "sinon": "^17.0.1"
+  }
+}
