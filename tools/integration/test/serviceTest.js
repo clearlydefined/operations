@@ -25,78 +25,86 @@ describe('Validation between dev and prod', function () {
   })
 })
 
-describe('Validate curation on dev', function () {
+describe('Validate on dev', function () {
   this.timeout(definition.timeout)
 
-  describe('Propose curation', function () {
-    const coordinates = components[0]
-    const [type, provider, namespace, name, revision] = coordinates.split('/')
-    const curation = {
-      described: {
-        releaseDate: new Date().toISOString().substring(0, 10) //yyyy-mm-dd
-      }
-    }
-    let prNumber
-
-    before(async function () {
-      const response = await callFetch(
-        `${devApiBaseUrl}/curations`,
-        buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
-      ).then(r => r.json())
-      prNumber = response.prNumber
-    })
-
-    it('should create the PR via curation', async function () {
-      expect(prNumber).to.be.ok
-    })
-
-    it('should get the curation by PR', async function () {
-      const fetchedCuration = await callFetch(
-        `${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
-      ).then(r => r.json())
-      expect(fetchedCuration).to.be.deep.equal(curation)
-    })
-
-    it('should reflect the PR in definition preview', async function () {
-      const curatedDefinition = await callFetch(
-        `${devApiBaseUrl}/definitions/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
-      ).then(r => r.json())
-      expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
-    })
-
-    it('should get of list of PRs for component', async function () {
-      const response = await callFetch(`${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}`).then(r =>
-        r.json()
-      )
-      const proposedPR = response.contributions.filter(c => c.prNumber === prNumber)
-      expect(proposedPR).to.be.ok
-    })
-
-    it('should get PRs for components', async function () {
-      const coordinates = `${type}/${provider}/${namespace}/${name}`
-      const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([coordinates])).then(r => r.json())
-      const proposedPR = response[coordinates].contributions.filter(c => c.prNumber === prNumber)
-      expect(proposedPR).to.be.ok
+  describe('Search definitions', function () {
+    components.forEach(coordinates => {
+      it(`should find definition for ${coordinates}`, () => findDefinition(coordinates))
     })
   })
 
-  describe('Merged curation', function () {
-    const curatedCoordinates = 'npm/npmjs/@nestjs/platform-express/6.2.2'
-    const expected = {
-      licensed: {
-        declared: 'Apache-2.0'
+  describe('Validate curation', function () {
+    describe('Propose curation', function () {
+      const coordinates = components[0]
+      const [type, provider, namespace, name, revision] = coordinates.split('/')
+      const curation = {
+        described: {
+          releaseDate: new Date().toISOString().substring(0, 10) //yyyy-mm-dd
+        }
       }
-    }
-    it('should get merged curation for coordinates', async function () {
-      const response = await callFetch(`${devApiBaseUrl}/curations/${curatedCoordinates}`).then(r => r.json())
-      expect(response).to.be.deep.equal(expected)
+      let prNumber
+
+      before(async function () {
+        const response = await callFetch(
+          `${devApiBaseUrl}/curations`,
+          buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
+        ).then(r => r.json())
+        prNumber = response.prNumber
+      })
+
+      it('should create the PR via curation', async function () {
+        expect(prNumber).to.be.ok
+      })
+
+      it('should get the curation by PR', async function () {
+        const fetchedCuration = await callFetch(
+          `${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
+        ).then(r => r.json())
+        expect(fetchedCuration).to.be.deep.equal(curation)
+      })
+
+      it('should reflect the PR in definition preview', async function () {
+        const curatedDefinition = await callFetch(
+          `${devApiBaseUrl}/definitions/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
+        ).then(r => r.json())
+        expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
+      })
+
+      it('should get of list of PRs for component', async function () {
+        const response = await callFetch(`${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}`).then(
+          r => r.json()
+        )
+        const proposedPR = response.contributions.filter(c => c.prNumber === prNumber)
+        expect(proposedPR).to.be.ok
+      })
+
+      it('should get PRs for components', async function () {
+        const coordinates = `${type}/${provider}/${namespace}/${name}`
+        const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([coordinates])).then(r => r.json())
+        const proposedPR = response[coordinates].contributions.filter(c => c.prNumber === prNumber)
+        expect(proposedPR).to.be.ok
+      })
     })
 
-    it('should reflect merged curation in definition for coordinates', async function () {
-      const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${curatedCoordinates}`).then(r =>
-        r.json()
-      )
-      expect(curatedDefinition.licensed.declared).to.be.deep.equal(expected.licensed.declared)
+    describe('Merged curation', function () {
+      const curatedCoordinates = 'npm/npmjs/@nestjs/platform-express/6.2.2'
+      const expected = {
+        licensed: {
+          declared: 'Apache-2.0'
+        }
+      }
+      it('should get merged curation for coordinates', async function () {
+        const response = await callFetch(`${devApiBaseUrl}/curations/${curatedCoordinates}`).then(r => r.json())
+        expect(response).to.be.deep.equal(expected)
+      })
+
+      it('should reflect merged curation in definition for coordinates', async function () {
+        const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${curatedCoordinates}`).then(r =>
+          r.json()
+        )
+        expect(curatedDefinition.licensed.declared).to.be.deep.equal(expected.licensed.declared)
+      })
     })
   })
 })
@@ -118,6 +126,15 @@ function buildCurationOpts(coordinates, type, provider, namespace, name, revisio
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(curationBody)
   }
+}
+
+async function findDefinition(coordinates) {
+  const [type, provider, namespace, name, revision] = coordinates.split('/')
+  const response = await callFetch(
+    `${devApiBaseUrl}/definitions?type=${type}&provider=${provider}&namespace=${namespace}&name=${name}&sortDesc=true&sort=revision`
+  ).then(r => r.json())
+  const foundDef = response.data.filter(d => d.coordinates.revision === revision)
+  expect(foundDef).to.be.ok
 }
 
 async function fetchAndCompareAttachments(coordinates) {
