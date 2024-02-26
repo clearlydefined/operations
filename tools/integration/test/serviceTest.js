@@ -55,7 +55,6 @@ describe('Service tests', function () {
 
     describe('Validate curation', function () {
       describe('Propose curation', function () {
-        const coordinates = components[0]
         const [type, provider, namespace, name, revision] = coordinates.split('/')
         const curation = {
           described: {
@@ -64,12 +63,12 @@ describe('Service tests', function () {
         }
         let prNumber
 
-        before(async function () {
-          const response = await callFetch(
+        before('curate', async function () {
+          const curationResponse = await callFetch(
             `${devApiBaseUrl}/curations`,
             buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
           ).then(r => r.json())
-          prNumber = response.prNumber
+          prNumber = curationResponse.prNumber
         })
 
         it('should create the PR via curation', async function () {
@@ -77,16 +76,16 @@ describe('Service tests', function () {
         })
 
         it('should get the curation by PR', async function () {
-          const fetchedCuration = await callFetch(
-            `${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
-          ).then(r => r.json())
+          const fetchedCuration = await callFetch(`${devApiBaseUrl}/curations/${coordinates}/pr/${prNumber}`).then(r =>
+            r.json()
+          )
           expect(fetchedCuration).to.be.deep.equal(curation)
         })
 
         it('should reflect the PR in definition preview', async function () {
-          const curatedDefinition = await callFetch(
-            `${devApiBaseUrl}/definitions/${type}/${provider}/${namespace}/${name}/${revision}/pr/${prNumber}`
-          ).then(r => r.json())
+          const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${coordinates}/pr/${prNumber}`).then(
+            r => r.json()
+          )
           expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
         })
 
@@ -99,11 +98,11 @@ describe('Service tests', function () {
         })
 
         it('should get PRs for components via post', async function () {
-          const coordinates = `${type}/${provider}/${namespace}/${name}`
-          const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([coordinates])).then(r =>
-            r.json()
+          const revisionlessCoordinates = `${type}/${provider}/${namespace}/${name}`
+          const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([revisionlessCoordinates])).then(
+            r => r.json()
           )
-          const proposedPR = response[coordinates].contributions.filter(c => c.prNumber === prNumber)
+          const proposedPR = response[revisionlessCoordinates].contributions.filter(c => c.prNumber === prNumber)
           expect(proposedPR).to.be.ok
         })
       })
@@ -157,14 +156,14 @@ async function findDefinition(coordinates) {
 }
 
 async function fetchAndCompareAttachments(coordinates) {
-  const expectedAttachments = await findAttachments(coordinates)
+  const expectedAttachments = await findAttachments(prodApiBaseUrl, coordinates)
   for (const sha256 of expectedAttachments) {
     await compareAttachment(sha256)
   }
 }
 
-async function findAttachments(coordinates) {
-  const definition = await getDefinition(prodApiBaseUrl, coordinates)
+async function findAttachments(apiBaseUrl, coordinates) {
+  const definition = await getDefinition(apiBaseUrl, coordinates)
   return definition.files.filter(f => f.natures || [].includes('license')).map(f => f.hashes.sha256)
 }
 
