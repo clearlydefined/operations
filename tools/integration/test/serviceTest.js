@@ -75,21 +75,21 @@ describe('Service tests', function () {
           expect(prNumber).to.be.ok
         })
 
-        it('should get the curation by PR', async function () {
+        it(`should get the curation by PR via /curations/${coordinates}/pr`, async function () {
           const fetchedCuration = await callFetch(`${devApiBaseUrl}/curations/${coordinates}/pr/${prNumber}`).then(r =>
             r.json()
           )
           expect(fetchedCuration).to.be.deep.equal(curation)
         })
 
-        it('should reflect the PR in definition preview', async function () {
+        it(`should reflect the PR in definition preview via definitions/${coordinates}/pr`, async function () {
           const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${coordinates}/pr/${prNumber}`).then(
             r => r.json()
           )
           expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
         })
 
-        it('should get of list of PRs for component', async function () {
+        it(`should get of list of PRs for component via /curations/${type}/${provider}/${namespace}/${name}`, async function () {
           const response = await callFetch(`${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}`).then(
             r => r.json()
           )
@@ -97,7 +97,7 @@ describe('Service tests', function () {
           expect(proposedPR).to.be.ok
         })
 
-        it('should get PRs for components via post', async function () {
+        it('should get PRs for components via post /curations', async function () {
           const revisionlessCoordinates = `${type}/${provider}/${namespace}/${name}`
           const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([revisionlessCoordinates])).then(
             r => r.json()
@@ -114,12 +114,12 @@ describe('Service tests', function () {
             declared: 'Apache-2.0'
           }
         }
-        it('should get merged curation for coordinates', async function () {
+        it(`should get merged curation for coordinates via /curations/${curatedCoordinates}`, async function () {
           const response = await callFetch(`${devApiBaseUrl}/curations/${curatedCoordinates}`).then(r => r.json())
           expect(response).to.be.deep.equal(expected)
         })
 
-        it('should reflect merged curation in definition for coordinates', async function () {
+        it(`should reflect merged curation in definition for coordinates ${curatedCoordinates}`, async function () {
           const curatedDefinition = await getDefinition(devApiBaseUrl, curatedCoordinates, true)
           expect(curatedDefinition.licensed.declared).to.be.deep.equal(expected.licensed.declared)
         })
