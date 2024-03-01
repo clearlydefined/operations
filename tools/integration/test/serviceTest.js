@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { omit, isEqual } = require('lodash')
-const { expect } = require('chai')
+const { deepStrictEqual, strictEqual } = require('assert')
 const { callFetch } = require('../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('./testConfig')
 
@@ -28,23 +28,23 @@ async function fetchAndCompareDefinition(coordinates) {
 }
 
 function compareDefinition(recomputedDef, expectedDef) {
-  expect(recomputedDef.coordinates).to.be.deep.equals(expectedDef.coordinates)
+  deepStrictEqual(recomputedDef.coordinates, expectedDef.coordinates)
   compareLicensed(recomputedDef, expectedDef)
   compareDescribed(recomputedDef, expectedDef)
   compareFiles(recomputedDef, expectedDef)
-  expect(recomputedDef.score).to.be.deep.equal(expectedDef.score)
+  deepStrictEqual(recomputedDef.score, expectedDef.score)
 }
 
 function compareLicensed(result, expectation) {
   const actual = omit(result.licensed, ['facets'])
   const expected = omit(expectation.licensed, ['facets'])
-  expect(actual).to.be.deep.equals(expected)
+  deepStrictEqual(actual, expected)
 }
 
 function compareDescribed(result, expectation) {
   const actual = omit(result.described, ['tools'])
   const expected = omit(expectation.described, ['tools'])
-  expect(actual).to.be.deep.equals(expected)
+  deepStrictEqual(actual, expected)
 }
 
 function compareFiles(result, expectation) {
@@ -57,9 +57,9 @@ function compareFiles(result, expectation) {
   const differences = [...extraInResult, ...missingInResult, ...differentEntries]
   differences.forEach(f => logDifferences(expectedFiles.get(f.path), resultFiles.get(f.path)))
 
-  expect(missingInResult.length).to.be.equal(0, 'Some files are missing in the result')
-  expect(extraInResult.length).to.be.equal(0, 'There are extra files in the result')
-  expect(differentEntries.length).to.be.equal(0, 'Some files are different between the result and the expectation')
+  strictEqual(missingInResult.length, 0, 'Some files are missing in the result')
+  strictEqual(extraInResult.length, 0, 'There are extra files in the result')
+  strictEqual(differentEntries.length, 0, 'Some files are different between the result and the expectation')
 }
 
 function logDifferences(expected, actual) {
