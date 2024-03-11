@@ -3,6 +3,8 @@
 
 const { callFetch, buildPostOpts } = require('./fetch')
 
+//The versions correspond to the schema versions of the tools which are used in /harvest/{type}/{provider}/{namespace}/{name}/{revision}/{tool}/{toolVersion}
+//See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
 const defaultToolChecks = [
   ['licensee', '9.14.0'],
   ['scancode', '30.3.0'],
@@ -19,9 +21,10 @@ class Harvester {
     return await callFetch(`${this.apiBaseUrl}/harvest`, buildPostOpts(this._buildPostJson(components, reharvest)))
   }
 
-  _buildPostJson(components, reharvest = false) {
+  _buildPostJson(components, reharvest) {
+    const tool = this.harvestToolChecks.length === 1 ? this.harvestToolChecks[0][0] : 'component'
     return components.map(coordinates => {
-      const result = { tool: 'component', coordinates }
+      const result = { tool, coordinates }
       if (reharvest) result.policy = 'always'
       return result
     })
@@ -46,8 +49,9 @@ class Harvester {
       const completed = await poller.poll(async () => this.isHarvestComplete(coordinates, startTime))
       console.log(`Completed ${coordinates}: ${completed}`)
       return completed
-    } catch (e) {
-      console.error(`Failed to wait for harvest completion ${coordinates}: ${e.message}`)
+    } catch (error) {
+      if (error.code === 'ECONNREFUSED') throw error
+      console.log(`Error polling for ${coordinates}: ${error}`)
       return false
     }
   }
@@ -57,9 +61,7 @@ class Harvester {
       this.isHarvestedbyTool(coordinates, tool, toolVersion, startTime)
     )
 
-    return Promise.all(harvestChecks)
-      .then(results => results.every(r => r))
-      .catch(() => false)
+    return Promise.all(harvestChecks).then(results => results.every(r => r))
   }
 
   async isHarvestedbyTool(coordinates, tool, toolVersion, startTime = 0) {
@@ -71,9 +73,9 @@ class Harvester {
   }
 
   async fetchHarvestResult(coordinates, tool, toolVersion) {
-    return callFetch(`${this.apiBaseUrl}/harvest/${coordinates}/${tool}/${toolVersion}?form=raw`)
-      .then(r => r.json())
-      .catch(() => ({}))
+    return callFetch(`${this.apiBaseUrl}/harvest/${coordinates}/${tool}/${toolVersion}?form=raw`).then(r =>
+      r.headers.get('Content-Length') === '0' ? Promise.resolve({}) : r.json()
+    )
   }
 }
 
