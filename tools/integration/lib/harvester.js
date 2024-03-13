@@ -12,13 +12,14 @@ const defaultToolChecks = [
 ]
 
 class Harvester {
-  constructor(apiBaseUrl, harvestToolChecks) {
+  constructor(apiBaseUrl, harvestToolChecks, fetch = callFetch) {
     this.apiBaseUrl = apiBaseUrl
     this.harvestToolChecks = harvestToolChecks || defaultToolChecks
+    this._fetch = fetch
   }
 
   async harvest(components, reharvest = false) {
-    return await callFetch(`${this.apiBaseUrl}/harvest`, buildPostOpts(this._buildPostJson(components, reharvest)))
+    return await this._fetch(`${this.apiBaseUrl}/harvest`, buildPostOpts(this._buildPostJson(components, reharvest)))
   }
 
   _buildPostJson(components, reharvest) {
@@ -74,7 +75,7 @@ class Harvester {
   }
 
   async fetchHarvestResult(coordinates, tool, toolVersion) {
-    return callFetch(`${this.apiBaseUrl}/harvest/${coordinates}/${tool}/${toolVersion}?form=raw`).then(r =>
+    return this._fetch(`${this.apiBaseUrl}/harvest/${coordinates}/${tool}/${toolVersion}?form=raw`).then(r =>
       r.headers.get('Content-Length') === '0' ? Promise.resolve({}) : r.json()
     )
   }
