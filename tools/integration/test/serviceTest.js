@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { omit, isEqual } = require('lodash')
-const { expect } = require('chai')
+const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetch, buildPostOpts } = require('../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('./testConfig')
 
@@ -36,7 +36,7 @@ describe('Service tests', function () {
           findDefinition(coordinates),
           getDefinition(devApiBaseUrl, coordinates)
         ])
-        expect(foundDef).to.be.deep.equal(omit(expectedDef, ['files']))
+        deepStrictEqual(foundDef, omit(expectedDef, ['files']))
       })
     })
 
@@ -49,7 +49,7 @@ describe('Service tests', function () {
           postDefinitions.then(r => r[coordinates]),
           getDefinition(devApiBaseUrl, coordinates)
         ])
-        expect(actualDef).to.be.deep.equal(expectedDef)
+        deepStrictEqual(actualDef, expectedDef)
       })
     })
 
@@ -72,21 +72,21 @@ describe('Service tests', function () {
         })
 
         it('should create the PR via curation', async function () {
-          expect(prNumber).to.be.ok
+          ok(prNumber)
         })
 
         it(`should get the curation by PR via /curations/${coordinates}/pr`, async function () {
           const fetchedCuration = await callFetch(`${devApiBaseUrl}/curations/${coordinates}/pr/${prNumber}`).then(r =>
             r.json()
           )
-          expect(fetchedCuration).to.be.deep.equal(curation)
+          deepStrictEqual(fetchedCuration, curation)
         })
 
         it(`should reflect the PR in definition preview via definitions/${coordinates}/pr`, async function () {
           const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${coordinates}/pr/${prNumber}`).then(
             r => r.json()
           )
-          expect(curatedDefinition.described.releaseDate).to.be.equal(curation.described.releaseDate)
+          strictEqual(curatedDefinition.described.releaseDate, curation.described.releaseDate)
         })
 
         it(`should get of list of PRs for component via /curations/${type}/${provider}/${namespace}/${name}`, async function () {
@@ -94,7 +94,7 @@ describe('Service tests', function () {
             r => r.json()
           )
           const proposedPR = response.contributions.filter(c => c.prNumber === prNumber)
-          expect(proposedPR).to.be.ok
+          ok(proposedPR)
         })
 
         it('should get PRs for components via post /curations', async function () {
@@ -103,7 +103,7 @@ describe('Service tests', function () {
             r => r.json()
           )
           const proposedPR = response[revisionlessCoordinates].contributions.filter(c => c.prNumber === prNumber)
-          expect(proposedPR).to.be.ok
+          ok(proposedPR)
         })
       })
 
@@ -116,12 +116,12 @@ describe('Service tests', function () {
         }
         it(`should get merged curation for coordinates via /curations/${curatedCoordinates}`, async function () {
           const response = await callFetch(`${devApiBaseUrl}/curations/${curatedCoordinates}`).then(r => r.json())
-          expect(response).to.be.deep.equal(expected)
+          deepStrictEqual(response, expected)
         })
 
         it(`should reflect merged curation in definition for coordinates ${curatedCoordinates}`, async function () {
           const curatedDefinition = await getDefinition(devApiBaseUrl, curatedCoordinates, true)
-          expect(curatedDefinition.licensed.declared).to.be.deep.equal(expected.licensed.declared)
+          deepStrictEqual(curatedDefinition.licensed.declared, expected.licensed.declared)
         })
       })
     })
@@ -173,7 +173,7 @@ async function compareAttachment(sha256) {
       p.then(r => r.text())
     )
   )
-  expect(devAttachment).to.be.equal(prodAttachment)
+  strictEqual(devAttachment, prodAttachment)
 }
 
 async function fetchAndCompareDefinition(coordinates) {
@@ -192,23 +192,23 @@ async function getDefinition(apiBaseUrl, coordinates, reCompute = false) {
 }
 
 function compareDefinition(recomputedDef, expectedDef) {
-  expect(recomputedDef.coordinates).to.be.deep.equals(expectedDef.coordinates)
+  deepStrictEqual(recomputedDef.coordinates, expectedDef.coordinates)
   compareLicensed(recomputedDef, expectedDef)
   compareDescribed(recomputedDef, expectedDef)
   compareFiles(recomputedDef, expectedDef)
-  expect(recomputedDef.score).to.be.deep.equal(expectedDef.score)
+  deepStrictEqual(recomputedDef.score, expectedDef.score)
 }
 
 function compareLicensed(result, expectation) {
   const actual = omit(result.licensed, ['facets'])
   const expected = omit(expectation.licensed, ['facets'])
-  expect(actual).to.be.deep.equals(expected)
+  deepStrictEqual(actual, expected)
 }
 
 function compareDescribed(result, expectation) {
   const actual = omit(result.described, ['tools'])
   const expected = omit(expectation.described, ['tools'])
-  expect(actual).to.be.deep.equals(expected)
+  deepStrictEqual(actual, expected)
 }
 
 function compareFiles(result, expectation) {
@@ -221,9 +221,9 @@ function compareFiles(result, expectation) {
   const differences = [...extraInResult, ...missingInResult, ...differentEntries]
   differences.forEach(f => logDifferences(expectedFiles.get(f.path), resultFiles.get(f.path)))
 
-  expect(missingInResult.length).to.be.equal(0, 'Some files are missing in the result')
-  expect(extraInResult.length).to.be.equal(0, 'There are extra files in the result')
-  expect(differentEntries.length).to.be.equal(0, 'Some files are different between the result and the expectation')
+  strictEqual(missingInResult.length, 0, 'Some files are missing in the result')
+  strictEqual(extraInResult.length, 0, 'There are extra files in the result')
+  strictEqual(differentEntries.length, 0, 'Some files are different between the result and the expectation')
 }
 
 function logDifferences(expected, actual) {

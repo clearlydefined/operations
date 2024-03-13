@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const { expect } = require('chai')
+const { strictEqual, ok } = require('assert')
 const { callFetch } = require('../../lib/fetch')
 const Poller = require('../../lib/poller')
 const Harvester = require('../../lib/harvester')
@@ -12,14 +12,14 @@ describe('Integration test against dev deployment', function () {
   it('should get harvest for a component', async function () {
     const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
     const result = await callFetch(`${devApiBaseUrl}/harvest/${coordinates}?form=list`).then(r => r.json())
-    expect(result.length).to.be.greaterThan(0)
+    ok(result.length > 0)
   })
 
   it('should harvest a component', async function () {
     const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
     const harvester = new Harvester(devApiBaseUrl)
     const result = await harvester.harvest([coordinates])
-    expect(result.status).to.be.equal(201)
+    strictEqual(result.status, 201)
   })
 })
 
@@ -33,20 +33,20 @@ describe('Tests for Harvester', function () {
   it('should detect when a scan tool result for component is available', async function () {
     sinon.stub(harvester, 'fetchHarvestResult').resolves(metadata())
     const result = await harvester.isHarvestedbyTool(coordinates, 'licensee', '9.14.0')
-    expect(result).to.be.equal(true)
+    strictEqual(result, true)
   })
 
   it('should detect when component is completely harvested', async function () {
     sinon.stub(harvester, 'fetchHarvestResult').resolves(metadata())
     const result = await harvester.isHarvestComplete(coordinates)
-    expect(result).to.be.equal(true)
+    strictEqual(result, true)
   })
 
   it('should detect whether component is harvested after a timestamp', async function () {
     const date = '2023-01-01T00:00:00.000Z'
     sinon.stub(harvester, 'fetchHarvestResult').resolves(metadata(date))
     const result = await harvester.isHarvestComplete(coordinates, Date.now())
-    expect(result).to.be.equal(false)
+    strictEqual(result, false)
   })
 })
 
@@ -65,26 +65,26 @@ describe('Integration tests for Harvester and Poller', function () {
   it('should poll until max time is reached', async function () {
     sinon.stub(harvester, 'fetchHarvestResult').resolves({})
     const result = await poller.poll(async () => await harvester.isHarvestComplete(coordinates, Date.now()))
-    expect(result).to.be.equal(false)
+    strictEqual(result, false)
   })
 
   it('should poll for completion if results exist', async function () {
     sinon.stub(harvester, 'fetchHarvestResult').resolves(metadata())
     const status = await harvester.pollForCompletion([coordinates], poller)
-    expect(status.get(coordinates)).to.be.equal(true)
+    strictEqual(status.get(coordinates), true)
   })
 
   it('should poll for completion if results are stale', async function () {
     const date = '2023-01-01T00:00:00.000Z'
     sinon.stub(harvester, 'fetchHarvestResult').resolves(metadata(date))
     const status = await harvester.pollForCompletion([coordinates], poller, Date.now())
-    expect(status.get(coordinates)).to.be.equal(false)
+    strictEqual(status.get(coordinates), false)
   })
 
   it('should handle an error', async function () {
     sinon.stub(harvester, 'fetchHarvestResult').rejects(new Error('failed'))
     const status = await harvester.pollForCompletion([coordinates], poller, Date.now())
-    expect(status.get(coordinates)).to.be.equal(false)
+    strictEqual(status.get(coordinates), false)
   })
 })
 

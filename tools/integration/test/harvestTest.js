@@ -4,7 +4,7 @@
 const { components, devApiBaseUrl, harvest } = require('./testConfig')
 const Poller = require('../lib/poller')
 const Harvester = require('../lib/harvester')
-const assert = require('assert')
+const { strictEqual } = require('assert')
 
 describe('Tests for harvesting different components', function () {
   it('should verify all harvests are complete', async function () {
@@ -12,7 +12,7 @@ describe('Tests for harvesting different components', function () {
     console.time('Harvest Test')
     const status = await harvestTillCompletion(components)
     for (const [coordinates, isHarvested] of status) {
-      assert.strictEqual(isHarvested, true, `Harvest for ${coordinates} is not complete`)
+      strictEqual(isHarvested, true, `Harvest for ${coordinates} is not complete`)
     }
     console.timeEnd('Harvest Test')
   })
