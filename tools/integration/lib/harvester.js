@@ -38,7 +38,8 @@ class Harvester {
     }
 
     for (const coordinates of components) {
-      const completed = status.get(coordinates) || (await this.isHarvestComplete(coordinates, startTime))
+      const completed =
+        status.get(coordinates) || (await this.isHarvestComplete(coordinates, startTime).catch(() => false))
       status.set(coordinates, completed)
     }
     return status
