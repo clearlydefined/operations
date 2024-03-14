@@ -8,21 +8,6 @@ const Harvester = require('../../lib/harvester')
 const { devApiBaseUrl, harvestToolVersions } = require('../testConfig')
 const sinon = require('sinon')
 
-describe.skip('Integration test against dev deployment', function () {
-  it('should get harvest for a component', async function () {
-    const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
-    const result = await callFetch(`${devApiBaseUrl}/harvest/${coordinates}?form=list`).then(r => r.json())
-    ok(result.length > 0)
-  })
-
-  it('should harvest a component', async function () {
-    const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
-    const harvester = new Harvester(devApiBaseUrl)
-    const result = await harvester.harvest([coordinates])
-    strictEqual(result.status, 201)
-  })
-})
-
 describe('Tests for Harvester', function () {
   const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
 
