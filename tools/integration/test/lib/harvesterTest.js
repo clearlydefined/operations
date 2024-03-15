@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 const { strictEqual, ok, deepStrictEqual } = require('assert')
-const { callFetch } = require('../../lib/fetch')
 const Poller = require('../../lib/poller')
 const Harvester = require('../../lib/harvester')
 const { devApiBaseUrl, harvestToolVersions } = require('../testConfig')
