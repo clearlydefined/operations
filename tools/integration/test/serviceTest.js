@@ -4,7 +4,7 @@
 const { omit, isEqual } = require('lodash')
 const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetch, buildPostOpts } = require('../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('./testConfig')
+const { devApiBaseUrl, prodApiBaseUrl, componentsHarvested: components, definition } = require('./testConfig')
 
 describe('Service tests', function () {
   this.timeout(definition.timeout)
