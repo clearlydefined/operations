@@ -5,7 +5,7 @@
   "scripts": {
     "test": "npm run mocha && npm run lint",
     "e2e-test-harvest": "mocha test/harvestTest.js",
-    "e2e-test-service": "mocha test/serviceTest.js",
+    "e2e-test-service": "mocha --exit \"test/e2e-test-service/**/*.js\"",
     "mocha": "mocha --exit \"test/lib/**/*.js\"",
     "lint": "npm run prettier:check && npm run eslint",
     "lint:fix": "npm run prettier:write && npm run eslint:fix",
