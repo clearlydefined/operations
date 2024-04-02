@@ -54,9 +54,39 @@ Pre-releases append a confidence indicator. The initial confidence level (e.g. a
 6. The next step is to Deploy.  The Deploy process varies between the apps.  All apps are moving to use the same process, but do not at this writing.  See the Deploy process for each app below in the [Deploy](#deploy) section.
 7. Test deploy.  For pre-releases, full testing to determine if they are ready to be published.  For published release, test to be sure the deploy was successful.
 
-## How to create Release Notes
+## Get the list of PRs since the last release
+
+* open terminal
+* navigate to clearlydefined/operations
+* run command
+
+```bash
+node tools/release-scripts/lib/getPRs.mjs <repo> <tag-latest-release> prod <repo-public-gh-pat>
+```
+
+Substitutions:
+
+* `<repo>` - one of the primary apps (i.e. `service`, `webapp`, `crawler`)
+* `<tag-latest-release>` - tag of the latest release for the primary app
+* `<repo-public-gh-pat>` - your GitHub personal access token (PAT) with permissions for public repos
+
+Output:
+
+This will output a list of PRs including title, PR #, PR authors. 
+
+Example output:
+
+```md
+- Use dependency injection in PypiCoordinatesMapper (#1072) (@qtomlinson)
+- Use URL object to generate request URL (#1066) (@lumaxis)
+- add GitHub action for deploy of production service (#1051) (@elrayle)
+```
+
+## Create Release Notes
 
 The release notes should follow this basic pattern...
+
+_NOTE: Anywhere there is a list of PRs, the format follows that returned by getPRs.  See section [Get the list of PRs since the last release](#get-the-list-of-prs-since-the-last-release). Copy and paste the PRs from the list into the release notes._
 
 ```md
 ## Release Highlights
@@ -77,22 +107,22 @@ Changes: [v1.0.0...v1.0.1](https://github.com/clearlydefined/service/compare/v1.
 
 ### Breaking Changes
 
-* List of PRs that introduce breaking changes (committers' handles)
+* List of PRs that introduce breaking changes
 * If none, do not include this section
 
 ### Minor Changes
 
-* List of PRs, not in a previous section, that introduce minor changes (committers' handles)
+* List of PRs, not in a previous section, that introduce minor changes
 * If none, do not include this section
 
 ### Bug Fixes and Patches
 
-* List of PRs, not in a previous section, that are bug fixes or patches (committers' handles)
+* List of PRs, not in a previous section, that are bug fixes or patches
 * If none, do not include this section
 
 ```
 
-## How to Deploy
+## Deploy
 
 The steps to deploy vary by application.  Follow the steps for the application you are deploying.
 
