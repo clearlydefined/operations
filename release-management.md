@@ -54,6 +54,24 @@ Pre-releases append a confidence indicator. The initial confidence level (e.g. a
 6. The next step is to Deploy.  The Deploy process varies between the apps.  All apps are moving to use the same process, but do not at this writing.  See the Deploy process for each app below in the [Deploy](#deploy) section.
 7. Test deploy.  For pre-releases, full testing to determine if they are ready to be published.  For published release, test to be sure the deploy was successful.
 
+## Accepatance Test
+
+End-to-end integration tests have been implemented to ensure that the functionalities of the [service API](https://api.clearlydefined.io/api-docs/#) work as expected. Further effort is required to enhance the test suite and cover more cases and error handling.
+
+To manually trigger the integration tests, you can use [GitHub Actions in the operations repository](https://github.com/clearlydefined/operations/actions/workflows/integration-test.yml). If you run the tests on the main branch, all the tests committed to that branch will be executed. By default, the integration tests compare the results from the development deployment with the production deployment. You can configure the development and production deployments in testConfig.js.
+
+The current tests include:
+
+- Harvesting components that are supported by ClearlyDefined.
+- Retrieving information from the harvest store through the /harvest API.
+- Computing and retrieving definitions for coordinates through the /definitions API.
+- Searching for definitions for coordinates through the GET /definitions API.
+- Curating components through the PATCH /curations API.
+- Retrieving curation information through the /curations API.
+- Previewing definitions with curation through the /definitions API.
+- Retrieving attachments through the /attachments API.
+- Generating notices for all component types supported by ClearlyDefined through the POST /notices API (in progress)
+
 ## Get the list of PRs since the last release
 
 * open terminal
@@ -163,3 +181,16 @@ You can also deploy manually.  This is uncommon.  Production is setup to run the
 ### Crawler
 
 [Azure DevOps builds](https://dev.azure.com/clearlydefined/ClearlyDefined/_build)
+
+## Verification After Deployment
+
+After the deployment, API calls can be made to the service for verification purposes. The collection of sample API calls can be found at [tools/integration/api-test](./tools/integration/api-test).
+
+Here are some steps to get started:
+
+1. To ensure that the service is up and running, perform a ping/health check and confirm the build SHA of the deployment.
+2. Use the [POST call to /harvest](https://api.clearlydefined.io/api-docs/#/harvest/post_harvest) to add a new component for harvesting. You can find an example of this API call in the `harvest` folder of the sample collection. Replace the request body with the details of the new component. Please note that components that have already been harvested are usually skipped during the harvest process.
+3. To confirm that the component has been successfully harvested, you can either inspect the harvest store (such as Blob Storage) or make a [GET call to /harvest](https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision_). You can find examples of the API call in the `harvest` folder of the sample collection. Keep in mind that depending on the number of items in the queue, it may take some time for the harvest to be completed.
+4. Verify the definition of the component by making a [GET call to /definitions](https://api.clearlydefined.io/api-docs/#/definitions/get_definitions__type___provider___namespace___name___revision_). Examples of this call can be found in the `definitions` folder of the sample collection.  Alternatively, you can also verify the definition through the ClearlyDefined website, e.g. https://clearlydefined.io/definitions/npm/npmjs/@types/aws-lambda/8.10.137, along with the corresponding coordinates.
+5. Verify the notice generation by making a [POST call to /notices](https://api.clearlydefined.io/api-docs/#/notices/post_notices). You can find an example of this call in the `notices` folder of the sample api-test collection.
+6. Check the [website](https://clearlydefined.io/) to ensure that the recently harvested list is populated. You can click on the components listed there to verify their definitions.
