@@ -1,0 +1,76 @@
+name: Deployable
+
+on:
+  workflow_call:
+
+# Org Secrets:
+#   DEPLOY_TOKEN:         token with permissions needed to determine if github.actor can deploy to production
+#   PRODUCTION_DEPLOYERS: name of team identifying users that can deploy to production
+
+jobs:
+  verify-secrets:
+    name: Secrets Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secrets
+        run: |
+          missing=false
+
+          secret_value=$(echo '${{ secrets.PRODUCTION_DEPLOYERS }}')
+          single_line_value=$(echo -n "$secret_value" | tr -d '\n')
+          len=${#single_line_value}
+          if [[ ${len} -le 0 ]]; then
+            echo "Secret PRODUCTION_DEPLOYERS does not have a value"
+            missing=true
+          fi
+
+          secret_value=$(echo '${{ secrets.DEPLOY_TOKEN }}')
+          single_line_value=$(echo -n "$secret_value" | tr -d '\n')
+          len=${#single_line_value}
+          if [[ ${len} -le 0 ]]; then
+            echo "Secret DEPLOY_TOKEN does not have a value"
+            missing=true
+          fi
+
+          if [[ $missing == true ]]; then
+            exit 1
+            fi
+          echo "Deployable: Required secrets all have values"
+
+  deployable:
+    runs-on: ubuntu-latest
+    needs: verify-secrets
+    steps:    
+      - name: Get organization ID
+        run: |
+          org_name=${{ github.repository_owner }}
+          org_info=$(curl \
+            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/$org_name)
+          org_id=$(echo "$org_info" | jq .id)
+          echo "ORG_ID=$org_id" >> $GITHUB_ENV
+
+      - name: Check team membership
+        run: |
+          user="${{ github.actor }}" 
+          org_id=${{ env.ORG_ID }}
+          org_name=${{ github.repository_owner }}
+
+          team_info=$(curl \
+            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/$org_name/teams)
+          team_id=$(echo "$team_info" | jq '.[] | select(.name=="${{ secrets.PRODUCTION_DEPLOYERS }}") | .id')
+
+          membership=$(curl \
+            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/$org_id/team/$team_id/memberships/$user)
+
+          if [[ $membership == *"active"* ]]; then
+            echo "$user is a member of the team"
+          else
+            echo "$user does not have permissions to deploy"
+            exit 1
+          fi
