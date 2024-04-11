@@ -106,16 +106,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # v3.0.1 passes when AZURE_WEBAPP_PUBLISH_PROFILE_DEV isn't set, but should fail.
-      # Added secret check above to ensure it is set.
-      - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v3.0.1
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
-          images: '${{ env.DOCKER_IMAGE_NAME }}:${{ env.DEPLOY_DOCKER_TAG }}'
-
-      # set configs after deploy in case the deploy fails
       - name: Set DOCKER configs in Azure web app
         uses: azure/appservice-settings@v1.1.1
         with:
@@ -138,3 +128,12 @@ jobs:
                   "slotSetting": false
               }
             ]
+
+      # v3.0.1 passes when AZURE_WEBAPP_PUBLISH_PROFILE_DEV isn't set, but should fail.
+      # Added secret check above to ensure it is set.
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v3.0.1
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
+          images: '${{ env.DOCKER_IMAGE_NAME }}:${{ env.DEPLOY_DOCKER_TAG }}'
