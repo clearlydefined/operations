@@ -1,0 +1,140 @@
+# This workflow will build a docker image, push it to ghcr.io, and deploy it to an Azure WebApp.
+name: Build and Deploy to dev
+
+on:
+  workflow_call:
+    inputs:
+      application-type:
+        description: 'application type - one of api, worker, ui'
+        required: true
+        type: string
+      application-name:
+        description: 'application name - one of clearlydefined-api, cdcrawler, clearlydefined; all will have `-dev` appended to the name'
+        required: true
+        type: string
+  
+# There are secrets and environment variables that need to be set that control what is pushed to
+# ghcr and Azure.
+#
+# Org Secrets:
+#   AZURE_CREDENTIALS:          service principal that has access to the Azure apps
+#
+# Repo Secrets:
+#   AZURE_WEBAPP_PUBLISH_PROFILE_DEV: publish profile for the Azure WebApp being deployed to
+#
+# Environment Variables from inputs:
+#   APPLICATION_TYPE:   type of application that is being deployed; used to add a label to the Docker image (values: api | ui | worker)
+#   AZURE_WEBAPP_NAME:  name of the Azure WebApp being deployed
+#
+# Environment Variables from workflow context:
+#   DEPLOY_DOCKER_TAG:  the tag used for deploying a specific Docker image to Azure.
+#   DOCKER_IMAGE_NAME:  name of the Docker image that is being built and pushed to ghcr.io.
+#
+# Environment Variables set here:
+#   DEPLOY_ENVIRONMENT: environment that the code is being deployed to; used to add a label to the Docker image (values: dev | prod)
+
+env:
+  APPLICATION_TYPE: ${{ inputs.application-type }}
+  AZURE_WEBAPP_NAME: ${{ inputs.application-name }}-dev
+  DEPLOY_DOCKER_TAG: ${{ github.sha }}
+  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}-dev
+  DEPLOY_ENVIRONMENT: dev
+
+jobs:
+  verify-secrets:
+    name: Secret Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Secrets
+        run: |
+          missing=false
+
+          secret_value=$(echo '${{ secrets.AZURE_CREDENTIALS }}')
+          single_line_value=$(echo -n "$secret_value" | tr -d '\n')
+          len=${#single_line_value}
+          if [[ ${len} -le 0 ]]; then
+            echo "Secret AZURE_CREDENTIALS does not have a value"
+            missing=true
+          fi
+          
+          secret_value=$(echo '${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}')
+          single_line_value=$(echo -n "$secret_value" | tr -d '\n')
+          len=${#single_line_value}
+          if [[ ${len} -le 0 ]]; then
+            echo "Secret AZURE_WEBAPP_PUBLISH_PROFILE_DEV does not have a value"
+            missing=true
+          fi
+
+          if [[ $missing == true ]]; then
+            exit 1
+          fi
+          echo "Required secrets all have values"
+
+  build-and-deploy:
+    name: Build and Deploy
+    needs: verify-secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log beginning deploy
+        run: echo "Deploying ${{ github.repository }} to ${{ env.AZURE_WEBAPP_NAME }}"
+
+      - uses: actions/checkout@v4
+
+      - name: Log into ghcr registry
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }} # user that kicked off the action
+          password: ${{ secrets.GITHUB_TOKEN }} # token created when the action launched (short lived)
+
+      - name: Build and push Docker image
+        env:
+          DOCKER_TAGS: |
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DEPLOY_DOCKER_TAG }}
+        uses: docker/build-push-action@v5.2.0
+        with:
+          context: .
+          push: true
+          file: Dockerfile
+          tags: ${{ env.DOCKER_TAGS }}
+          labels: |
+            env=${{ env.DEPLOY_ENVIRONMENT }}
+            type=${{ env.APPLICATION_TYPE }}
+
+      - name: Login for Azure cli commands
+        uses: azure/login@v2.0.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # v3.0.1 passes when AZURE_WEBAPP_PUBLISH_PROFILE_DEV isn't set, but should fail.
+      # Added secret check above to ensure it is set.
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v3.0.1
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
+          images: '${{ env.DOCKER_IMAGE_NAME }}:${{ env.DEPLOY_DOCKER_TAG }}'
+
+      # set configs after deploy in case the deploy fails
+      - name: Set DOCKER configs in Azure web app
+        uses: azure/appservice-settings@v1.1.1
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-settings-json: |
+            [
+              {
+                "name": "DOCKER_CUSTOM_IMAGE_NAME",
+                "value": "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DEPLOY_DOCKER_TAG }}",
+                "slotSetting": false
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_URL",
+                "value": "https://ghcr.io",
+                "slotSetting": false
+              },
+              {
+                  "name": "BUILD_SHA",
+                  "value": "${{ github.sha }}",
+                  "slotSetting": false
+              }
+            ]
