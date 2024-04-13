@@ -21,6 +21,7 @@
     "eslint-config-prettier": "^9.1.0",
     "lodash": "^4.17.21",
     "mocha": "^10.3.0",
+    "nock": "^13.5.4",
     "node-fetch": "^3.3.2",
     "prettier": "^3.2.5",
     "sinon": "^17.0.1"
