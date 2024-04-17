@@ -10,7 +10,7 @@ const pollingMaxTime = 1000 * 60 * 30 // 30 minutes
 //Havest results to check for harvest completeness
 //The versions correspond to the schema versions of the tools which are used in /harvest/{type}/{provider}/{namespace}/{name}/{revision}/{tool}/{toolVersion}
 //See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
-const harvestToolVersions = [
+const harvestSchemaVersions = [
   ['licensee', '9.14.0'],
   ['scancode', '30.3.0'],
   ['reuse', '3.2.1']
@@ -35,19 +35,19 @@ const components = [
   // 'sourcearchive/mavencentral/org.apache.httpcomponents/httpcore/4.1' // Dev and prod have different license and scores. See https://github.com/clearlydefined/crawler/issues/533
 ]
 
-//Responses from fixtures
-const fixtures = {
-  '/definitions/pod/cocoapods/-/SoftButton/0.1.0': require('./fixtures/softbutton-0.1.0.json')
-}
+//When production response is not available or needs to be corrected, stub response from production service for testing
+const expectedResponses = [
+  { url: '/definitions/pod/cocoapods/-/SoftButton/0.1.0', response: require('./fixtures/softbutton-0.1.0.json') }
+]
 
 module.exports = {
   devApiBaseUrl,
   prodApiBaseUrl,
-  fixtures,
+  expectedResponses,
   components,
   harvest: {
     poll: { interval: pollingInterval, maxTime: pollingMaxTime },
-    harvestToolVersions,
+    harvestSchemaVersions,
     timeout: 1000 * 60 * 60 * 2 // 2 hours for harvesting all the components
   },
   definition: {

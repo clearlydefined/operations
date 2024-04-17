@@ -4,14 +4,14 @@
 const { omit, isEqual } = require('lodash')
 const { deepStrictEqual, strictEqual } = require('assert')
 const { callFetch, buildPostOpts } = require('../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, fixtures, components, definition } = require('../testConfig')
+const { devApiBaseUrl, prodApiBaseUrl, expectedResponses, components, definition } = require('../testConfig')
 const nock = require('nock')
 
 describe('Validation definitions between dev and prod', function () {
   this.timeout(definition.timeout)
 
   before(() => {
-    Object.entries(fixtures).forEach(([url, response]) =>
+    expectedResponses.forEach(({ url, response }) =>
       nock(prodApiBaseUrl, { allowUnmocked: true }).get(url).reply(200, response)
     )
   })

@@ -19,8 +19,8 @@ describe('Tests for harvesting different components', function () {
 })
 
 async function harvestTillCompletion(components) {
-  const { harvestToolVersions, poll } = harvest
-  const harvester = new Harvester(devApiBaseUrl, harvestToolVersions)
+  const { harvestSchemaVersions, poll } = harvest
+  const harvester = new Harvester(devApiBaseUrl, harvestSchemaVersions)
 
   //make sure that we have one entire set of harvest results (old or new)
   console.log('Ensure harvest results exist before starting tests')
