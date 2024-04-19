@@ -3,7 +3,7 @@
 ## Resources
 
 1. Integration tests are located at ./test to support the integration-test.yml GitHub Action.
-1. Npm scripts triggered in the GitHub Action include:
+1. npm scripts triggered in the GitHub Action include:
 
    - e2e-test-harvest: re-triggers harvest for the components in testConfig.js
    - e2e-test-service: runs the tests in [./test/e2e-test-service](./test/e2e-test-service) folder.
