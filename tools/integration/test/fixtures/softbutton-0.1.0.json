@@ -1,0 +1,483 @@
+{
+  "described": {
+    "releaseDate": "2021-07-19",
+    "sourceLocation": {
+      "type": "git",
+      "provider": "github",
+      "namespace": "PallavAg",
+      "name": "SoftButton",
+      "revision": "de07cc45cb48fe4d52b39d2b233cd2fe33b27dc7",
+      "url": "https://github.com/PallavAg/SoftButton/tree/de07cc45cb48fe4d52b39d2b233cd2fe33b27dc7"
+    },
+    "projectWebsite": "https://github.com/PallavAg/SoftButton",
+    "urls": {
+      "registry": "https://cocoapods.org/pods/SoftButton",
+      "version": "https://github.com/PallavAg/SoftButton/tree/de07cc45cb48fe4d52b39d2b233cd2fe33b27dc7",
+      "download": "https://github.com/PallavAg/SoftButton/archive/de07cc45cb48fe4d52b39d2b233cd2fe33b27dc7.zip"
+    },
+    "files": 53,
+    "tools": [
+      "clearlydefined/1.2.0",
+      "reuse/3.2.1",
+      "licensee/9.14.0",
+      "scancode/30.3.0"
+    ],
+    "toolScore": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    },
+    "score": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    }
+  },
+  "licensed": {
+    "declared": "MIT",
+    "toolScore": {
+      "total": 76,
+      "declared": 30,
+      "discovered": 1,
+      "consistency": 15,
+      "spdx": 15,
+      "texts": 15
+    },
+    "facets": {
+      "core": {
+        "attribution": {
+          "unknown": 46,
+          "parties": [
+            "Copyright (c) 2021 PallavAg",
+            "Copyright (c) 2015 CocoaPods",
+            "Copyright (c) 2021 Pallav Agarwal",
+            "Copyright (c) 2021 PallavAg agpallav@gmail.com",
+            "Copyright (c) 2021 PallavAg <agpallav@gmail.com>"
+          ]
+        },
+        "discovered": {
+          "unknown": 47,
+          "expressions": [
+            "MIT"
+          ]
+        },
+        "files": 52
+      }
+    },
+    "score": {
+      "total": 76,
+      "declared": 30,
+      "discovered": 1,
+      "consistency": 15,
+      "spdx": 15,
+      "texts": 15
+    }
+  },
+  "files": [
+    {
+      "path": ".travis.yml",
+      "hashes": {
+        "sha1": "3d6a950d2ea991c09cfed226b4a12c76b230f3be",
+        "sha256": "0b3cf3e993b9c2ebd38c37760c941e5e021d8d7e377a1b76ec84695f5513e560"
+      }
+    },
+    {
+      "path": "LICENSE",
+      "license": "MIT",
+      "natures": [
+        "license"
+      ],
+      "attributions": [
+        "Copyright (c) 2021 Pallav Agarwal"
+      ],
+      "hashes": {
+        "sha1": "fd7c3dba3596451bbd68ad087077f4db57f9c0ec",
+        "sha256": "638d3656b0a5f729a75ff37d2ae5c29ed529c7a2b283fc94809259b46321da11"
+      },
+      "token": "638d3656b0a5f729a75ff37d2ae5c29ed529c7a2b283fc94809259b46321da11"
+    },
+    {
+      "path": "README.md",
+      "hashes": {
+        "sha1": "f2f54c7ed2178108a86e1fa58344a5c3ccc1da1e",
+        "sha256": "c338b0c0fbf0e334e50a2e0762900fc3ab55a3efb93a5f1e81ca6a5610c91246"
+      }
+    },
+    {
+      "path": "SoftButton.podspec",
+      "license": "MIT",
+      "hashes": {
+        "sha1": "4b7ee0cace332c20873882b57473967bcb61d6fb",
+        "sha256": "404d16f44c24bb18d3e70d9c521d7cd01d7c3680eb4cd9342ef70a0074209931"
+      }
+    },
+    {
+      "path": "Example/Podfile",
+      "hashes": {
+        "sha1": "77e2c161d8eb292d9d7c39636cd0ec18f64c32b2",
+        "sha256": "55040153f2020ca9e3441fb2dc7f6661237271ae5df10993f38aad769da537ec"
+      }
+    },
+    {
+      "path": "Example/Podfile.lock",
+      "hashes": {
+        "sha1": "24b8dea77b6577b79b5da73d011d20576d2a4b84",
+        "sha256": "ed052a32c40d965ac208e145169a877948b3635b4fcaa797d097642428c36d88"
+      }
+    },
+    {
+      "path": "Example/Pods/Manifest.lock",
+      "hashes": {
+        "sha1": "24b8dea77b6577b79b5da73d011d20576d2a4b84",
+        "sha256": "ed052a32c40d965ac208e145169a877948b3635b4fcaa797d097642428c36d88"
+      }
+    },
+    {
+      "path": "Example/Pods/Local Podspecs/SoftButton.podspec.json",
+      "license": "MIT",
+      "hashes": {
+        "sha1": "2c0e8314697476e8be2a4eee2ba72de7111151e9",
+        "sha256": "06dab5925411359e5faafdd3398e6da076b262840c1344e8be32619d0a059020"
+      }
+    },
+    {
+      "path": "Example/Pods/Pods.xcodeproj/project.pbxproj",
+      "hashes": {
+        "sha1": "42785f5dc8968589c75b4083bb11ed99c6c5f109",
+        "sha256": "37674b857131505d6d58902e3f72dd06d69870115e07864d270b48c880306fd4"
+      }
+    },
+    {
+      "path": "Example/Pods/Pods.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "hashes": {
+        "sha1": "84243848f54b0c5983e1ed26defb41d262ce1354",
+        "sha256": "7f3b00b5c3fdb45242d7b87e1e5c4e25d1fa8129a16c94295ecc4e8ea2235c5f"
+      }
+    },
+    {
+      "path": "Example/Pods/Pods.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "hashes": {
+        "sha1": "df5fe739b8b3ab69cf1a32a8881c48a1662e0340",
+        "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example-acknowledgements.markdown",
+      "license": "MIT",
+      "attributions": [
+        "Copyright (c) 2021 PallavAg <agpallav@gmail.com>"
+      ],
+      "hashes": {
+        "sha1": "d7278ab869a75138ea3c0e12c435566f3d415a73",
+        "sha256": "694ddd07a6c584d1fb36895cf392568eb586becd3f04a0d6d692e26ffe3c2be8"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example-acknowledgements.plist",
+      "license": "MIT",
+      "attributions": [
+        "Copyright (c) 2021 PallavAg agpallav@gmail.com"
+      ],
+      "hashes": {
+        "sha1": "d9eb71972c2e8a5b6bd653ddab3c8f330d549ff0",
+        "sha256": "628907e40ee776674c21a6fde3b63ca79ed5ad82b8ec0eacd56d008e1a07e142"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example-dummy.m",
+      "hashes": {
+        "sha1": "defcc2bcb6c32f4d5a500b3d03a2c9d1cf86eb95",
+        "sha256": "f60f5f7fc698a26ca2922ef9fd7555de00b30824dbb4e9e3876324d898c215ec"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example-frameworks.sh",
+      "hashes": {
+        "sha1": "018cce74227c89017cde64541abe064960c7cf55",
+        "sha256": "5faf41f54efdf413595c2e6482bf2b22888fbebcd9b55f235061d408b55bc958"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example-Info.plist",
+      "hashes": {
+        "sha1": "df49577720195422c7c5016cb42e7de5c033e17b",
+        "sha256": "9151dcebe4456d5ac62abfae17df067bf280a753b127006461bad2ea3af420aa"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example-umbrella.h",
+      "hashes": {
+        "sha1": "d0de034cc4b494b9598e5a5eb8ebaef70c1c047c",
+        "sha256": "63a0466ad6f6cf940924443af42a64c6193076e62c1e8cb0c6f284d95fd6e487"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example.debug.xcconfig",
+      "hashes": {
+        "sha1": "6a40b580a814505ff4925aab443dcac2d899b46d",
+        "sha256": "6c04aa05121ed1383c878054c95ef81cf39fd8f1d4f737633b89e869e8dd9f31"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example.modulemap",
+      "hashes": {
+        "sha1": "2ee9c89ee4c1ecf05730b8e774593c4f09f3efcb",
+        "sha256": "10df24fe405612ab4934d47b82b4f8e46fabf24b971edaa61168f95158261d61"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Example/Pods-SoftButton_Example.release.xcconfig",
+      "hashes": {
+        "sha1": "6a40b580a814505ff4925aab443dcac2d899b46d",
+        "sha256": "6c04aa05121ed1383c878054c95ef81cf39fd8f1d4f737633b89e869e8dd9f31"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests-acknowledgements.markdown",
+      "hashes": {
+        "sha1": "00b13d18409d5807fc4748bd945c7088d77127f6",
+        "sha256": "f2a98ec2795dee67ce705ac29f61cb7383808cff7db94fbd2b2a01a57ce64ffa"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests-acknowledgements.plist",
+      "hashes": {
+        "sha1": "a4c44c06404b1acc17f2ec246d885319672d26f1",
+        "sha256": "3ddf95946dd1173fa4e5ab9223a3c81e754fa322bff280d69566be21aa52a687"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests-dummy.m",
+      "hashes": {
+        "sha1": "b28f03a288a45097baa61f1f38299dca7325e4c1",
+        "sha256": "28fb0d28a8f36b4c48a5b68cb60ee6454a13c600a6ec93efb0df3b2949350dfc"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests-Info.plist",
+      "hashes": {
+        "sha1": "df49577720195422c7c5016cb42e7de5c033e17b",
+        "sha256": "9151dcebe4456d5ac62abfae17df067bf280a753b127006461bad2ea3af420aa"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests-umbrella.h",
+      "hashes": {
+        "sha1": "638429abcbb8858b0b453f18989ad45dcac2ea1e",
+        "sha256": "e26997cc5e34d8aad5c1407b6d7c771aa2fc97b59b1fde159c3d1212b64724d6"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests.debug.xcconfig",
+      "hashes": {
+        "sha1": "0f80b47343fb5bc84af2983bc862699ad7be721b",
+        "sha256": "181736a1056cee0547ccacc07bbda34d6a71e537007580d45e3ee7bde1885302"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests.modulemap",
+      "hashes": {
+        "sha1": "4664fcb31de699131bbcc0aa46ae807739e2bea8",
+        "sha256": "90fba8a5bc191255cf3d5feb36dd9bea3173de6ff6b62ddcd32ba2c48a5dbe9b"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/Pods-SoftButton_Tests/Pods-SoftButton_Tests.release.xcconfig",
+      "hashes": {
+        "sha1": "0f80b47343fb5bc84af2983bc862699ad7be721b",
+        "sha256": "181736a1056cee0547ccacc07bbda34d6a71e537007580d45e3ee7bde1885302"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton-dummy.m",
+      "hashes": {
+        "sha1": "309358ecb011c6822d93e4f951124fc95212e6e4",
+        "sha256": "074be6de39d31c2c57afe3dba84cc583b720f8ea6ea2c76559888a40bc54a94f"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton-Info.plist",
+      "hashes": {
+        "sha1": "bb3a16302d2a13b424ad5b351e8290739b86607d",
+        "sha256": "02878029d32205ad73a1c6034e69a453662e21b8b5819efbd478ed6afcb8fa7b"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton-prefix.pch",
+      "hashes": {
+        "sha1": "d45f2a855e51fa015f452e3d8188d2673d4543c4",
+        "sha256": "507e85a071ec6fc3ae2528cd372431f9d06f121e7ebd4d057c532339cb31c95f"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton-umbrella.h",
+      "hashes": {
+        "sha1": "c0b716734d3db7556333064a035a6bebf27f5e32",
+        "sha256": "ad3df00289d3d04e78018155a6315fe7bd0bcd884492b5a2d9ffb9e41733ab58"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton.debug.xcconfig",
+      "hashes": {
+        "sha1": "2a15a86cfd2ad236a4e8aa6967a6a4e319ffe8b6",
+        "sha256": "74bd011bbb1bbc2b71142f841fd3e5b7b96e9eca4fbd2ccfa3b9d78d191207b0"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton.modulemap",
+      "hashes": {
+        "sha1": "1c71bc5072c852b4dd72ff0cdbdd75b2493ca2da",
+        "sha256": "a0552233feac490c1e3457a9450327f238401bd24ab8f61985aa837f2bbc58aa"
+      }
+    },
+    {
+      "path": "Example/Pods/Target Support Files/SoftButton/SoftButton.release.xcconfig",
+      "hashes": {
+        "sha1": "2a15a86cfd2ad236a4e8aa6967a6a4e319ffe8b6",
+        "sha256": "74bd011bbb1bbc2b71142f841fd3e5b7b96e9eca4fbd2ccfa3b9d78d191207b0"
+      }
+    },
+    {
+      "path": "Example/SoftButton/AppDelegate.swift",
+      "attributions": [
+        "Copyright (c) 2021 PallavAg"
+      ],
+      "hashes": {
+        "sha1": "3371a8839d1aa85607bdbcb83997723cb9aae79b",
+        "sha256": "2629d9131573884d64a12d61c2f696fcbf66bb78ad095f5a8be4506f8feb93b3"
+      }
+    },
+    {
+      "path": "Example/SoftButton/Info.plist",
+      "hashes": {
+        "sha1": "87de0ad080af1a61ab3ed97439a1a361e4e64b69",
+        "sha256": "b90a8b5b066b279968cc7e1be8bb6b8babec4e7476d590b47065bb8b1195d377"
+      }
+    },
+    {
+      "path": "Example/SoftButton/ViewController.swift",
+      "attributions": [
+        "Copyright (c) 2021 PallavAg"
+      ],
+      "hashes": {
+        "sha1": "0948e9ba592f4b4f0fec1da9c6f0ce9c2b43285f",
+        "sha256": "251e9979ad6ec0cd67d78a275a907f4db4ffa3c40098c3d8336fe35c200ba0fe"
+      }
+    },
+    {
+      "path": "Example/SoftButton/Base.lproj/LaunchScreen.xib",
+      "attributions": [
+        "Copyright (c) 2015 CocoaPods"
+      ],
+      "hashes": {
+        "sha1": "45eb327c43277526bcb9a3ccb38eefce2cb7f65b",
+        "sha256": "3907904d9c46b9de17672e76e79205a91a8c31d0293f10a5ae632643251e47e6"
+      }
+    },
+    {
+      "path": "Example/SoftButton/Base.lproj/Main.storyboard",
+      "hashes": {
+        "sha1": "04a5be547654caa096e987911eb0e6fe46ca5bdb",
+        "sha256": "bf1dcf67e4b4170c5ebe0a14a51bfff3a51b7cccdec1f3e39a07c0386167b02b"
+      }
+    },
+    {
+      "path": "Example/SoftButton/Images.xcassets/AppIcon.appiconset/Contents.json",
+      "hashes": {
+        "sha1": "2ba17d6526e5b6fb6a2a6ae0b13c07a8d6faa0d0",
+        "sha256": "dae700422af6c4ca19baad129720930a45fce7084008fc36971788f0bcc52205"
+      }
+    },
+    {
+      "path": "Example/SoftButton.xcodeproj/project.pbxproj",
+      "hashes": {
+        "sha1": "c868edb3c431aa67da581271095cbc5f29460073",
+        "sha256": "f275098bc7112712b9cecf151dfcef0412acee91a6ef992e750ab6ebbac458d4"
+      }
+    },
+    {
+      "path": "Example/SoftButton.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "hashes": {
+        "sha1": "9ae76de12b6acf3bec8f39db841d2fd22581667d",
+        "sha256": "bc56296cbfd872b6ce0b9e88525f292d2dfacfa548fc4ad83eaa302d93451d27"
+      }
+    },
+    {
+      "path": "Example/SoftButton.xcodeproj/xcshareddata/xcschemes/SoftButton-Example.xcscheme",
+      "hashes": {
+        "sha1": "e507516785dd15513a7af143f2bfce7a6300d22a",
+        "sha256": "719fc1ca34b3f8d8bcd391c1541db59fb3bf5a8a85be938575e71df7418e0b22"
+      }
+    },
+    {
+      "path": "Example/SoftButton.xcworkspace/contents.xcworkspacedata",
+      "hashes": {
+        "sha1": "909ea43b300e89b73f319bdf8d187bfa1619178d",
+        "sha256": "ae03609b4b5fe4e20ebf68d5a9ef05b191d300a51c7abeb4610484fe78c759d5"
+      }
+    },
+    {
+      "path": "Example/SoftButton.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "hashes": {
+        "sha1": "df5fe739b8b3ab69cf1a32a8881c48a1662e0340",
+        "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+      }
+    },
+    {
+      "path": "Example/Tests/Info.plist",
+      "hashes": {
+        "sha1": "4239984ce09b6ec99e648d940c44a645b1accf61",
+        "sha256": "1dcb5aa88dabb5f19b671f7066204bd58220ded8654dc91f5f79e09690d81365"
+      }
+    },
+    {
+      "path": "Example/Tests/Tests.swift",
+      "hashes": {
+        "sha1": "46629bb3290c14ccc2501894e5105dc39f898d3d",
+        "sha256": "8c9620679be3ceec288dc90ba265de5b23c1a910ca1434ee0577a1eb556f55b0"
+      }
+    },
+    {
+      "path": "SoftButton/Assets/.gitkeep",
+      "hashes": {
+        "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "SoftButton/Classes/.gitkeep",
+      "hashes": {
+        "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "Source/SoftButton.swift",
+      "hashes": {
+        "sha1": "6a872bbccba8daba48312562969401368b45e309",
+        "sha256": "9e7a400198ab70874e257eb1a7809c1e26d4edce0500cfbf172a092e7be113b1"
+      }
+    },
+    {
+      "path": ".gitignore",
+      "hashes": {
+        "sha1": "3dc0a36e26de6dae7d731b9f6961ceb571680aff",
+        "sha256": "d7186524ab0931a2b28bec485551e6768220650204fffc23fb51e9e0804c842b"
+      }
+    }
+  ],
+  "coordinates": {
+    "type": "pod",
+    "provider": "cocoapods",
+    "name": "SoftButton",
+    "revision": "0.1.0"
+  },
+  "_meta": {
+    "schemaVersion": "1.6.1",
+    "updated": "2024-04-13T00:13:04.644Z"
+  },
+  "scores": {
+    "effective": 88,
+    "tool": 88
+  }
+}
