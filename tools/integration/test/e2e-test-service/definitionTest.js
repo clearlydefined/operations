@@ -4,22 +4,23 @@
 const { omit, isEqual } = require('lodash')
 const { deepStrictEqual, strictEqual } = require('assert')
 const { callFetch, buildPostOpts } = require('../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, expectedResponses, components, definition } = require('../testConfig')
+const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../testConfig')
 const nock = require('nock')
+const fs = require('fs')
 
 describe('Validation definitions between dev and prod', function () {
   this.timeout(definition.timeout)
-
-  before(() => {
-    expectedResponses.forEach(({ url, response }) =>
-      nock(prodApiBaseUrl, { allowUnmocked: true }).get(url).reply(200, response)
-    )
-  })
 
   //Rest a bit to avoid overloading the servers
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
   describe('Validation between dev and prod', function () {
+    before(() => {
+      loadFixtures().forEach(([url, definition]) =>
+        nock(prodApiBaseUrl, { allowUnmocked: true }).get(url).reply(200, definition)
+      )
+    })
+
     components.forEach(coordinates => {
       it(`should return the same definition as prod for ${coordinates}`, () => fetchAndCompareDefinition(coordinates))
     })
@@ -119,4 +120,18 @@ async function findDefinition(coordinates) {
     `${devApiBaseUrl}/definitions?type=${type}&provider=${provider}&namespace=${namespace}&name=${name}&sortDesc=true&sort=revision`
   ).then(r => r.json())
   return response.data.find(d => d.coordinates.revision === revision)
+}
+
+function loadFixtures() {
+  const location = 'test/fixtures/definitions'
+  return fs
+    .readdirSync(location)
+    .filter(f => f.endsWith('.json'))
+    .map(jsonFile => JSON.parse(fs.readFileSync(`${location}/${jsonFile}`)))
+    .map(definition => {
+      const { coordinates } = definition
+      const namespace = coordinates.namespace || '-'
+      const coordinatesString = `${coordinates.type}/${coordinates.provider}/${namespace}/${coordinates.name}/${coordinates.revision}`
+      return [`/definitions/${coordinatesString}`, definition]
+    })
 }

@@ -17,5 +17,6 @@
    - Mock responses when the production system does not have the response or needs an override,
    - Current harvest schema versions. This is for polling harvest results to check whether the harvest is complete. When scan tool versions are updated, this needs to be updated as well.
 
+1. Test fixtures are grouped by endpoints at [./test/fixtures](./test/fixtures).
 1. The classes used in the integration tests are located at ./lib. Tests for those tooling classes are located at ./test/lib. Run `npm test` to test the tooling classes.
 1. Sample API test calls to the production deployment can be found at ./api-test. The [Insomnia collection](./api-test/clearlydefined_prod_api_test_insomnia_collection.json) is organized by endpoints (definitions, harvest, and notices). Refer to the [Swagger UI](https://api.clearlydefined.io/api-docs/#/) for detailed documentation. The `Ping/health check` can be used as the first check to see if the service is up and running.
