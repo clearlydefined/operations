@@ -22,10 +22,6 @@ on:
         description: 'environment to deploy (i.e. dev | prod)'
         required: true
         type: string
-      application-type:
-        description: 'application type (i.e. api | worker | ui)'
-        required: true
-        type: string
       azure-webapp-name:
         description: 'Azure application name of application to deploy (i.e. clearlydefined-api | cdcrawler | clearlydefined)'
         required: true

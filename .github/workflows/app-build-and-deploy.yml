@@ -26,7 +26,7 @@ on:
         required: true
         type: string
       application-type:
-        description: 'application type (i.e. api | worker | ui)'
+        description: 'application type (i.e. api | worker | ui) - used as a label on the Docker image'
         required: true
         type: string
       azure-app-base-name:
@@ -101,7 +101,6 @@ jobs:
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
     with:
       deploy-env: ${{ inputs.deploy-env }}
-      application-type: ${{ inputs.application-type }}
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.azure-app-name-postfix }}
       application-version: ${{ needs.get-version.outputs.version }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
@@ -118,7 +117,6 @@ jobs:
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
     with:
       deploy-env: ${{ inputs.deploy-env }}
-      application-type: ${{ inputs.application-type }}
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.secondary-azure-app-name-postfix }}
       application-version: ${{ needs.get-version.outputs.version }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
