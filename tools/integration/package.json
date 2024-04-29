@@ -4,8 +4,8 @@
   "description": "Integration tests and related tools for ClearlyDefined",
   "scripts": {
     "test": "npm run mocha && npm run lint",
-    "e2e-test-harvest": "mocha test/harvestTest.js",
-    "e2e-test-service": "mocha --exit \"test/e2e-test-service/**/*.js\"",
+    "e2e-test-harvest": "mocha test/integration/harvestTest.js",
+    "e2e-test-service": "mocha --exit \"test/integration/e2e-test-service/**/*.js\"",
     "mocha": "mocha --exit \"test/lib/**/*.js\"",
     "lint": "npm run prettier:check && npm run eslint",
     "lint:fix": "npm run prettier:write && npm run eslint:fix",

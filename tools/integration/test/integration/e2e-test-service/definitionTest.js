@@ -3,7 +3,7 @@
 
 const { omit, isEqual } = require('lodash')
 const { deepStrictEqual, strictEqual } = require('assert')
-const { callFetch, buildPostOpts } = require('../../lib/fetch')
+const { callFetch, buildPostOpts } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
@@ -123,7 +123,7 @@ async function findDefinition(coordinates) {
 }
 
 function loadFixtures() {
-  const location = 'test/fixtures/definitions'
+  const location = 'test/integration/fixtures/definitions'
   return fs
     .readdirSync(location)
     .filter(f => f.endsWith('.json'))

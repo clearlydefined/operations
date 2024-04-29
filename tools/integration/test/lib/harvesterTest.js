@@ -4,8 +4,9 @@
 const { strictEqual, ok, deepStrictEqual } = require('assert')
 const Poller = require('../../lib/poller')
 const Harvester = require('../../lib/harvester')
-const { devApiBaseUrl, harvestToolVersions } = require('../testConfig')
 const sinon = require('sinon')
+
+const devApiBaseUrl = 'localhost:4000'
 
 describe('Tests for Harvester', function () {
   const coordinates = 'nuget/nuget/-/NuGet.Protocol/6.7.1'
@@ -14,7 +15,7 @@ describe('Tests for Harvester', function () {
   let fetchStub
   beforeEach(function () {
     fetchStub = sinon.stub()
-    harvester = new Harvester(devApiBaseUrl, harvestToolVersions, fetchStub)
+    harvester = new Harvester(devApiBaseUrl, undefined, fetchStub)
   })
 
   describe('Verify api calls in harvest and fetchHarvestResult', function () {
