@@ -37,22 +37,50 @@ Pre-releases append a confidence indicator. The initial confidence level (e.g. a
 1. Decide the appropriate version for the new release following Semantic Versioning
    * if no testing has been done, the recommendation is to set a beta release (e.g. v2.4.0-alpha.2, v2.4.0-beta.1)
    * if testing is looking good, but not fully complete, set a release candidate (e.g. v2.4.0-rc.3)
-   * when testing is complete, set the release version (e.g. v2.4.0)
-2. In all cases, update the version in the package system using `npm-version` (e.g. `npm-version v2.4.0-rc.3`)
-3. In all cases, create a tag for the code using the version number as the tag (e.g. v2.4.0-rc.3).
-4. This is a good time to write the release notes, even if this is a beta or release candidate.  See [How to create Release Notes](#how-to-create-release-notes) for information on the structure of the notes.  Writing the these early will help identify what needs to be tested. Save the notes outside of GitHub (e.g. Google Docs). 
-5. Create the release
+   * when testing is complete and maintainers agree, set the release version (e.g. v2.4.0)
+2. Update the version
    * For beta or release candidates versions:
-     * create a pre-release using the tag created previously (e.g. v2.4.0-rc.3)
-     * for the notes, only include the link that does the diff (e.g. for the service app, it will be something like `Changes: [v2.3.4...v2.4.0-rc.3](https://github.com/clearlydefined/service/compare/v2.3.4...https://github.com/clearlydefined/service/compare/v2.4.0-rc.3)`)
-     * BE SURE TO CHECK THE `Set as a pre-release`
-     * BE SURE THAT `Set as the latest release` WAS UNCHECKED automatically
+     * in master branch, run `npm version <NEW_VERSION>` (e.g. `npm version v2.4.0-rc.3`)
+     * commit updated version to `master` branch
+     * push commit directly to `master` branch (**_This is the only time you should directly push to master_**)
    * For the full release:
-     * create a published release using the tag created previously (e.g. v2.4.0)
+     * in master branch, run `npm version <NEW_VERSION>` (e.g. `npm version v2.4.0`)
+     * commit updated version to `master` branch
+     * push commit directly to `master` branch (**_This is the only time you should directly push to master_**)
+3. Update code being published
+   * For beta or release candidates versions:
+     * _Nothing to do as these releases come from the current state of the `master` branch._
+   * For the full release:
+     * if the code in `master` is going to be the full release
+       * merge `master` into `prod`
+     * if the code in `prod` is going to be the full release
+       * port just the version commit to `prod` branch
+4. Create a tag
+   * For beta or release candidates versions:
+     * in `master` branch, create a tag of head commit named for the version (e.g. `v2.4.0-rc.3`) (_the one including the version update_)
+   * For the full release:
+     * in `prod` branch, create a tag of head commit named for the version (e.g. `v2.4.0`) (_the one including the version update_)
+5. This is a good time to write the release notes, even if this is a beta or release candidate.  See [How to create Release Notes](#how-to-create-release-notes) for information on the structure of the notes.  Writing these early will help identify what needs to be tested. Save the notes outside of GitHub (e.g. Google Docs).
+6. Create the release
+   * For beta or release candidates versions:
+     * create a pre-release using the tag created previously (e.g. `v2.4.0-rc.3`)
+     * set the release title to the version (e.g. `v2.4.0-rc.3`)
+     * for the notes, only include the link that does the diff (e.g. for the service app, it will be something like `Changes: [v2.3.4...v2.4.0-rc.3](https://github.com/clearlydefined/service/compare/v2.3.4...https://github.com/clearlydefined/service/compare/v2.4.0-rc.3)`)
+     * **BE SURE TO CHECK THE `Set as a pre-release`**
+     * **BE SURE THAT `Set as the latest release` IS UNCHECKED**
+     * Publish release
+   * For the full release:
+     * create a published release using the tag created previously (e.g. `v2.4.0`)
+     * set the release title to the version (e.g. `v2.4.0`)
      * for the notes, use the full set of release notes
      * check or uncheck `Set as the latest release` as needed
-6. The next step is to Deploy.  The Deploy process varies between the apps.  All apps are moving to use the same process, but do not at this writing.  See the Deploy process for each app below in the [Deploy](#deploy) section.
-7. Test deploy.  For pre-releases, full testing to determine if they are ready to be published.  For published release, test to be sure the deploy was successful.
+     * Publish release
+7. The next step is to Deploy.  The Deploy process varies between the apps.  All apps are moving to use the same process, but do not at this writing.  See the Deploy process for each app below in the [Deploy](#deploy) section.
+8. Test deploy.  
+   * For beta or release candidates versions:
+     * full testing to determine if it is ready to be move to a full release.  
+   * For the full release:
+     * test to be sure the deploy was successful
 
 ## Accepatance Test
 
