@@ -39,7 +39,10 @@ const components = [
 //When production response is not available or needs to be corrected, stub response from production service for testing
 const expectedResponses = [
   { url: '/definitions/pod/cocoapods/-/SoftButton/0.1.0', response: require('./fixtures/softbutton-0.1.0.json') },
-  { url: '/definitions/conda/conda-forge/linux-aarch64/numpy/1.16.6-py36hdc1b780_0', response: require('./fixtures/numpy-1.16.6.json') }
+  {
+    url: '/definitions/conda/conda-forge/linux-aarch64/numpy/1.16.6-py36hdc1b780_0',
+    response: require('./fixtures/numpy-1.16.6.json')
+  }
 ]
 
 module.exports = {
