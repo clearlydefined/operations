@@ -74,7 +74,7 @@ jobs:
           if [[ ${{ inputs.deploy-env }} == 'prod' ]]; then
             if [[ ${{ needs.determine-trigger.outputs.is-release }} == 'true' ]]; then
               # validate the version when triggered by a release
-              if [[ $version != 'v'${{ github.event.release.tag_name }} ]]; then
+              if [[ $version != ${{ github.event.release.tag_name }} ]]; then
                 echo "Version in package-lock.json ($version) does not match the release tag (${{ github.event.release.tag_name }})"
                 exit 1
               fi
