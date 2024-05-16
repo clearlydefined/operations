@@ -45,15 +45,23 @@ on:
         description: 'postfix to apply to the base name for a secondary deploy site (e.g. -prod-europe, do not specify if no secondary site)'
         type: string
         default: ''
-      is-release:
-        description: 'true only when triggered by a release; otherwise false when dev deploy or manually deploy of prod'
-        type: boolean
-        default: false   
 
 jobs:
+  determine-trigger:
+    name: Determine if this was triggered by a release or workflow_dispatch
+    runs-on: ubuntu-latest
+    outputs:
+      is-release: ${{ env.IS_RELEASE }}
+    steps:
+      - name: Check if this was triggered by a release
+        id: release
+        run: |
+          echo "IS_RELEASE"=${{ github.event_name == 'release' }} >> $GITHUB_ENV
+
   get-version:
     name: Get version from package-lock.json
     runs-on: ubuntu-latest
+    needs: determine-trigger
     outputs:
       version: ${{ env.VERSION }}
     steps:
@@ -64,7 +72,7 @@ jobs:
         run: |
           version='v'$(jq -r '.version' package-lock.json)       # e.g. v1.2.0
           if [[ ${{ inputs.deploy-env }} == 'prod' ]]; then
-            if [[ ${{ inputs.is-release }} == 'true' ]]; then
+            if [[ ${{ needs.determine-trigger.outputs.is-release }} == 'true' ]]; then
               # validate the version when triggered by a release
               if [[ $version != 'v'${{ github.event.release.tag_name }} ]]; then
                 echo "Version in package-lock.json ($version) does not match the release tag (${{ github.event.release.tag_name }})"
