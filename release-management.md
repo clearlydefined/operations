@@ -210,6 +210,23 @@ You can also deploy manually.  This is uncommon.  Production is setup to run the
 
 [Azure DevOps builds](https://dev.azure.com/clearlydefined/ClearlyDefined/_build)
 
+#### dev deploy
+
+This is currently setup to autodeploy on merge to master.  If you need to manually deploy, the instructions are... _NOTE: This is used to reploy the current release from master OR restore a previous release.  It cannot be used to deploy a PR branch._
+
+* In Azure DevOps, click Pipelines in the left menu
+* Click Releases in the expanded left menu
+* Click crawler-dev (Azure Container Registry) (_in main content area_)
+* Click Create release
+
+#### prod deploy
+
+* In Azure DevOps, click Pipelines in the left menu
+* Click crawler-prod (Docker Hub) (_in main content area_)
+* Click Run Pipeline button
+* Select ubuntu latest as the Agent Specification
+* Click Run button
+
 ## Verification After Deployment
 
 After the deployment, API calls can be made to the service for verification purposes. The collection of sample API calls can be found at [tools/integration/api-test](./tools/integration/api-test).
