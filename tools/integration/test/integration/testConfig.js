@@ -21,6 +21,7 @@ const components = [
   'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16',
   'maven/mavengoogle/android.arch.lifecycle/common/1.0.1',
   'maven/gradleplugin/io.github.lognet/grpc-spring-boot-starter-gradle-plugin/4.6.0',
+  'conda/conda-forge/linux-aarch64/numpy/1.16.6-py36hdc1b780_0',
   'crate/cratesio/-/ratatui/0.26.0',
   'npm/npmjs/-/redis/0.1.0',
   'git/github/ratatui-org/ratatui/bcf43688ec4a13825307aef88f3cdcd007b32641',

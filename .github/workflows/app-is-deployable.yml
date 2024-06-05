@@ -1,0 +1,77 @@
+name: Deployable
+
+on:
+  workflow_call:
+    secrets: 
+      DEPLOY_TOKEN:
+        description: 'Token that is used to determine if the deployment is allowed - Defined in org action secrets'
+        required: true
+      PRODUCTION_DEPLOYERS:
+        description: 'Name of the team that defines who can deploy to production - Defined in org action secrets'
+        required: true
+
+    inputs:
+      deploy-env:
+        description: 'environment to deploy to - one of dev, prod'
+        required: true
+        type: string
+
+jobs:
+  confirm-dev:
+    runs-on: ubuntu-latest
+    outputs:
+      is-dev: ${{ env.IS_DEV }}
+    steps:
+      # erring on the side of caution by assuming everything is prod unless it is identified as dev and ends in -dev
+      - id: confirm-dev
+        shell: bash
+        run: |
+          is_dev=false
+          if [[ "${{ inputs.deploy-env }}" == 'dev' ]]; then
+            is_dev=true
+            echo "Deploying to dev environment"
+          else
+            echo "Deploying to prod or UNKNOWN environment"
+          fi
+          echo "IS_DEV=$is_dev" >> $GITHUB_ENV
+          echo "Deployable: confirm-dev -> outputs -> is-dev:  $is_dev"
+        
+  deployable:
+    runs-on: ubuntu-latest
+    needs: confirm-dev
+    # run deployable check for anything that is NOT dev (most conservative approach)
+    if: ${{ needs.confirm-dev.outputs.is-dev != 'true' }}
+    steps:    
+      - name: Get organization ID
+        run: |
+          org_name=${{ github.repository_owner }}
+          org_info=$(curl \
+            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/$org_name)
+          org_id=$(echo "$org_info" | jq .id)
+          echo "ORG_ID=$org_id" >> $GITHUB_ENV
+
+      - name: Check team membership
+        run: |
+          user="${{ github.actor }}" 
+          org_id=${{ env.ORG_ID }}
+          org_name=${{ github.repository_owner }}
+
+          team_info=$(curl \
+            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/$org_name/teams)
+          team_id=$(echo "$team_info" | jq '.[] | select(.name=="${{ secrets.PRODUCTION_DEPLOYERS }}") | .id')
+
+          membership=$(curl \
+            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/$org_id/team/$team_id/memberships/$user)
+
+          if [[ $membership == *"active"* ]]; then
+            echo "$user is a member of the team"
+          else
+            echo "$user does not have permissions to deploy"
+            exit 1
+          fi
