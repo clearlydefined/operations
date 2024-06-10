@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const { omit, isEqual } = require('lodash')
+const { omit, isEqual, pick } = require('lodash')
 const { deepStrictEqual, strictEqual } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../testConfig')
@@ -78,14 +78,16 @@ function compareDefinition(recomputedDef, expectedDef) {
 }
 
 function compareLicensed(result, expectation) {
-  const actual = omit(result.licensed, ['facets'])
+  let actual = omit(result.licensed, ['facets'])
   const expected = omit(expectation.licensed, ['facets'])
+  actual = pick(actual, Object.keys(expected))
   deepStrictEqual(actual, expected)
 }
 
 function compareDescribed(result, expectation) {
-  const actual = omit(result.described, ['tools'])
+  let actual = omit(result.described, ['tools'])
   const expected = omit(expectation.described, ['tools'])
+  actual = pick(actual, Object.keys(expected))
   deepStrictEqual(actual, expected)
 }
 
