@@ -2,19 +2,12 @@
 // SPDX-License-Identifier: MIT
 
 const { callFetch, buildPostOpts } = require('./fetch')
-
-//The versions correspond to the schema versions of the tools which are used in /harvest/{type}/{provider}/{namespace}/{name}/{revision}/{tool}/{toolVersion}
-//See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
-const defaultToolChecks = [
-  ['licensee', '9.14.0'],
-  ['scancode', '32.3.0'],
-  ['reuse', '3.2.1']
-]
+const HarvestResultMonitor = require('./harvestResultMonitor')
 
 class Harvester {
   constructor(apiBaseUrl, harvestToolChecks, fetch = callFetch) {
     this.apiBaseUrl = apiBaseUrl
-    this.harvestToolChecks = harvestToolChecks || defaultToolChecks
+    this.harvestToolChecks = harvestToolChecks
     this._fetch = fetch
   }
 
@@ -23,7 +16,7 @@ class Harvester {
   }
 
   _buildPostJson(components, reharvest) {
-    const tool = this.harvestToolChecks.length === 1 ? this.harvestToolChecks[0][0] : 'component'
+    const tool = this.harvestToolChecks?.length === 1 ? this.harvestToolChecks[0][0] : 'component'
     return components.map(coordinates => {
       const result = { tool, coordinates }
       if (reharvest) result.policy = 'always'
@@ -32,6 +25,7 @@ class Harvester {
   }
 
   async pollForCompletion(components, poller, startTime) {
+    if (!this.harvestToolChecks) throw new Error('Harvest tool checks not set')
     const status = new Map()
     for (const coordinates of components) {
       const completed = await this._pollForOneCompletion(coordinates, poller, startTime)
@@ -39,45 +33,43 @@ class Harvester {
     }
 
     for (const coordinates of components) {
-      const completed =
-        status.get(coordinates) || (await this.isHarvestComplete(coordinates, startTime).catch(() => false))
+      const completed = status.get(coordinates) || (await this._isHarvestComplete(coordinates, startTime))
       status.set(coordinates, completed)
     }
     return status
   }
 
   async _pollForOneCompletion(coordinates, poller, startTime) {
-    try {
-      const completed = await poller.poll(async () => this.isHarvestComplete(coordinates, startTime))
-      console.log(`Completed ${coordinates}: ${completed}`)
-      return completed
-    } catch (error) {
-      if (error.code === 'ECONNREFUSED') throw error
-      console.log(`Error polling for ${coordinates}: ${error}`)
-      return false
-    }
-  }
-
-  async isHarvestComplete(coordinates, startTime) {
-    const harvestChecks = this.harvestToolChecks.map(([tool, toolVersion]) =>
-      this.isHarvestedbyTool(coordinates, tool, toolVersion, startTime)
+    return new HarvestResultMonitor(this.apiBaseUrl, coordinates, this._fetch).pollForHarvestComplete(
+      poller,
+      this.harvestToolChecks,
+      startTime
     )
-
-    return Promise.all(harvestChecks).then(results => results.every(r => r))
   }
 
-  async isHarvestedbyTool(coordinates, tool, toolVersion, startTime = 0) {
-    const harvested = await this.fetchHarvestResult(coordinates, tool, toolVersion)
-    if (!harvested._metadata) return false
-    const fetchedAt = new Date(harvested._metadata.fetchedAt)
-    console.log(`${coordinates} ${tool}, ${toolVersion} fetched at ${fetchedAt}`)
-    return fetchedAt.getTime() > startTime
+  async _isHarvestComplete(coordinates, startTime) {
+    return new HarvestResultMonitor(this.apiBaseUrl, coordinates, this._fetch)
+      .isHarvestComplete(this.harvestToolChecks, startTime)
+      .catch(error => {
+        console.log(`Error polling for ${coordinates} completion: ${error}`)
+        return false
+      })
   }
 
-  async fetchHarvestResult(coordinates, tool, toolVersion) {
-    return this._fetch(`${this.apiBaseUrl}/harvest/${coordinates}/${tool}/${toolVersion}?form=raw`).then(r =>
-      r.headers.get('Content-Length') === '0' ? Promise.resolve({}) : r.json()
+  async detectSchemaVersions(component, poller, tools) {
+    const startTime = Date.now()
+    //make sure that we have one entire set of harvest results (old or new)
+    await this.harvest([component])
+    //trigger a reharvest to overwrite the old result, so we can verify the timestamp is new for completion
+    await this.harvest([component], true)
+
+    const detectedVersions = await new HarvestResultMonitor(this.apiBaseUrl, component).pollForToolVersionsComplete(
+      poller,
+      startTime,
+      tools
     )
+    console.log(`Detected schema versions: ${detectedVersions}`)
+    this.harvestToolChecks = detectedVersions
   }
 }
 

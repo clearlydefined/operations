@@ -16,28 +16,28 @@ describe('Unit tests for Poller', function () {
 
   it('should poll until max time reached', async function () {
     const activity = sinon.stub().resolves(false)
-    const result = await poller.poll(activity)
+    const result = await poller.with(activity).poll()
     strictEqual(activity.callCount, 2)
     strictEqual(result, false)
   })
 
   it('should handle when activity is done', async function () {
     const activity = sinon.stub().resolves(true)
-    const result = await poller.poll(activity)
+    const result = await poller.with(activity).poll()
     strictEqual(activity.callCount, 1)
     strictEqual(result, true)
   })
 
   it('should continue to poll until activity is done', async function () {
     const activity = sinon.stub().resolves(false).onCall(1).resolves(true)
-    const result = await poller.poll(activity)
+    const result = await poller.with(activity).poll()
     strictEqual(activity.callCount, 2)
     strictEqual(result, true)
   })
 
   it('should poll once for one time poller', async function () {
     const activity = sinon.stub().resolves(false)
-    const result = await new Poller(1, 1).poll(activity)
+    const result = await new Poller(1, 1).with(activity).poll()
     strictEqual(activity.callCount, 1)
     strictEqual(result, false)
   })

@@ -7,11 +7,17 @@ class Poller {
     this.maxTime = maxTime
   }
 
-  async poll(activity) {
+  with(activity) {
+    this._activity = activity
+    return this
+  }
+
+  async poll() {
+    if (typeof this._activity !== 'function') throw new Error('Activity not set')
     let counter = 0
     while (counter * this.interval < this.maxTime) {
       console.log(`Polling ${counter}`)
-      const isDone = await activity()
+      const isDone = await this._activity()
       if (isDone) return true
       await new Promise(resolve => setTimeout(resolve, this.interval))
       counter++
