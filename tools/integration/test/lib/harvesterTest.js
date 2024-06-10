@@ -62,7 +62,7 @@ describe('Tests for Harvester', function () {
     })
 
     it('should handle an error', async function () {
-      fetchStub = () => Promise.rejects(new Error('failed'))
+      fetchStub = () => Promise.reject(new Error('failed'))
       const status = await harvester.pollForCompletion([coordinates], poller, Date.now())
       strictEqual(status.get(coordinates), false)
     })

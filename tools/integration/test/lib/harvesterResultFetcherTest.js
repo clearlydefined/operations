@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { strictEqual, ok, deepStrictEqual } = require('assert')
-const HarvestResultMonitor = require('../../lib/harvestResultMonitor')
+const HarvestResultFetcher = require('../../lib/harvestResultFetcher')
 const sinon = require('sinon')
 const Poller = require('../../lib/poller')
 
@@ -12,7 +12,7 @@ const defaultToolChecks = [
   ['scancode', '30.3.0'],
   ['reuse', '3.2.1']
 ]
-describe('Tests for HarvestResultMonitor', function () {
+describe('HarvestResultFetcher', function () {
   const coordinates = 'pypi/pypi/-/platformdirs/4.2.0'
   let resultMonitor
 
@@ -20,7 +20,7 @@ describe('Tests for HarvestResultMonitor', function () {
     let fetchStub
     beforeEach(function () {
       fetchStub = sinon.stub()
-      resultMonitor = new HarvestResultMonitor(apiBaseUrl, coordinates, fetchStub)
+      resultMonitor = new HarvestResultFetcher(apiBaseUrl, coordinates, fetchStub)
     })
 
     it('should call the correct harvest api in fetchHarvestResult', async function () {
@@ -41,7 +41,7 @@ describe('Tests for HarvestResultMonitor', function () {
 
   describe('isHarvested', function () {
     beforeEach(function () {
-      resultMonitor = new HarvestResultMonitor(apiBaseUrl, coordinates)
+      resultMonitor = new HarvestResultFetcher(apiBaseUrl, coordinates)
     })
     it('should detect when a scan tool result for component is available', async function () {
       sinon.stub(resultMonitor, 'fetchHarvestResult').resolves(metadata())
@@ -84,7 +84,7 @@ describe('Tests for HarvestResultMonitor', function () {
 
     beforeEach(function () {
       poller = new Poller(interval, maxTime)
-      resultMonitor = new HarvestResultMonitor(apiBaseUrl, coordinates)
+      resultMonitor = new HarvestResultFetcher(apiBaseUrl, coordinates)
     })
 
     it('should poll for completion if results exist', async function () {
@@ -102,7 +102,7 @@ describe('Tests for HarvestResultMonitor', function () {
 
     it('should handle an error', async function () {
       sinon.stub(resultMonitor, 'fetchHarvestResult').rejects(new Error('failed'))
-      const status = await resultMonitor.pollForHarvestComplete(poller, Date.now())
+      const status = await resultMonitor.pollForHarvestComplete(poller, defaultToolChecks, Date.now())
       strictEqual(status, false)
     })
 
@@ -119,7 +119,7 @@ describe('Tests for HarvestResultMonitor', function () {
     let fetchStub
     beforeEach(function () {
       fetchStub = sinon.stub()
-      resultMonitor = new HarvestResultMonitor(apiBaseUrl, coordinates, fetchStub)
+      resultMonitor = new HarvestResultFetcher(apiBaseUrl, coordinates, fetchStub)
     })
 
     it('should call the correct harvest api', async function () {
@@ -155,7 +155,7 @@ describe('Tests for HarvestResultMonitor', function () {
 
     beforeEach(function () {
       poller = new Poller(interval, maxTime)
-      resultMonitor = new HarvestResultMonitor(apiBaseUrl, coordinates)
+      resultMonitor = new HarvestResultFetcher(apiBaseUrl, coordinates)
     })
 
     it('should process the result correctly', async function () {

@@ -19,6 +19,8 @@ describe('Tests for harvesting different components', function () {
 })
 
 async function harvestTillCompletion(components) {
+  if (components.length === 0) return new Map()
+
   const { poll, tools } = harvest
   const harvester = new Harvester(devApiBaseUrl)
 

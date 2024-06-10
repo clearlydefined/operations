@@ -4,7 +4,7 @@ const { callFetch } = require('./fetch')
 
 const defaultTools = ['licensee', 'reuse', 'scancode']
 
-class HarvestResultMonitor {
+class HarvestResultFetcher {
   constructor(apiBaseUrl, coordinates, fetch = callFetch) {
     this.apiBaseUrl = apiBaseUrl
     this._fetch = fetch
@@ -75,4 +75,4 @@ class HarvestResultMonitor {
   }
 }
 
-module.exports = HarvestResultMonitor
+module.exports = HarvestResultFetcher
