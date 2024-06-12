@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 const { components, devApiBaseUrl, harvest } = require('./testConfig')
-const Poller = require('../lib/poller')
-const Harvester = require('../lib/harvester')
+const Poller = require('../../lib/poller')
+const Harvester = require('../../lib/harvester')
 const { strictEqual } = require('assert')
 
 describe('Tests for harvesting different components', function () {
