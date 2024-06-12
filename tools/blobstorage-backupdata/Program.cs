@@ -16,7 +16,21 @@ internal sealed class Program
         ILogger logger = loggerFactory.CreateLogger(nameof(Program));
         logger.LogInformation("Backup job started.");
         var backupJob = CreateBackupJob(loggerFactory);
-        backupJob.ProcessJob().Wait();
+        try 
+        {
+            backupJob.ProcessJob().Wait();
+        }
+        catch (AggregateException ae)
+        {
+            foreach (var e in ae.InnerExceptions)
+            {
+                logger.LogError(e, "Backup job failed.");
+            }   
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Backup job failed.");
+        }
         logger.LogInformation("Backup job completed.");
     }
 
