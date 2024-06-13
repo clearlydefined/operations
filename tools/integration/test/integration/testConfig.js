@@ -5,7 +5,7 @@ const devApiBaseUrl = 'https://dev-api.clearlydefined.io'
 const prodApiBaseUrl = 'https://api.clearlydefined.io'
 
 const pollingInterval = 1000 * 60 * 5 // 5 minutes
-const pollingMaxTime = 1000 * 60 * 30 // 30 minutes
+const pollingMaxTime = 1000 * 60 * 60 // 60 minutes
 
 //Havest tools to check for harvest completeness
 const harvestTools = ['licensee', 'reuse', 'scancode']
@@ -36,9 +36,9 @@ module.exports = {
   prodApiBaseUrl,
   components,
   harvest: {
-    poll: { interval: pollingInterval, maxTime: pollingMaxTime },
+    poll: { interval: pollingInterval, maxTime: pollingMaxTime }, // for each component
     tools: harvestTools,
-    timeout: 1000 * 60 * 60 * 2 // 2 hours for harvesting all the components
+    timeout: 1000 * 60 * 60 * 4 // 4 hours for harvesting all the components
   },
   definition: {
     timeout: 1000 * 10 // for each component
