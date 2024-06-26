@@ -7,7 +7,7 @@ const { callFetch, buildPostOpts } = require('./fetch')
 //See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
 const defaultToolChecks = [
   ['licensee', '9.14.0'],
-  ['scancode', '30.3.0'],
+  ['scancode', '32.3.0'],
   ['reuse', '3.2.1']
 ]
 

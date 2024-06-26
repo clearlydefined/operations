@@ -12,7 +12,7 @@ const pollingMaxTime = 1000 * 60 * 30 // 30 minutes
 //See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
 const harvestSchemaVersions = [
   ['licensee', '9.14.0'],
-  ['scancode', '30.3.0'],
+  ['scancode', '32.3.0'],
   ['reuse', '3.2.1']
 ]
 
@@ -27,6 +27,7 @@ const components = [
   'git/github/ratatui-org/ratatui/bcf43688ec4a13825307aef88f3cdcd007b32641',
   'gem/rubygems/-/sorbet/0.5.11226',
   'pypi/pypi/-/platformdirs/4.2.0',
+  'pypi/pypi/-/sdbus/0.12.0',
   'go/golang/rsc.io/quote/v1.3.0',
   'nuget/nuget/-/NuGet.Protocol/6.7.1',
   'composer/packagist/symfony/polyfill-mbstring/v1.28.0',
