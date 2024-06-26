@@ -19,8 +19,14 @@ describe('Tests for harvesting different components', function () {
 })
 
 async function harvestTillCompletion(components) {
-  const { harvestSchemaVersions, poll } = harvest
-  const harvester = new Harvester(devApiBaseUrl, harvestSchemaVersions)
+  if (components.length === 0) return new Map()
+
+  const { poll, tools } = harvest
+  const harvester = new Harvester(devApiBaseUrl)
+
+  const oneComponent = components.shift()
+  const versionPoller = new Poller(poll.interval / 5, poll.maxTime)
+  await harvester.detectSchemaVersions(oneComponent, versionPoller, tools)
 
   //make sure that we have one entire set of harvest results (old or new)
   console.log('Ensure harvest results exist before starting tests')

@@ -3,7 +3,7 @@
 
 const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, components, definition } = require('../testConfig')
+const { devApiBaseUrl, definition } = require('../testConfig')
 
 describe('Validate curation', function () {
   this.timeout(definition.timeout)
@@ -11,7 +11,7 @@ describe('Validate curation', function () {
   //Rest a bit to avoid overloading the servers
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
-  const coordinates = components[0]
+  const coordinates = 'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16'
 
   describe('Propose curation', function () {
     const [type, provider, namespace, name, revision] = coordinates.split('/')

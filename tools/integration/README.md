@@ -14,7 +14,7 @@
 
    - Components to be harvested,
    - Base URLs for the development and production systems, along with polling interval and timeout settings,
-   - Current harvest schema versions. This is for polling harvest results to check whether the harvest is complete. When scan tool versions are updated, these need to be updated as well.
+   - Current harvest tools. This is used for polling harvest results to check whether the harvest is complete. When scan tools are added or removed during the harvest process, this list needs to be updated as well.
 
 1. Test fixtures are grouped by endpoints at [./test/integration/fixtures](./test/integration/fixtures). You can use these fixtures to override responses from the production system when necessary.
 1. The classes used in the integration tests are located at [./lib](./lib). Tests for those tooling classes are located at ./test/lib. Run `npm test` to test the tooling classes.
