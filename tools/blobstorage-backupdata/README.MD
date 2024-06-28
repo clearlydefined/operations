@@ -15,7 +15,7 @@ parties to maintain the complete mirror of ClearlyDefined definitions, and doing
 ## Published data structure
 
 The changes published into a storage account named `clearlydefinedprod`, in a container named
-`production-snapshots`. This container doesn't allow for listing of objects, because of costs
+`changes-notifications`. This container doesn't allow for listing of objects, because of costs
 considerations. Instead, the following mechanism is used to notify users of new changes.
 
 The files contained in the storage container can be split into two categories:
@@ -25,7 +25,7 @@ The files contained in the storage container can be split into two categories:
 ### Definition files
 Definition files are named after ClearlyDefined coordinates with a `.json` extension, e.g.
 `pypi/pypi/-/opentelemetry-api/1.21.0.json`. They are contained in the root directory of the
-`production-snapshots` storage container. They can be read individually, but not listed.
+`changes-notifications` storage container. They can be read individually, but not listed.
 
 Each definition file contain a JSON representation of a ClearlyDefined package definition,
 excluding the `files` part.
@@ -110,7 +110,7 @@ excluding the `files` part.
 </details>
 
 ### Indexing files
-Indexing files are contained in the `changes` sub-directory of the `production-snapshots` container.
+Indexing files are contained in the `changes` sub-directory of the `changes-notifications` container.
 There are further two categories of these files:
 1. Changeset files,
 2. `index` file.
@@ -222,7 +222,7 @@ interval from the main database, and publishes the resulting definitions and cha
 updates the `changes\index` file by adding the published changeset entries.
 
 ### Operations
-`blobstorage-backupdata` is built on every merge to main branch. It done using GitHub action defined in
+`blobstorage-backupdata` is built on every merge to main branch. It is done using a GitHub action defined in
 `.github/workflows/backup-data-docker-image.yml` file. The produced Docker image is published to 
 `ghcr.io``, and is public. The image is tagged with SHA of the commit.
 
