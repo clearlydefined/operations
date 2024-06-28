@@ -14,8 +14,8 @@ describe('Validate notice files between dev and prod', function () {
     afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
     before(() => {
-        loadFixtures().forEach(([coordinatesString, definition]) => {
-            nock(prodApiBaseUrl, { allowUnmocked: true }).post('/notices', {"coordinates": [coordinatesString]}).reply(200, definition)
+        loadFixtures().forEach(([coordinatesString, notice]) => {
+            nock(prodApiBaseUrl, { allowUnmocked: true }).post('/notices', { "coordinates": [coordinatesString] }).reply(200, notice)
         })
     })
 
@@ -25,7 +25,7 @@ describe('Validate notice files between dev and prod', function () {
 })
 
 async function fetchAndCompareNotices(coordinates) {
-    const [recomputedDef, expectedDef] = await Promise.all(
+    const [computedNotice, expectedNotice] = await Promise.all(
         [
             callFetch(`${devApiBaseUrl}/notices`, buildPostOpts({
                 "coordinates": [
@@ -37,9 +37,8 @@ async function fetchAndCompareNotices(coordinates) {
                     coordinates
                 ]
             }))
-        ].map(p => p.then(r => r.json()))
-    )
-    deepStrictEqual(recomputedDef, expectedDef)
+        ].map(p => p.then(r => r.json())))
+    deepStrictEqual(computedNotice, expectedNotice)
 }
 
 function loadFixtures() {
@@ -48,9 +47,8 @@ function loadFixtures() {
         .readdirSync(location)
         .filter(f => f.endsWith('.json'))
         .map(jsonFile => {
-            const definition = JSON.parse(fs.readFileSync(`${location}/${jsonFile}`))
+            const notice = JSON.parse(fs.readFileSync(`${location}/${jsonFile}`))
             const coordinatesString = jsonFile.replaceAll('-', '/').replaceAll('//', '/-/').replace('.json', '')
-            return [coordinatesString, definition]
-        }
-        )
+            return [coordinatesString, notice]
+        })
 }
