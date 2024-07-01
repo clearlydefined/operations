@@ -33,7 +33,8 @@ const components = [
   'composer/packagist/symfony/polyfill-mbstring/v1.28.0',
   'pod/cocoapods/-/SoftButton/0.1.0', // Dev and prod have different file counts. See https://github.com/clearlydefined/crawler/issues/529
   'deb/debian/-/mini-httpd/1.30-0.2_arm64',
-  'debsrc/debian/-/mini-httpd/1.30-0.2'
+  'debsrc/debian/-/mini-httpd/1.30-0.2',
+  'pod/cocoapods/-/xcbeautify/0.9.1'
   // 'sourcearchive/mavencentral/org.apache.httpcomponents/httpcore/4.1' // Dev and prod have different license and scores. See https://github.com/clearlydefined/crawler/issues/533
 ]
 
