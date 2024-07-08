@@ -37,7 +37,7 @@ on:
         
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.0
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:

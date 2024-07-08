@@ -20,43 +20,49 @@ jobs:
   confirm-dev:
     runs-on: ubuntu-latest
     outputs:
-      is-dev: ${{ env.IS_DEV }}
+      is-dev: "${{ env.IS_DEV }}"
     steps:
-      # erring on the side of caution by assuming everything is prod unless it is identified as dev and ends in -dev
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          ref: 'v1.1.1'
+          path: 'operations'
       - id: confirm-dev
         shell: bash
         run: |
-          is_dev=false
-          if [[ "${{ inputs.deploy-env }}" == 'dev' ]]; then
-            is_dev=true
-            echo "Deploying to dev environment"
-          else
-            echo "Deploying to prod or UNKNOWN environment"
-          fi
+          script_log=$(./operations/scripts/app-workflows/confirm-dev.sh \
+            "${{ inputs.deploy-env }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          is_dev=$(echo "$script_log" | tail -n 1)
           echo "IS_DEV=$is_dev" >> $GITHUB_ENV
-          echo "Deployable: confirm-dev -> outputs -> is-dev:  $is_dev"
-        
+
   deployable:
     runs-on: ubuntu-latest
     needs: confirm-dev
     # run deployable check for anything that is NOT dev (most conservative approach)
     if: ${{ needs.confirm-dev.outputs.is-dev != 'true' }}
-    steps:    
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          ref: 'v1.1.1'
+          path: 'operations'
+
       - name: Get organization ID
         run: |
-          org_name=${{ github.repository_owner }}
-          org_info=$(curl \
-            -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/orgs/$org_name)
-          org_id=$(echo "$org_info" | jq .id)
+          script_log=$(./operations/scripts/app-workflows/get-org-id.sh \
+            "${{ github.repository_owner }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          org_id=$(echo "$script_log" | tail -n 1)
           echo "ORG_ID=$org_id" >> $GITHUB_ENV
 
       - name: Check team membership
         run: |
           user="${{ github.actor }}" 
-          org_id=${{ env.ORG_ID }}
-          org_name=${{ github.repository_owner }}
+          org_id="${{ env.ORG_ID }}"
+          org_name="${{ github.repository_owner }}"
 
           team_info=$(curl \
             -H "Authorization: token ${{ secrets.DEPLOY_TOKEN }}" \
