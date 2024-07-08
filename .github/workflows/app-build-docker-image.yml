@@ -24,6 +24,10 @@ on:
         description: 'the tag to use for the image (e.g. prod: v1.2.0, dev: v1.2.0+dev:1D3F567890)'
         required: true
         type: string
+      build-args:
+        description: 'optionally pass in build args to the Docker build command (e.g. "MY_VAR=my_value")'
+        required: false
+        type: string
       
     outputs:
       docker-image-name-with-tag: 
@@ -31,7 +35,7 @@ on:
 
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.0
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v2.0.0
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:
@@ -42,22 +46,25 @@ jobs:
     name: Determine Image Name
     runs-on: ubuntu-latest
     outputs:
-      docker-image-name-with-tag: ${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}
+      docker-image-name-with-tag: "${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"
     steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          ref: 'v2.0.0'
+          path: 'operations'
       - name: Determine Docker Image Name
         id: determine_image_name
         run: |
-          image_base_name=ghcr.io/${{ github.repository }} # e.g. ghcr.io/clearlydefined/service
-          if [[ ${{ inputs.deploy-env }} == 'prod' ]] ; then
-            image_name_with_tag=$image_base_name':${{ inputs.image-tag }}'
-          elif [[ ${{ inputs.deploy-env }} == 'dev' ]] ; then
-            image_name_with_tag=$image_base_name'-dev:${{ inputs.image-tag }}'
-          else
-            echo "Invalid deploy-env: ${{ inputs.deploy-env }}. Must be 'dev' or 'prod'"
-            exit 1
-          fi
-          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name_with_tag" >> $GITHUB_ENV
-          echo "DetermineImageName: determine_image_name -> outputs -> image_name_with_tag: $image_name_with_tag"
+          echo "BUILD_ARGS=${{ inputs.build-args }}"
+          script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
+            "${{ github.repository }}" \
+            "${{ inputs.deploy-env }}" \
+            "${{ inputs.image-tag }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          image_name=$(echo "$script_log" | tail -n 1)
+          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
 
   build-docker-image:
     name: Build Image
@@ -80,6 +87,7 @@ jobs:
           context: .
           push: true
           file: Dockerfile
+          build-args: ${{ inputs.build-args }}
           tags: ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
           labels: |
             env=${{ inputs.deploy-env }}
