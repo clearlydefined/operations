@@ -31,7 +31,7 @@ on:
 
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.0
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:
@@ -47,17 +47,8 @@ jobs:
       - name: Determine Docker Image Name
         id: determine_image_name
         run: |
-          image_base_name=ghcr.io/${{ github.repository }} # e.g. ghcr.io/clearlydefined/service
-          if [[ ${{ inputs.deploy-env }} == 'prod' ]] ; then
-            image_name_with_tag=$image_base_name':${{ inputs.image-tag }}'
-          elif [[ ${{ inputs.deploy-env }} == 'dev' ]] ; then
-            image_name_with_tag=$image_base_name'-dev:${{ inputs.image-tag }}'
-          else
-            echo "Invalid deploy-env: ${{ inputs.deploy-env }}. Must be 'dev' or 'prod'"
-            exit 1
-          fi
-          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name_with_tag" >> $GITHUB_ENV
-          echo "DetermineImageName: determine_image_name -> outputs -> image_name_with_tag: $image_name_with_tag"
+          image_name=$(${{ github.workspace }}/scripts/app-workflows/determine-image-name.sh ${{ github.repository }} ${{ inputs.deploy-env }} ${{ inputs.image-tag }})
+          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
 
   build-docker-image:
     name: Build Image
