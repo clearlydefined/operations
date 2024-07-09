@@ -26,7 +26,7 @@ jobs:
       - id: confirm-dev
         shell: bash
         run: |
-          is_dev=$(${{ github.workspace }}/scripts/app-workflows/confirm-dev.sh ${{ inputs.deploy-env }})
+          is_dev=$(${{ github.workspace }}/.github/workflows/scripts/app-workflows/confirm-dev.sh ${{ inputs.deploy-env }})
           echo "IS_DEV=$is_dev" >> $GITHUB_ENV
 
   deployable:
@@ -37,7 +37,7 @@ jobs:
     steps:    
       - name: Get organization ID
         run: |
-          org_id=$(${{ github.workspace }}/scripts/app-workflows/get-org-id.sh ${{ github.repository_owner }})
+          org_id=$(${{ github.workspace }}/.github/workflows/scripts/app-workflows/get-org-id.sh ${{ github.repository_owner }})
           echo "ORG_ID=$org_id" >> $GITHUB_ENV
 
       - name: Check team membership
