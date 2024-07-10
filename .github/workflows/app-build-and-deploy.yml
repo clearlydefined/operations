@@ -1,5 +1,5 @@
 # This workflow will build a docker image, push it to ghcr.io, and deploy it to an Azure WebApp.
-# v1.1.1-rc4 - This tag coordinates the other reusable parts of this workflow.
+# v1.1.1-rc5 - This tag coordinates the other reusable parts of this workflow.
 #   * app-build-docker-image.yml
 #   * app-deploy-to-azure.yml
 #   * app-is-deployable.yml
@@ -79,13 +79,17 @@ jobs:
         id: get_version
         shell: bash
         run: |
-          version=$(./operations/scripts/app-workflows/get-version.sh ${{ inputs.deploy-env }} ${{ needs.determine-trigger.outputs.is-release }} ${{ github.event.release.tag_name }} ${{ github.sha }})
+          version=$(./operations/scripts/app-workflows/get-version.sh \
+            ${{ inputs.deploy-env }} \
+            ${{ needs.determine-trigger.outputs.is-release }} \
+            ${{ github.event.release.tag_name }} \
+            ${{ github.sha }} | tail -n 1)
           echo "VERSION=$version" >> $GITHUB_ENV
 
   build-and-publish-image:
     name: Build and publish Docker image
     needs: get-version
-    uses: clearlydefined/operations/.github/workflows/app-build-docker-image.yml@v1.1.1-rc4
+    uses: clearlydefined/operations/.github/workflows/app-build-docker-image.yml@v1.1.1-rc5
     secrets:
       DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
@@ -97,7 +101,7 @@ jobs:
   deploy-primary-app-to-azure:
     name: Deploy to primary Azure app
     needs: [get-version, build-and-publish-image]
-    uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc4
+    uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc5
     secrets:
       AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
@@ -113,7 +117,7 @@ jobs:
     name: Deploy to secondary Azure app
     if: ${{ inputs.secondary-azure-app-name-postfix != '' }}
     needs: [get-version, build-and-publish-image]
-    uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc4
+    uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc5
     secrets:
       AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_SECONDARY_WEBAPP_PUBLISH_PROFILE }}
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

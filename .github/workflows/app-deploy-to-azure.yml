@@ -37,7 +37,7 @@ on:
         
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc4
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc5
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:
@@ -55,7 +55,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set DOCKER configs in Azure web app
-        uses: azure/appservice-settings@v1.1.1-rc4
+        uses: azure/appservice-settings@v1.1.1-rc5
         with:
           app-name: ${{ inputs.azure-webapp-name }}
           app-settings-json: |

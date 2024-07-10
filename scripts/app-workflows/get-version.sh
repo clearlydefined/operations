@@ -10,13 +10,11 @@
 # Outputs
 #   version: the version of the package to deploy (e.g. v1.2.0, v1.2.0-dev-1234567890)
 
-ROOT_DIR=$(git rev-parse --show-toplevel)
-
 deploy_env="$1"
 is_release="$2"
 release_tag="$3"
 sha="$4"
-lock_file="${5:-$ROOT_DIR/package-lock.json}"
+lock_file="${5:-package-lock.json}"
 
 version='v'$(jq -r '.version' $lock_file) # e.g. v1.2.0
 if [[ "$deploy_env" == 'prod' ]]; then
