@@ -31,7 +31,7 @@ on:
 
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc8
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc9
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:
@@ -48,6 +48,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
+          ref: 'v1.1.1-rc9'
           path: 'operations'
       - name: Determine Docker Image Name
         id: determine_image_name
