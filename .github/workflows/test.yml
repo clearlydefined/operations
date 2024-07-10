@@ -23,4 +23,4 @@ jobs:
         sudo ./install.sh /usr/local
 
     - name: Run Bats tests
-      run: bats .github/workflows/tests/scripts/app-workflows/*.bats
+      run: bats ./tests/scripts/app-workflows/*.bats

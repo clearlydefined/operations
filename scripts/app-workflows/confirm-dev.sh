@@ -8,6 +8,7 @@
 
 deploy_env="$1"
 
+# erring on the side of caution by assuming everything is prod unless it is identified as dev and ends in -dev
 is_dev='false'
 if [[ "$deploy_env" == 'dev' ]]; then
   is_dev='true'

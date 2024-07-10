@@ -22,11 +22,15 @@ jobs:
     outputs:
       is-dev: ${{ env.IS_DEV }}
     steps:
-      # erring on the side of caution by assuming everything is prod unless it is identified as dev and ends in -dev
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          path: 'operations'
       - id: confirm-dev
         shell: bash
         run: |
-          is_dev=$(${{ github.workspace }}/.github/workflows/scripts/app-workflows/confirm-dev.sh ${{ inputs.deploy-env }})
+          is_dev=$(./operations/scripts/app-workflows/confirm-dev.sh ${{ inputs.deploy-env }})
           echo "IS_DEV=$is_dev" >> $GITHUB_ENV
 
   deployable:
@@ -34,10 +38,16 @@ jobs:
     needs: confirm-dev
     # run deployable check for anything that is NOT dev (most conservative approach)
     if: ${{ needs.confirm-dev.outputs.is-dev != 'true' }}
-    steps:    
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          path: 'operations'
+
       - name: Get organization ID
         run: |
-          org_id=$(${{ github.workspace }}/.github/workflows/scripts/app-workflows/get-org-id.sh ${{ github.repository_owner }})
+          org_id=$(./operations/scripts/app-workflows/get-org-id.sh ${{ github.repository_owner }})
           echo "ORG_ID=$org_id" >> $GITHUB_ENV
 
       - name: Check team membership

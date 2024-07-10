@@ -65,12 +65,21 @@ jobs:
     outputs:
       version: ${{ env.VERSION }}
     steps:
-      - uses: actions/checkout@v4.1.1        
+      - name: Download package-lock.json
+        uses: actions/download-artifact@v4
+        with:
+          name: package-lock.json
+          path: .
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          path: 'operations'
       - name: Get version from package-lock.json
         id: get_version
         shell: bash
         run: |
-          version=$(${{ github.workspace }}/.github/workflows/scripts/app-workflows/get-version.sh ${{ inputs.deploy-env }} ${{ needs.determine-trigger.outputs.is-release }} ${{ github.event.release.tag_name }} ${{ github.sha }})
+          version=$(./operations/scripts/app-workflows/get-version.sh ${{ inputs.deploy-env }} ${{ needs.determine-trigger.outputs.is-release }} ${{ github.event.release.tag_name }} ${{ github.sha }})
           echo "VERSION=$version" >> $GITHUB_ENV
 
   build-and-publish-image:
