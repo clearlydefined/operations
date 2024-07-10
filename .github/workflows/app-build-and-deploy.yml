@@ -79,6 +79,9 @@ jobs:
         id: get_version
         shell: bash
         run: |
+          echo "----- listing root"  
+          ll
+          echo "-----"  
           version=$(./operations/scripts/app-workflows/get-version.sh \
             ${{ inputs.deploy-env }} \
             ${{ needs.determine-trigger.outputs.is-release }} \
