@@ -30,8 +30,10 @@ jobs:
       - id: confirm-dev
         shell: bash
         run: |
-          is_dev=$(./operations/scripts/app-workflows/confirm-dev.sh ${{ inputs.deploy-env }})
-          echo "IS_DEV=$is_dev" >> $GITHUB_ENV
+          script_log=$(./operations/scripts/app-workflows/confirm-dev.sh \
+            ${{ inputs.deploy-env }}) || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          echo "IS_DEV=$(script_log | tail -n 1)" >> $GITHUB_ENV
 
   deployable:
     runs-on: ubuntu-latest
@@ -47,8 +49,10 @@ jobs:
 
       - name: Get organization ID
         run: |
-          org_id=$(./operations/scripts/app-workflows/get-org-id.sh ${{ github.repository_owner }})
-          echo "ORG_ID=$org_id" >> $GITHUB_ENV
+          script_log=$(./operations/scripts/app-workflows/get-org-id.sh \
+            ${{ github.repository_owner }}) || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          echo "ORG_ID=$(script_log | tail -n 1)" >> $GITHUB_ENV
 
       - name: Check team membership
         run: |

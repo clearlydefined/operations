@@ -31,7 +31,7 @@ on:
 
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc7
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc8
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:
@@ -52,8 +52,12 @@ jobs:
       - name: Determine Docker Image Name
         id: determine_image_name
         run: |
-          image_name=$(./operations/scripts/app-workflows/determine-image-name.sh ${{ github.repository }} ${{ inputs.deploy-env }} ${{ inputs.image-tag }})
-          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
+          script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
+            ${{ github.repository }} \
+            ${{ inputs.deploy-env }} \
+            ${{ inputs.image-tag }}) || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          echo "DOCKER_IMAGE_NAME_WITH_TAG=$(script_log | tail -n 1)" >> $GITHUB_ENV
 
   build-docker-image:
     name: Build Image

@@ -21,7 +21,7 @@ if [[ "$deploy_env" == 'prod' ]]; then
   if [[ "$is_release" == 'true' ]]; then
     # validate the version when triggered by a release
     if [[ "$version" != "$release_tag" ]]; then
-      echo "Version in package-lock.json ($version) does not match the release tag ($release_tag)"
+      echo "ERROR: Version in package-lock.json ($version) does not match the release tag ($release_tag)"
       exit 1
     fi
   fi
@@ -29,7 +29,7 @@ elif [[ "$deploy_env" == 'dev' ]]; then
   short_sha=$(echo "$sha" | cut -c 1-10)
   version=$version'-dev-'$short_sha       # e.g. v1.2.0-dev-1234567890
 else
-  echo "Invalid deploy environment: $deploy_env. Must be 'dev' or 'prod'"
+  echo "ERROR: Invalid deploy environment: $deploy_env. Must be 'dev' or 'prod'"
   exit 1
 fi
 

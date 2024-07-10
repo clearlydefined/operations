@@ -11,7 +11,7 @@ org_name="$1"
 org_info=$(curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/orgs/$org_name")
 org_id=$(echo "$org_info" | jq .id)
 if [[ "$org_id" == "null" ]]; then
-  echo "Organization not found: $org_name"
+  echo "ERROR: Organization not found: $org_name"
   exit 1
 fi
 

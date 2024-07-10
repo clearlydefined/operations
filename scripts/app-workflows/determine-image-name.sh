@@ -18,7 +18,7 @@ if [[ "$deploy_env" == 'prod' ]] ; then
 elif [[ "$deploy_env" == 'dev' ]] ; then
     image_name_with_tag="$image_base_name-dev:$image_tag"
 else
-    echo "Invalid deploy environment: $deploy_env. Must be 'dev' or 'prod'"
+    echo "ERROR: Invalid deploy environment: $deploy_env. Must be 'dev' or 'prod'"
     exit 1
 fi
 
