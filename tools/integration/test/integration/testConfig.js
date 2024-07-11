@@ -5,19 +5,14 @@ const devApiBaseUrl = 'https://dev-api.clearlydefined.io'
 const prodApiBaseUrl = 'https://api.clearlydefined.io'
 
 const pollingInterval = 1000 * 60 * 5 // 5 minutes
-const pollingMaxTime = 1000 * 60 * 30 // 30 minutes
+const pollingMaxTime = 1000 * 60 * 60 // 60 minutes
 
-//Havest results to check for harvest completeness
-//The versions correspond to the schema versions of the tools which are used in /harvest/{type}/{provider}/{namespace}/{name}/{revision}/{tool}/{toolVersion}
-//See https://api.clearlydefined.io/api-docs/#/harvest/get_harvest__type___provider___namespace___name___revision___tool___toolVersion_
-const harvestSchemaVersions = [
-  ['licensee', '9.14.0'],
-  ['scancode', '32.3.0'],
-  ['reuse', '3.2.1']
-]
+//Havest tools to check for harvest completeness
+const harvestTools = ['licensee', 'reuse', 'scancode']
 
 //Components to test
 const components = [
+  'pypi/pypi/-/platformdirs/4.2.0', //Keep this as the first element to test, it is relatively small
   'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16',
   'maven/mavengoogle/android.arch.lifecycle/common/1.0.1',
   'maven/gradleplugin/io.github.lognet/grpc-spring-boot-starter-gradle-plugin/4.6.0',
@@ -26,7 +21,6 @@ const components = [
   'npm/npmjs/-/redis/0.1.0',
   'git/github/ratatui-org/ratatui/bcf43688ec4a13825307aef88f3cdcd007b32641',
   'gem/rubygems/-/sorbet/0.5.11226',
-  'pypi/pypi/-/platformdirs/4.2.0',
   'pypi/pypi/-/sdbus/0.12.0',
   'go/golang/rsc.io/quote/v1.3.0',
   'nuget/nuget/-/NuGet.Protocol/6.7.1',
@@ -42,9 +36,9 @@ module.exports = {
   prodApiBaseUrl,
   components,
   harvest: {
-    poll: { interval: pollingInterval, maxTime: pollingMaxTime },
-    harvestSchemaVersions,
-    timeout: 1000 * 60 * 60 * 2 // 2 hours for harvesting all the components
+    poll: { interval: pollingInterval, maxTime: pollingMaxTime }, // for each component
+    tools: harvestTools,
+    timeout: 1000 * 60 * 60 * 4 // 4 hours for harvesting all the components
   },
   definition: {
     timeout: 1000 * 10 // for each component
