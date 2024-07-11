@@ -35,7 +35,7 @@ on:
 
 jobs:
   check-deployable:
-    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc15
+    uses: clearlydefined/operations/.github/workflows/app-is-deployable.yml@v1.1.1-rc16
     with:
       deploy-env: ${{ inputs.deploy-env }}
     secrets:
@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v1.1.1-rc15'
+          ref: 'v1.1.1-rc16'
           path: 'operations'
       - name: Determine Docker Image Name
         id: determine_image_name
@@ -87,7 +87,7 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          build-args: ${{ inputs.build_args}}
+          build-args: "REACT_APP_SERVER=https://dev.clearlydefined.io"
           tags: ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
           labels: |
             env=${{ inputs.deploy-env }}
