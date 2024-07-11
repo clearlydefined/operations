@@ -1,5 +1,5 @@
 # This workflow will build a docker image, push it to ghcr.io, and deploy it to an Azure WebApp.
-# v1.1.1-rc16 - This tag coordinates the other reusable parts of this workflow.
+# v1.1.1-rc17 - This tag coordinates the other reusable parts of this workflow.
 #   * app-build-docker-image.yml
 #   * app-deploy-to-azure.yml
 #   * app-is-deployable.yml
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v1.1.1-rc16'
+          ref: 'v1.1.1-rc17'
           path: 'operations'
       - name: Get version from package-lock.json
         id: get_version
@@ -97,7 +97,7 @@ jobs:
   build-and-publish-image:
     name: Build and publish Docker image
     needs: get-version
-    uses: clearlydefined/operations/.github/workflows/app-build-docker-image.yml@v1.1.1-rc16
+    uses: clearlydefined/operations/.github/workflows/app-build-docker-image.yml@v1.1.1-rc17
     secrets:
       DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
@@ -110,7 +110,7 @@ jobs:
   # deploy-primary-app-to-azure:
   #   name: Deploy to primary Azure app
   #   needs: [get-version, build-and-publish-image]
-  #   uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc16
+  #   uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc17
   #   secrets:
   #     AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
   #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
@@ -126,7 +126,7 @@ jobs:
   #   name: Deploy to secondary Azure app
   #   if: ${{ inputs.secondary-azure-app-name-postfix != '' }}
   #   needs: [get-version, build-and-publish-image]
-  #   uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc16
+  #   uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v1.1.1-rc17
   #   secrets:
   #     AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_SECONDARY_WEBAPP_PUBLISH_PROFILE }}
   #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
