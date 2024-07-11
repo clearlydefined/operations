@@ -26,13 +26,13 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v1.1.1-rc11'
+          ref: 'v1.1.1-rc12'
           path: 'operations'
       - id: confirm-dev
         shell: bash
         run: |
           script_log=$(./operations/scripts/app-workflows/confirm-dev.sh \
-            ${{ inputs.deploy-env }}) || (echo "$script_log" && exit 1)
+            "${{ inputs.deploy-env }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           is_dev=$(echo "$script_log" | tail -n 1)
           echo "IS_DEV=$is_dev" >> $GITHUB_ENV
@@ -47,13 +47,13 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v1.1.1-rc11'
+          ref: 'v1.1.1-rc12'
           path: 'operations'
 
       - name: Get organization ID
         run: |
           script_log=$(./operations/scripts/app-workflows/get-org-id.sh \
-            ${{ github.repository_owner }}) || (echo "$script_log" && exit 1)
+            "${{ github.repository_owner }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           org_id=$(echo "$script_log" | tail -n 1)
           echo "ORG_ID=$org_id" >> $GITHUB_ENV

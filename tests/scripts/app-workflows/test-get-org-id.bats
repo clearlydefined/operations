@@ -12,5 +12,5 @@ load 'test_helpers'
 @test "missing org name" {
   run ./scripts/app-workflows/get-org-id.sh ""
   test_value 1 "$status"
-  test_value "Organization not found: " "${lines[0]}"
+  test_value "ERROR: Organization not found: " "${lines[0]}"
 }

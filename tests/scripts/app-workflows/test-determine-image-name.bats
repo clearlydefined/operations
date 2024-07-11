@@ -19,5 +19,5 @@ load 'test_helpers'
 @test "invalid deploy environment" {
   run ./scripts/app-workflows/determine-image-name.sh test-org/test-repo BAD_ENV test-tag
   test_value 1 "$status"
-  test_value "Invalid deploy environment: BAD_ENV. Must be 'dev' or 'prod'" "${lines[0]}"
+  test_value "ERROR: Invalid deploy environment: BAD_ENV. Must be 'dev' or 'prod'" "${lines[0]}"
 }

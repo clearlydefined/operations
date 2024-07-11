@@ -23,7 +23,7 @@ package_lock_file="$(dirname "$BATS_TEST_DIRNAME")/app-workflows/fixtures/packag
   # fail because version in package-lock.json doesn't match the release tag
   run ./scripts/app-workflows/get-version.sh prod true v9.2.0 1234567890ABCDEF "$package_lock_file"
   test_value 1 "$status"
-  test_value "Version in package-lock.json (v10.0.1) does not match the release tag (v9.2.0)" "${lines[0]}"
+  test_value "ERROR: Version in package-lock.json (v10.0.1) does not match the release tag (v9.2.0)" "${lines[0]}"
 }
 
 @test "deploy to prod environment triggered by dispatch" {
@@ -37,5 +37,5 @@ package_lock_file="$(dirname "$BATS_TEST_DIRNAME")/app-workflows/fixtures/packag
 @test "invalid deploy environment" {
   run ./scripts/app-workflows/get-version.sh BAD_ENV false v9.2.0 1234567890ABCDEF "$package_lock_file"
   test_value 1 "$status"
-  test_value "Invalid deploy environment: BAD_ENV. Must be 'dev' or 'prod'" "${lines[0]}"
+  test_value "ERROR: Invalid deploy environment: BAD_ENV. Must be 'dev' or 'prod'" "${lines[0]}"
 }
