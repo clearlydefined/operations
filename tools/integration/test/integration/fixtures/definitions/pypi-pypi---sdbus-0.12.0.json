@@ -1,0 +1,755 @@
+{
+  "described": {
+    "releaseDate": "2024-04-02",
+    "sourceLocation": {
+      "type": "git",
+      "provider": "github",
+      "namespace": "igo95862",
+      "name": "python-sdbus",
+      "revision": "55d2667f0f7550ebee0b572f0200594ef6c3e93e",
+      "url": "https://github.com/igo95862/python-sdbus/tree/55d2667f0f7550ebee0b572f0200594ef6c3e93e"
+    },
+    "urls": {
+      "registry": "https://pypi.org/project/sdbus",
+      "version": "https://pypi.org/project/sdbus/0.12.0",
+      "download": "https://files.pythonhosted.org/packages/8e/39/3d49f0d18dcba3344af756f31e4408e7de50b3df86fa3f3ea6f604402f16/sdbus-0.12.0.tar.gz"
+    },
+    "hashes": {
+      "sha1": "6e1c2776afc50213ca542318ba83cd9384a06f6c",
+      "sha256": "c3692d75704438a78adc1439350bc32f30d6b38ad344cfc94773db89c6ce4a89"
+    },
+    "files": 57,
+    "tools": [
+      "clearlydefined/1.3.1",
+      "reuse/3.2.1",
+      "licensee/9.14.0",
+      "scancode/30.3.0"
+    ],
+    "toolScore": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    },
+    "score": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    }
+  },
+  "licensed": {
+    "declared": "GPL-2.0 AND LGPL-2.0-or-later AND LGPL-2.1-or-later",
+    "toolScore": {
+      "total": 66,
+      "declared": 30,
+      "discovered": 21,
+      "consistency": 0,
+      "spdx": 15,
+      "texts": 0
+    },
+    "facets": {
+      "core": {
+        "attribution": {
+          "unknown": 10,
+          "parties": [
+            "Copyright (C) 2022 igo95862",
+            "Copyright (C) 2023 igo95862",
+            "Copyright (C) 2024 igo95862",
+            "Copyright (c) 2022 igo95862",
+            "Copyright (c) 2023 igo95862",
+            "Copyright (c) 2024 igo95862",
+            "Copyright (C) 2020-2022 igo95862",
+            "Copyright (C) 2020-2023 igo95862",
+            "Copyright (C) 2020-2024 igo95862",
+            "Copyright (c) 2020-2022 igo95862",
+            "Copyright (c) 2020-2023 igo95862",
+            "Copyright (c) 2020-2024 igo95862",
+            "Copyright (C) 2020, 2021 igo95862",
+            "Copyright (c) 2020, 2021 igo95862",
+            "copyrighted by the Free Software Foundation",
+            "Copyright (c) 1989, 1991 Free Software Foundation, Inc.",
+            "Copyright (c) 1991, 1999 Free Software Foundation, Inc."
+          ]
+        },
+        "discovered": {
+          "unknown": 7,
+          "expressions": [
+            "GPL-1.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND Python-2.0",
+            "GPL-2.0 AND GPL-2.0-only",
+            "LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later",
+            "LGPL-2.1-only",
+            "LGPL-2.1-or-later"
+          ]
+        },
+        "files": 57
+      }
+    },
+    "score": {
+      "total": 66,
+      "declared": 30,
+      "discovered": 21,
+      "consistency": 0,
+      "spdx": 15,
+      "texts": 0
+    }
+  },
+  "files": [
+    {
+      "path": "sdbus-0.12.0/COPYING",
+      "license": "GPL-2.0 AND GPL-2.0-only",
+      "natures": [
+        "license"
+      ],
+      "attributions": [
+        "copyrighted by the Free Software Foundation",
+        "Copyright (c) 1989, 1991 Free Software Foundation, Inc."
+      ],
+      "hashes": {
+        "sha1": "4cc77b90af91e615a64ae04893fdffa7939db84c",
+        "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+      },
+      "token": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+    },
+    {
+      "path": "sdbus-0.12.0/COPYING.LESSER",
+      "license": "LGPL-2.1-only",
+      "natures": [
+        "license"
+      ],
+      "attributions": [
+        "copyrighted by the Free Software Foundation",
+        "Copyright (c) 1991, 1999 Free Software Foundation, Inc."
+      ],
+      "hashes": {
+        "sha1": "01a6b4bf79aca9b556822601186afab86e8c4fbf",
+        "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/PKG-INFO",
+      "license": "GPL-1.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND Python-2.0",
+      "hashes": {
+        "sha1": "2c1f5ef84a2c0c7eb8a9497d2b0c82c7f47fff69",
+        "sha256": "537199af659200d01fb5a089d73a1d507303177a31a5ad4d25b193e383e9b989"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/README.md",
+      "license": "GPL-1.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND Python-2.0",
+      "hashes": {
+        "sha1": "4d37c82e9b3469c0fa4403e8a458769bb3af0356",
+        "sha256": "28fb01f8b137a0b8a1e67574461017739f3db6136e84bf03cc294418f6930056"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/setup.cfg",
+      "hashes": {
+        "sha1": "fbb1975fd414af07da5ba9054cef698ea3b9dd4e",
+        "sha256": "1c473cbaee8da5fc46e7f0158794af5cea4414c34a3cf3f180c2001f5e38bd3e"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/setup.py",
+      "license": "LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "7206eabf8e6426f05c4a2ed3342da56680e2f9c5",
+        "sha256": "76ed0a224632b65cddc1d8727e077b7e61dd44f7154af5b0d1edf2766b5870f3"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/sdbus.egg-info/dependency_links.txt",
+      "hashes": {
+        "sha1": "adc83b19e793491b1c6ea0fd8b46cd9f32e592fc",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/sdbus.egg-info/PKG-INFO",
+      "license": "GPL-1.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND Python-2.0",
+      "hashes": {
+        "sha1": "2c1f5ef84a2c0c7eb8a9497d2b0c82c7f47fff69",
+        "sha256": "537199af659200d01fb5a089d73a1d507303177a31a5ad4d25b193e383e9b989"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/sdbus.egg-info/SOURCES.txt",
+      "hashes": {
+        "sha1": "0b528d5f1d5f61500132938dca5a60b19327d5dc",
+        "sha256": "c1edc3d97d8a7a0a59a0676cb31020074e8f44a057ee8937c2834240625f0eb8"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/sdbus.egg-info/top_level.txt",
+      "hashes": {
+        "sha1": "1af3a26463d7dc9c2d5fd77b76ff7b786bba4dd3",
+        "sha256": "0590db53ad1beb6c0cfe57686101f3a0f526e2a9f4036df1d31dc559d77722e5"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/__init__.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "100ee1f268aa5ad091fadcba8b7223e4ca28ff1f",
+        "sha256": "13190164d6c533274612b58c1a943b2dcea6c2d7ee5a14909c1c293e8db9fc26"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/__main__.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "a29bddf31209ab6225cdfc3b11a735a7b2c80d24",
+        "sha256": "8adc169dd3a148ec9bcfdc6d87ef48023c3b1902de0de1cf502aca9b31137881"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/autodoc.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "2ee77e3eb8430a97c1fef79d0e8d3cb1c8122611",
+        "sha256": "3d7dc0e7c34923129fbb6d0490974b441c39a8e74f754e6035545862ae964d24"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_common_elements.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "96d8cdef9a9a5ffce8a513613297a29c0d167f2e",
+        "sha256": "721d367ce8dfe199d449841ffe8a7497b4c4a542abf039f60b497ec6bf361c02"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_common_funcs.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2023 igo95862",
+        "Copyright (C) 2020-2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "ca06d82be1ec5cb901f6f2e98699640e0926a90c",
+        "sha256": "dd219e917d306cfee44add89732f36dd98d581db330adb76957a3f78ecce6f87"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_exceptions.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "e68f76cf17977542d38a799559579704951df915",
+        "sha256": "aea6494e0f241edb2cc7f402f99717fa5e354a749769106e42a5d6ff0e2febcb"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_async_interface_base.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "a7371114fd0c80f6153d44ac4b5f24ae1d91d317",
+        "sha256": "cfb9f2cfd1abdd6217b95b918e9d666a077ab28b27b1391df8de2d4a62d04811"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_async_interfaces.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2024 igo95862",
+        "Copyright (C) 2020-2024 igo95862"
+      ],
+      "hashes": {
+        "sha1": "8cb326531ecb63a882bc44393e4e2ccf64aa6287",
+        "sha256": "705d690cd0f1cccbcca653d2488638a8c2aa09b0c3047a21a1f90c6cd524e926"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_async_method.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2023 igo95862",
+        "Copyright (C) 2020-2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "24b578ed125b572d4fea06a96cca013a35ed1df7",
+        "sha256": "5f67cdd8f2c42a26f4838c4c5dffa9c5a248c857af9deeeaa96f9f5d33f14907"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_async_object_manager.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2024 igo95862",
+        "Copyright (C) 2020-2024 igo95862"
+      ],
+      "hashes": {
+        "sha1": "9ce8d8fe3c71e564ffb53225fcb6e07fbd1dc79c",
+        "sha256": "75b6bfdaa1621e57f301b404197c65c079a24b8e7709d8569928066ce96b2038"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_async_property.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2023 igo95862",
+        "Copyright (C) 2020-2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "82c1ca8b6b347fc2f2e30c5d2977aea45d76430a",
+        "sha256": "8e41ee14bc234200d64a6f5593fe3ed369d09058d7657357883a65d8fc559d6d"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_async_signal.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2023 igo95862",
+        "Copyright (C) 2020-2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "80489f70e8898a0b62e4bbde9daf392e8480dbbc",
+        "sha256": "999f723d541bfe0450b6b1b03827591ceab2a368cd65846a3c4baffb45666b86"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_sync_interface_base.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "f7fa2130cb9731ed42bf7403b5d658c8fb536c1a",
+        "sha256": "1209501c918053a46ecc0e5334dfcf0ff551e84ec20c4db67a812d240bd8a25c"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_sync_interfaces.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "f315a33f7136f39287f1298ab0f718358b025ad3",
+        "sha256": "f76b4a4f7559dcc5a152992a299bf51880a5ca20e0a7774eae45da041fef82f0"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_sync_method.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "1fee67c93bf54bdc0846f34113b7d730731eac2b",
+        "sha256": "fbbeb521bd5fb2b47c533bd5ff13d42958bf5e985a0329c104291b3d130a4e32"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/dbus_proxy_sync_property.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "0f498c7559c4e6a566c0514dd74d853d3fb62504",
+        "sha256": "403aa38df3b53f5267c05284478de1c021eb5fb1d8229a79e643731f3b52cea8"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/exceptions.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "6c531b909a6051fb20b93b70a4d0183b32ffa3ae",
+        "sha256": "18d15ccffd0609a332382bddfccd42e7d9dc217587b038c845573503d3d69a06"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/interface_generator.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "5efeffaaae96fda286b728cd48b0748a143d2654",
+        "sha256": "d98cba14e7e12f316267208c0e28fd12481726d4bab71fa24ac2330f38d9c3af"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/py.typed",
+      "hashes": {
+        "sha1": "6d0e7ecdc51a45abad424671fad1d70074b15b10",
+        "sha256": "cc40a0a4dd0e062bbc43b87c023d76b7ff3d1db4c0930d60086f736a4578eb6c"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals.c",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "9f310f1f750ec846c30084241236f6eba7836b20",
+        "sha256": "f87bb8b90de268b4cb397a010b28564676ddf20b99761647e290eb5260844aeb"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals.h",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "f51982c3513c0d79bdee5118d7d924c9e4773260",
+        "sha256": "100cb2692d3d4828d9d01a90a8dfafb37b892cdfa24906e23e3147bc0581178f"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2023 igo95862",
+        "Copyright (C) 2020-2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "07b7eab801fcf58107a2db8f0e76aab8a9c854d2",
+        "sha256": "e5e2f263fcf2a9ccfe44375c55a659151c8fc1b5f3a59e80f06aa566d25ec10f"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals_bus.c",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "92aac6b8b6f21b02a7e0cf3e1e3bd2161bf92454",
+        "sha256": "45fc31abd2c51235f9136eeaf4d65baf6d8631f298d79e1cd808509e8347b7f9"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals_funcs.c",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "adb41a9c7776100dcc64ffcde31ccf76e152500c",
+        "sha256": "cb10ee04b6eda10616599d9aaa89ab67b20e513b44bf27795e76945f53402173"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals_interface.c",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "365951b1f13eb7ed8e79e98713c9f57df1ce0c7d",
+        "sha256": "736b379aa57f2315afaa21b483cc23767d531b3bde8016421ecc1f67e9e86d80"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/sd_bus_internals_message.c",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "3fdfbb865f32aa77f7b470627a0498ac542fb4ff",
+        "sha256": "2c22430fc8e6e2e5ffe914872214a59371c12a49ab86a72e0f8c1d5fc1e9a90a"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/unittest.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2022 igo95862",
+        "Copyright (C) 2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "68cc87777f84fdb582841d7ffc621173606dc940",
+        "sha256": "647fcdb49e87e11660e9055567c0ce12f60553793dad5f596bb87af0d3ad973e"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus/utils.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "79eb08583778c01b795993e27fb1055c76194e7d",
+        "sha256": "85ebfbc21d3d8ba550d249c20baa8c288faa4d1d383e29d731a1043c8f2f958f"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus_async/dbus_daemon/__init__.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "c378d764a1d7a81491f80656dbff5910bd5d7dd3",
+        "sha256": "183ff8c8174c7399a1d8ceefae63319466b9e2fe278f9779e17df9c53c5f2ae7"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus_async/dbus_daemon/py.typed",
+      "hashes": {
+        "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus_block/dbus_daemon/__init__.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "0b5a536df1addc85a7dff11e8f53ca3754fde71a",
+        "sha256": "72e48eb9053da8370fb7e793a5733359c57d83b9be1845f1411f498f68929a2c"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/src/sdbus_block/dbus_daemon/py.typed",
+      "hashes": {
+        "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_deprecations.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "8f552faacae6085c09ec18c3727f64a115b5fa16",
+        "sha256": "aa264bb1707af37b77822462a0172de7d0bde4af7e0167dc8e787df70e2e9d04"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_high_level_errors.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "4b910fe37677c0d54ac7af7ee080794eb887dc1f",
+        "sha256": "9600cecf1898599560fcaebfb91f51dd0bbb1196189491f24acd0d72654a80fa"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_interface_generator.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "18ec0b8afeda006c2e34513337daa6e42f32b9fd",
+        "sha256": "aef8dd2e43bdb5e2103724f46272d41ceaabdb08bd112a938da1cbb4bf8a9306"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_low_level_api.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2022 igo95862",
+        "Copyright (C) 2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "22e678e642674522fbf9f83b260b05a568719245",
+        "sha256": "6df13fb628473b964160e39cd632cc737462ad078446c158a7aa1e686c2fe3f3"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_low_level_errors.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "fb9d6988747d18e394704f5cd83d4a3a17ae33fd",
+        "sha256": "5cca8fe3b0c5057341d78e125ac5815103ff3e3fbfdb518a3761c95269fc683d"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_object_manager.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2022 igo95862",
+        "Copyright (C) 2020-2022 igo95862"
+      ],
+      "hashes": {
+        "sha1": "5a3926e9839523228f290a2fe1b847a20136624b",
+        "sha256": "b9b8c51db5d390bc8c1df0ae948b42c4e1aeda53e032e77ec75dd8b4d6657362"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_proxies.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "c9003a0594c2699d8b62351b0c2a2e56d2250c3f",
+        "sha256": "5f9e0a8b4bd64ef22a08cba179407aaee18e5a68d9a3a0db20ef1e35825cd3ca"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_read_write_dbus_types.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "1773fed31d768c7d3fba3ccd52535dce2cfc6a38",
+        "sha256": "7fc9fc0ffd8aa35c4915a580ba5c86ae44c54f044fd328e9951a72d21592bbdf"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_request_name.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "d083ec8563ab43ec67701be389559b8ae72ce406",
+        "sha256": "74fabb9c007b3636b10df24bba074c62285de335d4dda2fa65ddc38439135c5b"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_sdbus_async.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020-2023 igo95862",
+        "Copyright (C) 2020-2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "1439e3e78c0ad602e9c590d47bdac2e7d0ed1bbd",
+        "sha256": "b22af5091b7d6d009b5d9c24c1b32dea65d285c64aed5fad088a5d4b82edf0fa"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_sdbus_async_bad_class.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "c41dcf2034090e3ba4c744ca83642c9e975c1fb8",
+        "sha256": "f59c19a2c69d9cb4a921eb84a9bffb8dc3cc510bf69c1429d43df14ccfce9156"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_sdbus_async_introspection.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "f976ee1554d0581613872efdea4cce1baea344b8",
+        "sha256": "a36e8b994ec76d0503700086223564fbb143d59e58696d2c3b9bab31282587d2"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_sdbus_block.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2020, 2021 igo95862",
+        "Copyright (C) 2020, 2021 igo95862"
+      ],
+      "hashes": {
+        "sha1": "7fe7669f66a08ca6dfcf50eec4030534025106e6",
+        "sha256": "9d8f8044bdd34e42f6b3156c82a26b1f3a8ccd6aff6a3a587bb8d31e3929fb85"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_sdbus_block_bad_class.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2023 igo95862",
+        "Copyright (C) 2023 igo95862"
+      ],
+      "hashes": {
+        "sha1": "b8d1206a2eb9f01e8d238de6b6972c64497aa2ad",
+        "sha256": "7b27785cc5191a872cb8f22e5515736705ec2feee6d45d544fabfa357dd0627b"
+      }
+    },
+    {
+      "path": "sdbus-0.12.0/test/test_typing.py",
+      "license": "LGPL-2.1-or-later",
+      "attributions": [
+        "Copyright (c) 2024 igo95862",
+        "Copyright (C) 2024 igo95862"
+      ],
+      "hashes": {
+        "sha1": "ca19f0f365578d757c40db97be3cc940373eea60",
+        "sha256": "970d13bce975cca4920a793c9b2aaf3dfe724d1fc761e63a3bf32f6ac4d960b5"
+      }
+    }
+  ],
+  "coordinates": {
+    "type": "pypi",
+    "provider": "pypi",
+    "name": "sdbus",
+    "revision": "0.12.0"
+  },
+  "_meta": {
+    "schemaVersion": "1.6.1",
+    "updated": "2024-06-28T16:39:17.125Z"
+  },
+  "scores": {
+    "effective": 83,
+    "tool": 83
+  }
+}
