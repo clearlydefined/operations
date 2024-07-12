@@ -118,8 +118,10 @@ function filesToMap(result) {
 
 async function findDefinition(coordinates) {
   const [type, provider, namespace, name, revision] = coordinates.split('/')
+  let coordinatesString = `type=${type}&provider=${provider}&name=${name}`
+  coordinatesString += namespace && namespace !== '-' ? `&namespace=${namespace}` : ''
   const response = await callFetch(
-    `${devApiBaseUrl}/definitions?type=${type}&provider=${provider}&namespace=${namespace}&name=${name}&sortDesc=true&sort=revision`
+    `${devApiBaseUrl}/definitions?${coordinatesString}&sortDesc=true&sort=revision`
   ).then(r => r.json())
   return response.data.find(d => d.coordinates.revision === revision)
 }
