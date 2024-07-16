@@ -55,9 +55,12 @@ class Harvester {
 
   async detectSchemaVersions(component, poller, tools) {
     if (!component) throw new Error('Component not set')
+    console.log('Start to detect schema versions for harvest tools')
     const startTime = Date.now()
     //make sure that we have one entire set of harvest results (old or new)
     await this.harvest([component])
+    await new Promise(resolve => setTimeout(resolve, poller.interval))
+
     //trigger a reharvest to overwrite the old result, so we can verify the timestamp is new for completion
     await this.harvest([component], true)
 
@@ -66,7 +69,7 @@ class Harvester {
       startTime,
       tools
     )
-    console.log(`Detected schema versions: ${detectedToolVersions}`)
+    console.log(`Detected schema versions for harvest tools: ${detectedToolVersions}`)
     this._harvestToolChecks = detectedToolVersions
   }
 
