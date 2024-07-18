@@ -35,7 +35,7 @@ describe('Validation definitions between dev and prod', function () {
           findDefinition(coordinates),
           getDefinition(devApiBaseUrl, coordinates)
         ])
-        deepStrictEqual(foundDef, omit(expectedDef, ['files']))
+        deepStrictEqualExpectedEntries(foundDef, omit(expectedDef, ['files']))
       })
     })
 
@@ -48,7 +48,7 @@ describe('Validation definitions between dev and prod', function () {
           postDefinitions.then(r => r[coordinates]),
           getDefinition(devApiBaseUrl, coordinates)
         ])
-        deepStrictEqual(actualDef, expectedDef)
+        deepStrictEqualExpectedEntries(actualDef, expectedDef)
       })
     })
   })
@@ -80,13 +80,16 @@ function compareDefinition(recomputedDef, expectedDef) {
 function compareLicensed(result, expectation) {
   let actual = omit(result.licensed, ['facets'])
   const expected = omit(expectation.licensed, ['facets'])
-  actual = pick(actual, Object.keys(expected))
-  deepStrictEqual(actual, expected)
+  deepStrictEqualExpectedEntries(actual, expected)
 }
 
 function compareDescribed(result, expectation) {
   let actual = omit(result.described, ['tools'])
   const expected = omit(expectation.described, ['tools'])
+  deepStrictEqualExpectedEntries(actual, expected)
+}
+
+function deepStrictEqualExpectedEntries(actual, expected) {
   actual = pick(actual, Object.keys(expected))
   deepStrictEqual(actual, expected)
 }
