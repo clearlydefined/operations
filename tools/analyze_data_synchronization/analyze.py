@@ -7,27 +7,9 @@ import pymongo
 import requests
 from azure.cosmos import cosmos_client
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 
-# All environment variables can be defined in tools/analyze_data_synchronization/.env
-#
-# Required environment variables:
-# * MONGO_CONNECTION_STRING: The connection string to the MongoDB database
-# * BASE_AZURE_BLOB_URL The base URL for the Azure Blob Storage
-# * SERVICE_API_URL: The URL for the service API
-# 
-# Optional environment variables:
-# * AZURE_CONTAINER_NAME: The name of the Azure Blob Storage container (default: "develop-definition")
-# * OUTPUT_FILE: The file to write the output to (default: "invalid_data.json")
-# * REPAIR: If set to "true", the script will attempt to repair the data (default: false)
-# * PAGE_SIZE: The number of documents to process at a time (default: 1000)
-# * INITIAL_SKIP: The number of documents to skip before starting the analysis (default: 0) - used with START_DATE and END_DATE
-# * START_MONTH: The first month to include in the query (default: 2024-01)
-# * END_MONTH: The last month to include in the query (default: 2024-06)
-# * START_DATE: The first date to include in the query (default: "")
-# * END_DATE: The last date to include in the query (default: "")
-# * VERBOSE: If set to "true", the script will output more information (default: false)
-
-# Commands to run this script on localhost from this directory after setting the environment variables:
+# Commands to run this script on localhost from this directory after setting the environment variables (see initialize() below):
 #
 #   cd tools/analyze_data_synchronization
 #   python3 -m venv .venv  
@@ -35,28 +17,20 @@ from dotenv import load_dotenv
 #   python3 -m pip install -r requirements.txt
 #   python3 analyze.py
 
-load_dotenv()
-
-MONGO_CONNECTION_STRING = str(os.environ.get("MONGO_CONNECTION_STRING"))
-DB_NAME = "clearlydefined"
-COLLECTION_NAME = "definitions-trimmed"
-
-BASE_AZURE_BLOB_URL = str(os.environ.get("BASE_AZURE_BLOB_URL"))
-AZURE_CONTAINER_NAME = str(os.environ.get("AZURE_CONTAINER_NAME", "develop-definition"))
-
-SERVICE_API_URL = str(os.environ.get("SERVICE_API_URL"))
-
-START_MONTH = str(os.environ.get("START_MONTH", "2024-01"))
-END_MONTH = str(os.environ.get("END_MONTH", "2024-06"))
-
-START_DATE = str(os.environ.get("START_DATE", ""))
-END_DATE = str(os.environ.get("END_DATE", ""))
-
-REPAIR = str(os.environ.get("REPAIR", "false")).lower() == "true"
-PAGE_SIZE = int(os.environ.get("PAGE_SIZE", 1000))
-INITIAL_SKIP = int(os.environ.get("INITIAL_SKIP", 0))
-OUTPUT_FILE = str(os.environ.get("OUTPUT_FILE", "invalid_data.json"))
-VERBOSE = str(os.environ.get("VERBOSE", "false")).lower() == "true"
+# This script analyzes the data synchronization between the CosmosDB and the Azure Blob Storage.
+# It compares the licensed.declared field in the CosmosDB with the licensed.declared field in the 
+# Azure Blob Storage. If the fields do not match, the document is considered invalid.  The script 
+# outputs a JSON file with summary statistics.
+#
+# The script can also repair the data by updating the licensed.declared field in the CosmosDB with 
+# the value from the Azure Blob Storage and makes a request to the service API to force the 
+# definitions to be re-processed.  This insures that any other data in the DB document is also
+# in sync with the source of truth in the blob store.
+#
+# The script can be run for a  date range or for a range of months.  The repair option is only
+# supported for the date range option.  The range of months is used to estimate the total number
+# of invalid documents in the database by evaluating a sample of the data for each month in the
+# range.
 
 # Example coordinates: composer/packagist/00f100/fcphp-cache/revision/0.1.0.json
 
@@ -111,6 +85,83 @@ VERBOSE = str(os.environ.get("VERBOSE", "false")).lower() == "true"
 # ]
 
 
+# All environment variables can be defined in `tools/analyze_data_synchronization/.env`
+# See `tools/analyze_data_synchronization/.env.example` for an example.
+#
+# Required environment variables:
+# * MONGO_CONNECTION_STRING: The connection string to the CosmosDB database
+# * BASE_AZURE_BLOB_URL The base URL for the Azure Blob Storage
+# * SERVICE_API_URL: The URL for the service API
+# 
+# Optional environment variables:
+# * AZURE_CONTAINER_NAME: The name of the Azure Blob Storage container (default: "develop-definition")
+# * OUTPUT_FILE: The file to write the output to (default: "invalid_data.json")
+# * REPAIR: If set to "true", the script will attempt to repair the data (default: false)
+# * PAGE_SIZE: The number of documents to process at a time (default: 1000)
+# * INITIAL_SKIP: The number of documents to skip before starting the analysis (default: 0) - used with START_DATE and END_DATE
+# * START_DATE: The first date to include in the query (default: "")
+# * END_DATE: The last date to include in the query (default: "")
+# * START_MONTH: The first month to include in the query (default: 2024-01) - ignored if START_DATE is set
+# * END_MONTH: The last month to include in the query (default: 2024-06) - ignored if START_DATE is set
+# * VERBOSE: If set to "true", the script will output more information (default: false)
+def initialize():
+    """Set up global variables based on the environment variables"""
+    global MONGO_CONNECTION_STRING, DB_NAME, COLLECTION_NAME, BASE_AZURE_BLOB_URL
+    global AZURE_CONTAINER_NAME, SERVICE_API_URL, START_DATE, END_DATE, START_MONTH, END_MONTH
+    global INITIAL_SKIP, PAGE_SIZE, OUTPUT_FILE, REPAIR, VERBOSE, DRYRUN
+
+    load_dotenv()
+
+    MONGO_CONNECTION_STRING = str(os.environ.get("MONGO_CONNECTION_STRING"))
+    DB_NAME = "clearlydefined"
+    COLLECTION_NAME = "definitions-trimmed"
+
+    BASE_AZURE_BLOB_URL = str(os.environ.get("BASE_AZURE_BLOB_URL"))
+    AZURE_CONTAINER_NAME = str(os.environ.get("AZURE_CONTAINER_NAME", "develop-definition"))
+
+    SERVICE_API_URL = str(os.environ.get("SERVICE_API_URL"))
+
+    START_DATE = str(os.environ.get("START_DATE", "")) # used to repair the data
+    END_DATE = str(os.environ.get("END_DATE", ""))
+    END_DATE = START_DATE if END_DATE < START_DATE else END_DATE
+
+    START_MONTH = str(os.environ.get("START_MONTH", "2024-01")) # used to spot check the data for out-of-sync licenses
+    END_MONTH = str(os.environ.get("END_MONTH", "2024-06"))
+    if START_DATE and END_DATE: # if the date range is set, ignore the month range
+        START_MONTH = ""
+        END_MONTH = ""
+
+    MAX_PAGE_SIZE = 500 # The service API can only process 500 definitions at a time, so it is limiting the max page size
+    PAGE_SIZE = int(os.environ.get("PAGE_SIZE", MAX_PAGE_SIZE))
+    PAGE_SIZE = PAGE_SIZE if 0 < PAGE_SIZE < MAX_PAGE_SIZE else MAX_PAGE_SIZE
+
+    INITIAL_SKIP = int(os.environ.get("INITIAL_SKIP", 0)) # used if processing fails part way through
+    INITIAL_SKIP = 0 if INITIAL_SKIP < 0 or START_MONTH else INITIAL_SKIP
+
+    base_filename = str(os.environ.get("BASE_OUTPUT_FILENAME", "invalid-data"))
+    OUTPUT_FILE = filename(base_filename, START_DATE, END_DATE, START_MONTH, END_MONTH, INITIAL_SKIP)
+
+    REPAIR = str(os.environ.get("REPAIR", "false")).lower() == "true"
+    REPAIR = False if START_MONTH else REPAIR # repair is not supported for spot checking multiple months
+
+    VERBOSE = str(os.environ.get("VERBOSE", "false")).lower() == "true"
+    DRYRUN = str(os.environ.get("DRYRUN", "false")).lower() == "true"
+
+def filename(base_filename, start_date, end_date, start_month, end_month, initial_skip):
+    """Generate output filename based on the parameters passed in (e.g. 2024-01-01_thru_2024-01-31_invalid-data_offset-1200.json)"""
+    start_dt = start_date if start_date else start_month
+    end_dt = end_date if end_date else end_month
+    offset = ''
+    if initial_skip > 0:
+        offset = f"_offset-{initial_skip}"
+        
+    return start_dt + '_thru_' + end_dt + '_' + base_filename + offset + ".json"
+
+def custom_range_label():
+    """Generate a range label for the custom date range"""
+    return f"{START_DATE}_thru_{END_DATE}_offset-{INITIAL_SKIP}"
+    
+
 def fetch_blob(base_url, container_name, type, provider, namespace, name, revision):
     """Fetch the blob from the azure blob storage"""
     # need to encode the url for the %2f characters
@@ -124,22 +175,23 @@ def fetch_blob(base_url, container_name, type, provider, namespace, name, revisi
         return {}
     return res.json()
 
-def repair_data(service_url, type, provider, namespace, name, revision):
-    """Repair the data by requesting the definition from the service with the force parameter"""
+def repair_all(service_url, coordinates):
+    """Repair the data by requesting the definitions from the service with the force parameter"""
     if VERBOSE:
-        print(f"  Repairing data for {type}/{provider}/{namespace}/{name}/{revision}")
-    url = f"{service_url}/definitions/{type}/{provider}/{namespace}/{name}/{revision}?force=true"
-    res = requests.get(url)
+        print(f"  Repairing data for {len(coordinates)} coordinates")
+    url = f"{service_url}/definitions?force=true"
+    res = requests.post(url, '\n'.join(coordinates))
     if res.status_code != 200:
         return {}
     return res.json()
 
 def dump_data(data, filename):
+    """Write the data to a file"""
     with open(filename, "w") as f:
         json.dump(data, f)
 
 def initialize_stats(range_label, total_docs_count, invalid_data):
-    # TODO: Add container name to summary stats.
+    """Initialize stats for the range"""
     invalid_data[range_label] = {
         "stats": {
             "sample_total": 0,
@@ -152,30 +204,32 @@ def initialize_stats(range_label, total_docs_count, invalid_data):
     }
 
 def update_stats(invalid_data, invalid_count, range_label, sample_count, checkpoint=False):
+    """Update the stats for the range at each checkpoint or at the end of a page of data"""
     invalid_data[range_label]["stats"]["sample_total"] = sample_count
     invalid_data[range_label]["stats"]["sample_invalid"] = invalid_count
 
-    percent_invalid = invalid_count / sample_count * 100
-    invalid_data[range_label]["stats"]["percent_invalid"] = str(round(percent_invalid, 2)) + "%"
+    percent_invalid = round(invalid_count / sample_count * 100, 2)
+    invalid_data[range_label]["stats"]["percent_invalid"] = str(percent_invalid) + "%"
 
     total_count = invalid_data[range_label]["stats"]["total_documents"]
     invalid_data[range_label]["stats"]["total_estimated_invalid"] = round((total_count * percent_invalid) / 100)
     invalid_data[range_label]["stats"]["sample_percent_of_total"] = str(round((sample_count / total_count * 100), 2)) + "%"
 
     repaired = ""
-    if REPAIR:
-        repaired = " (repaired)"
-    if checkpoint:
+    if checkpoint and VERBOSE:
         print(
-            f"Checkpoint: total invalid data: {invalid_count}{repaired}, total items {sample_count} ({percent_invalid}%)"
+            f"  Checkpoint: total invalid data: {invalid_count}, total items {sample_count} ({percent_invalid}%) - {datetime.now()}"
         )
     else:
+        if REPAIR:
+            repaired = " (repaired)"
         print(
-            f"Total invalid data: {invalid_count}{repaired}, total items {sample_count} ({percent_invalid}%)"
+            f"  Total invalid data: {invalid_count}{repaired}, total items {sample_count} ({percent_invalid}%) - {datetime.now()}"
         )
     dump_data(invalid_data, OUTPUT_FILE)
 
 def create_months(start_month, end_month):
+    """Create a list of months between the start and end months"""
     start_year, start_month = start_month.split("-")
     end_year, end_month = end_month.split("-")
     months = []
@@ -188,28 +242,33 @@ def create_months(start_month, end_month):
             months.append(f"{year}-{str(month).zfill(2)}")
     return months
 
-def page_count(collection, query, range_label, invalid_data):
+def page_count_and_setup(collection, query, range_label, invalid_data):
+    """Get the count of pages and set up the stats for the range"""
     all_docs_count = collection.count_documents(query, 
                                                 max_time_ms=10000000)
-
     initialize_stats(range_label, all_docs_count, invalid_data)
     if all_docs_count == 0:
-        print("No documents found missing licenses in {range_label}.")
+        print(f"No documents found with missing licenses in {range_label}.")
         return 0
 
     if INITIAL_SKIP > 0:
         print(f"Skipping {INITIAL_SKIP} documents")
         all_docs_count -= INITIAL_SKIP
 
-    pages = all_docs_count // PAGE_SIZE
+    page_count = all_docs_count // PAGE_SIZE
     if all_docs_count % PAGE_SIZE:
-        pages += 1
-    return pages
+        page_count += 1
 
+    est_hours_to_complete = round(page_count * 2.5 / 60)
+    est_completion_time = datetime.now() + timedelta(hours=est_hours_to_complete)
+    print(f"Found {all_docs_count} documents missing licenses in {range_label}.  Estimated time to complete is {est_hours_to_complete} hours ending at {est_completion_time}.")
 
-def analyze_docs(collection, query, range_label, invalid_data):
-    pages = page_count(collection, query, range_label, invalid_data)
-    if pages == 0:
+    return page_count
+
+def analyze_docs(collection, query, range_label, invalid_data, one_pass=False):
+    """Analyze the documents in the collection for the given query"""
+    page_count = page_count_and_setup(collection, query, range_label, invalid_data)
+    if page_count == 0 or DRYRUN:
         return
     
     running_count_docs = 0
@@ -219,21 +278,27 @@ def analyze_docs(collection, query, range_label, invalid_data):
     if INITIAL_SKIP > 0:
         skip = INITIAL_SKIP
     while True:
-        print(f"Processing page {page+1} of {pages} in {range_label}")
+        print(f"Processing page {page+1} of {page_count} in {range_label} starting at offset {skip} - {datetime.now()}")
         docs = collection.find(query).skip(skip).limit(PAGE_SIZE).max_time_ms(10000000)
         new_docs_count, new_invalid_count = analyze_page_of_docs(docs, running_count_docs, running_count_invalid, range_label, invalid_data)
         running_count_invalid += new_invalid_count
         running_count_docs += new_docs_count
-        if new_docs_count == 0:
+        if new_docs_count == 0 or one_pass:
             break
         page += 1
         skip = page * PAGE_SIZE + INITIAL_SKIP
 
 def analyze_page_of_docs(docs, running_count_docs, running_count_invalid, range_label, invalid_data):
+    """Analyze a page of documents"""
     count_docs = 0
     count_invalid = 0
+
+    repair_list = []
+    bulk_operations = []
+
     for doc in docs:
         count_docs += 1
+
         blob = fetch_blob(
             BASE_AZURE_BLOB_URL,
             AZURE_CONTAINER_NAME,
@@ -261,26 +326,37 @@ def analyze_page_of_docs(docs, running_count_docs, running_count_invalid, range_
                     },
                 }
             if REPAIR:
-                # request definition with the force parameter to update the licensed.declared field in the database
-                collection.update_one(
-                    {"_id": doc["_id"]},
-                    {"$set": {"licensed.declared": blob_licensed.get("declared")}},
+                # add the coordinates to the repair list
+                coordinates = urllib.parse.quote(
+                    doc["coordinates"]["type"] + \
+                    doc["coordinates"]["provider"] + \
+                    doc["coordinates"].get("namespace", "-") + \
+                    doc["coordinates"]["name"] + \
+                    doc["coordinates"]["revision"]
                 )
-                blob = repair_data(
-                    SERVICE_API_URL,
-                    doc["coordinates"]["type"],
-                    doc["coordinates"]["provider"],
-                    doc["coordinates"].get("namespace", "-"),
-                    doc["coordinates"]["name"],
-                    doc["coordinates"]["revision"],
+                repair_list.append(coordinates)
+
+                bulk_operations.append(
+                    pymongo.UpdateOne(
+                        {"_id": doc["_id"]},
+                        {"$set": {"licensed.declared": blob_licensed.get("declared")}},
+                    )
                 )
-
-
+            
         # Checkpoint in case mongo dies
         if count_docs % 100 == 0:
             total_invalid = running_count_invalid + count_invalid
             total_docs = running_count_docs + count_docs
             update_stats(invalid_data, total_invalid, range_label, total_docs, True)
+
+    if REPAIR and len(repair_list) > 0:
+        collection.bulk_write(bulk_operations)
+        blob = repair_all(
+            SERVICE_API_URL,
+            repair_list
+        )
+        if VERBOSE:
+            print(f"Repaired {len(repair_list)} items")
 
     total_invalid = running_count_invalid + count_invalid
     total_docs = running_count_docs + count_docs
@@ -289,7 +365,9 @@ def analyze_page_of_docs(docs, running_count_docs, running_count_invalid, range_
 
 
 ### Main ###
-print("Starting data synchronization analysis")
+initialize()
+
+print(f"Starting data synchronization analysis at {datetime.now()}")
 client = pymongo.MongoClient(MONGO_CONNECTION_STRING)
 
 db = client[DB_NAME]
@@ -318,13 +396,14 @@ if START_DATE and END_DATE:
     print(f"  START_DATE: {START_DATE}")
     print(f"  END_DATE:   {END_DATE}")
  
+    label = custom_range_label() if not DRYRUN else f"{custom_range_label()}_dryrun"
     analyze_docs(
         collection,
         {
             "_meta.updated": {"$gte": START_DATE, "$lte": END_DATE},
             "licensed.declared": {"$exists": False},
         },
-        "custom_range",
+        label,
         invalid_data,
     ) 
 
@@ -339,14 +418,19 @@ else:
     for month in months:
         print(f"Processing {month}")
 
+        label = month if not DRYRUN else f"{month}_dryrun"
         analyze_docs(
             collection,
             {
-                "_meta.updated": {"$gte": START_DATE, "$lte": END_DATE},
+                "_meta.updated": {"$gte": f"{month}-01", "$lte": f"{month}-31"},
                 "licensed.declared": {"$exists": False},
             },
-            month,
+            label,
             invalid_data,
+            one_pass=True,
         ) 
         
 dump_data(invalid_data, OUTPUT_FILE)
+
+if DRYRUN:
+    print("Dry run completed. No data was modified.")
