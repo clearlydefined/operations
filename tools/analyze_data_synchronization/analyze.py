@@ -242,32 +242,47 @@ def create_months(start_month, end_month):
             months.append(f"{year}-{str(month).zfill(2)}")
     return months
 
-def page_count_and_setup(collection, query, range_label, invalid_data):
+def page_count_and_setup(collection, all_query, missing_query, range_label, invalid_data):
     """Get the count of pages and set up the stats for the range"""
-    all_docs_count = collection.count_documents(query, 
-                                                max_time_ms=10000000)
-    initialize_stats(range_label, all_docs_count, invalid_data)
-    if all_docs_count == 0:
-        print(f"No documents found with missing licenses in {range_label}.")
+    all_docs_count = collection.count_documents(
+        all_query, 
+        max_time_ms=10000000
+    )
+
+    docs_with_missing_count = collection.count_documents(
+        missing_query,
+        max_time_ms=10000000
+    )
+    initialize_stats(range_label, docs_with_missing_count, invalid_data)
+    if docs_with_missing_count == 0:
+        if DRYRUN:
+            print(f"{range_label}, {all_docs_count}, 0%, 0, 0, 0")
+        else:
+            print(f"No documents found with missing licenses out of {all_docs_count} total in {range_label}.")
         return 0
 
     if INITIAL_SKIP > 0:
         print(f"Skipping {INITIAL_SKIP} documents")
-        all_docs_count -= INITIAL_SKIP
+        docs_with_missing_count -= INITIAL_SKIP
 
-    page_count = all_docs_count // PAGE_SIZE
-    if all_docs_count % PAGE_SIZE:
+    page_count = docs_with_missing_count // PAGE_SIZE
+    if docs_with_missing_count % PAGE_SIZE:
         page_count += 1
 
     est_hours_to_complete = round(page_count * 2.5 / 60)
     est_completion_time = datetime.now() + timedelta(hours=est_hours_to_complete)
-    print(f"Found {all_docs_count} documents missing licenses in {range_label}.  Estimated time to complete is {est_hours_to_complete} hours ending at {est_completion_time}.")
+
+    if DRYRUN:
+        print(f"{range_label}, {all_docs_count}, {docs_with_missing_count}, {round(docs_with_missing_count/all_docs_count, 4)*100}%, {est_hours_to_complete}, {round(est_hours_to_complete / 24, 2)}")
+    else:
+        print(f"Found {docs_with_missing_count} documents missing licenses out of {all_docs_count} total in {range_label}.  Estimated time to complete is {est_hours_to_complete} hours ending at {est_completion_time}.")
 
     return page_count
 
 def analyze_docs(collection, query, range_label, invalid_data, one_pass=False):
     """Analyze the documents in the collection for the given query"""
-    page_count = page_count_and_setup(collection, query, range_label, invalid_data)
+    missing_query = {**query, "licensed.declared": {"$exists": False}}
+    page_count = page_count_and_setup(collection, query, missing_query, range_label, invalid_data)
     if page_count == 0 or DRYRUN:
         return
     
@@ -279,7 +294,7 @@ def analyze_docs(collection, query, range_label, invalid_data, one_pass=False):
         skip = INITIAL_SKIP
     while True:
         print(f"Processing page {page+1} of {page_count} in {range_label} starting at offset {skip} - {datetime.now()}")
-        docs = collection.find(query).skip(skip).limit(PAGE_SIZE).max_time_ms(10000000)
+        docs = collection.find(missing_query).skip(skip).limit(PAGE_SIZE).max_time_ms(10000000)
         new_docs_count, new_invalid_count = analyze_page_of_docs(docs, running_count_docs, running_count_invalid, range_label, invalid_data)
         running_count_invalid += new_invalid_count
         running_count_docs += new_docs_count
@@ -395,13 +410,15 @@ if START_DATE and END_DATE:
     print("Processing custom date range")
     print(f"  START_DATE: {START_DATE}")
     print(f"  END_DATE:   {END_DATE}")
- 
+
+    if DRYRUN:
+        print("Range, # all docs, # missing, % missing, est hours to complete, est days to complete")
+
     label = custom_range_label() if not DRYRUN else f"{custom_range_label()}_dryrun"
     analyze_docs(
         collection,
         {
             "_meta.updated": {"$gte": START_DATE, "$lte": END_DATE},
-            "licensed.declared": {"$exists": False},
         },
         label,
         invalid_data,
@@ -415,17 +432,19 @@ else:
     months = create_months(START_MONTH, END_MONTH)
     print(f"  {months}")
 
-    for month in months:
-        print(f"Processing {month}")
+    if DRYRUN:
+        print("Range, # all docs, # missing, % missing, est hours to complete, est days to complete")
 
-        label = month if not DRYRUN else f"{month}_dryrun"
+    for month in months:
+        if not DRYRUN:
+            print(f"Processing {month}")
+
         analyze_docs(
             collection,
             {
                 "_meta.updated": {"$gte": f"{month}-01", "$lte": f"{month}-31"},
-                "licensed.declared": {"$exists": False},
             },
-            label,
+            month,
             invalid_data,
             one_pass=True,
         ) 
