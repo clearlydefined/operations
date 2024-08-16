@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { omit, isEqual, pick } = require('lodash')
-const { deepStrictEqual, strictEqual } = require('assert')
+const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../testConfig')
 const nock = require('nock')
@@ -36,6 +36,13 @@ describe('Validation definitions between dev and prod', function () {
           getDefinition(devApiBaseUrl, coordinates)
         ])
         deepStrictEqualExpectedEntries(foundDef, omit(expectedDef, ['files']))
+      })
+    })
+
+    describe('Search coordinates via pattern', function () {
+      it(`should find coordinates for aws-sdk-java`, async function () {
+        const response = await callFetch(`${devApiBaseUrl}/definitions?pattern=aws-sdk-java`).then(r => r.json())
+        ok(response.length > 0)
       })
     })
 
