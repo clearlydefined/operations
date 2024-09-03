@@ -155,6 +155,7 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_HOST
 * CRAWLER_INSIGHTS_KEY
 * CRAWLER_NAME
+* CRAWLER_QUEUE_AZURE_CONNECTION_STRING
 * CRAWLER_QUEUE_PREFIX
 * CRAWLER_QUEUE_PROVIDER
 * CRAWLER_SERVICE_AUTH_TOKEN
@@ -215,6 +216,11 @@ This is a name to refer to the crawler with. Note that we set it in the App Serv
 The crawler does not harvest repos or package repositories immediately when they are found. It queues them up to be harvested, then takes items off that queue and harvests them in a timely fashion. This is to avoid overloading our infrastructure with too many harvests at once.
 
 We use an [Azure Storage Queue](https://docs.microsoft.com/en-us/azure/storage/queues/storage-queues-introduction) (which is kept within the same Azure Storage Account as the blobs used by this environment)
+
+**CRAWLER_QUEUE_AZURE_CONNECTION_STRING**
+
+This is an optional variable that's used if you want to have your queues in a different Azure account from the results azblobs. Intended to be used if you are hosting the crawler yourself and submitting results to CD's Azure blobs.
+So that your queue data is segregated from the CD Azure account. For security and compliance regulations.
 
 **CRAWLER_SERVICE_AUTH_TOKEN**
 
