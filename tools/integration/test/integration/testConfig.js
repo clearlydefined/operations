@@ -22,7 +22,7 @@ const components = [
   // 'git/github/ratatui-org/ratatui/bcf43688ec4a13825307aef88f3cdcd007b32641',
   // 'gem/rubygems/-/sorbet/0.5.11226',
   // 'pypi/pypi/-/sdbus/0.12.0',
-  'go/golang/rsc.io/quote/v1.3.0',
+  'go/golang/rsc.io/quote/v1.3.0'
   // 'nuget/nuget/-/NuGet.Protocol/6.7.1',
   // 'composer/packagist/symfony/polyfill-mbstring/v1.28.0',
   // 'pod/cocoapods/-/SoftButton/0.1.0', // Dev and prod have different file counts. See https://github.com/clearlydefined/crawler/issues/529
