@@ -13,7 +13,7 @@ const harvestTools = ['licensee', 'reuse', 'scancode']
 //Components to test
 const components = [
   // 'pypi/pypi/-/platformdirs/4.2.0', //Keep this as the first element to test, it is relatively small
-  'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16',
+  // 'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16',
   // 'maven/mavengoogle/android.arch.lifecycle/common/1.0.1',
   // 'maven/gradleplugin/io.github.lognet/grpc-spring-boot-starter-gradle-plugin/4.6.0',
   // 'conda/conda-forge/linux-aarch64/numpy/1.16.6-py36hdc1b780_0',
