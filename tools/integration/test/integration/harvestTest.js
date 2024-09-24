@@ -28,18 +28,9 @@ async function harvestTillCompletion(components) {
   const versionPoller = new Poller(poll.interval / 5, poll.maxTime)
   await harvester.detectSchemaVersions(oneComponent, versionPoller, tools)
 
-  //make sure that we have one entire set of harvest results (old or new)
-  console.log('Ensure harvest results exist before starting tests')
-  const previousHarvests = await harvester.pollForCompletion(components, new Poller(1, 1))
-  const previousHarvestsComplete = Array.from(previousHarvests.values()).every(v => v)
-  const poller = new Poller(poll.interval, poll.maxTime)
-  if (!previousHarvestsComplete) {
-    await harvester.harvest(components)
-    await harvester.pollForCompletion(components, poller)
-  }
-
   //trigger a reharvest to overwrite the old result
   console.log('Trigger reharvest to overwrite old results')
   await harvester.harvest(components, true)
+  const poller = new Poller(poll.interval, poll.maxTime)
   return harvester.pollForCompletion(components, poller, Date.now())
 }
