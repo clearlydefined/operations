@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const { components, devApiBaseUrl, harvest } = require('./testConfig')
+const { getComponents, devApiBaseUrl, harvest } = require('./testConfig')
 const Poller = require('../../lib/poller')
 const Harvester = require('../../lib/harvester')
 const { strictEqual } = require('assert')
@@ -10,7 +10,9 @@ describe('Tests for harvesting different components', function () {
   it('should verify all harvests are complete', async function () {
     this.timeout(harvest.timeout)
     console.time('Harvest Test')
-    const status = await harvestTillCompletion(components)
+    const recentDefinitions = await getComponents()
+    console.info(`Recent definitions: ${recentDefinitions}`)
+    const status = await harvestTillCompletion(recentDefinitions)
     for (const [coordinates, isHarvested] of status) {
       strictEqual(isHarvested, true, `Harvest for ${coordinates} is not complete`)
     }

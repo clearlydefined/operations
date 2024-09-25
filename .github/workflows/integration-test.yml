@@ -10,6 +10,10 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        dynamicCoordinates: [true, false]
     defaults:
       run:
         working-directory: ./tools/integration
@@ -29,7 +33,7 @@ jobs:
         run: npm test
         
       - name: Trigger harvest and verify completion
-        run: npm run e2e-test-harvest
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
-        run: npm run e2e-test-service
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service

@@ -4,7 +4,7 @@
 const { omit, isEqual, pick } = require('lodash')
 const { deepStrictEqual, strictEqual } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../testConfig')
+const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
 
@@ -14,19 +14,16 @@ describe('Validation definitions between dev and prod', function () {
   //Rest a bit to avoid overloading the servers
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
-  describe('Validation between dev and prod', function () {
-    before(() => {
-      loadFixtures().forEach(([url, definition]) =>
-        nock(prodApiBaseUrl, { allowUnmocked: true }).get(url).reply(200, definition)
-      )
-    })
-
+  describe('Validation between dev and prod', async function () {
+    const components = await getComponents()
+    console.info(`Testing definitions for ${JSON.stringify(components)}`)
     components.forEach(coordinates => {
       it(`should return the same definition as prod for ${coordinates}`, () => fetchAndCompareDefinition(coordinates))
     })
   })
 
-  describe('Validate on dev', function () {
+  describe('Validate on dev', async function () {
+    const components = await getComponents()
     const coordinates = components[0]
 
     describe('Search definitions', function () {

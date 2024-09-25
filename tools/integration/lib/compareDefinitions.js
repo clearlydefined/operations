@@ -1,37 +1,5 @@
-const { app } = require("@azure/functions");
-
-app.http("compareDefinitions", {
-  methods: ["POST"],
-  authLevel: "anonymous",
-  handler: async (request, context) => {
-    try {
-      const {
-        productionDoc,
-        stagingDoc,
-        ignoredKeys = [],
-      } = await request.json();
-
-      if (!productionDoc || !stagingDoc) {
-        return {
-          status: 400,
-          body: "Please provide both productionDoc and stagingDoc in the request body",
-        };
-      }
-
-      const result = compareDocuments(stagingDoc, productionDoc, ignoredKeys);
-
-      return {
-        status: 200,
-        jsonBody: result,
-      };
-    } catch (error) {
-      return {
-        status: 400,
-        body: "Error processing request: " + error.message,
-      };
-    }
-  }
-});
+// (c) Copyright 2024, GitHub and ClearlyDefined contributors. Licensed under the MIT license.
+// SPDX-License-Identifier: MIT
 
 function compareDocuments(staging, production, ignoredKeys, path = '') {
     let differences = {};
@@ -49,7 +17,7 @@ function compareDocuments(staging, production, ignoredKeys, path = '') {
         const currentPath = path ? `${path}.${key}` : key;
 
         if (shouldIgnore(currentPath, ignoredKeys)) {
-            continue; // Skip comparison for keys that should be ignored
+            continue;
         }
 
         const stagingValue = staging[key];
@@ -248,3 +216,5 @@ function getType(value) {
     if (Array.isArray(value)) return 'array';
     return typeof value;
 }
+
+module.exports = { compareDocuments }
