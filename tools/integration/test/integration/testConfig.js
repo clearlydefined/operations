@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require('fs').promises
+const path = require('path')
 
 const devApiBaseUrl = 'https://dev-api.clearlydefined.io'
 const prodApiBaseUrl = 'https://api.clearlydefined.io'
@@ -36,40 +36,40 @@ const componentsStatic = [
 
 function shouldUseDynamicComponents() {
   // check for environment variable DYNAMIC_COORDINATES, if it is set to true, use dynamic components
-  return process.env.DYNAMIC_COORDINATES === 'true';
-  
+  return process.env.DYNAMIC_COORDINATES === 'true'
 }
 
 async function getComponents() {
   if (shouldUseDynamicComponents()) {
-    console.info("Using dynamic components");
-    return componentsDynamic();
+    console.info('Using dynamic components')
+    return componentsDynamic()
   } else {
-    console.info("Using static components");
-    return Promise.resolve(componentsStatic);
+    console.info('Using static components')
+    return Promise.resolve(componentsStatic)
   }
 }
 
 const componentsDynamic = async () => {
-  
-  const filePath = path.join(__dirname, 'recentDefinitions.json');
+  const filePath = path.join(__dirname, 'recentDefinitions.json')
 
   try {
     // Check if the file exists
-    await fs.access(filePath);
+    await fs.access(filePath)
     // Read the file contents
-    const data = await fs.readFile(filePath, 'utf8');
-    console.info("Read dynamic components from disk")
-    return JSON.parse(data);
+    const data = await fs.readFile(filePath, 'utf8')
+    console.info('Read dynamic components from disk')
+    return JSON.parse(data)
   } catch (err) {
     // If the file doesn't exist, fetch the data and save it to disk
-    const response = await fetch('https://cosmos-query-function-app.azurewebsites.net/api/getrecentdefinitions?days=1&limit=1');
-    const data = await response.json();
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
-    console.info("Read dynamic components from remote")
-    return data;
+    const response = await fetch(
+      'https://cosmos-query-function-app.azurewebsites.net/api/getrecentdefinitions?days=1&limit=1'
+    )
+    const data = await response.json()
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8')
+    console.info('Read dynamic components from remote')
+    return data
   }
-};
+}
 
 module.exports = {
   devApiBaseUrl,
