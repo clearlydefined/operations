@@ -15,6 +15,11 @@ describe('Validation definitions between dev and prod', function () {
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
   describe('Validation between dev and prod', async function () {
+    before(() => {
+      loadFixtures().forEach(([url, definition]) => {
+        nock(prodApiBaseUrl, { allowUnmocked: true }).get(url).reply(200, definition)
+      })
+    })
     const components = await getComponents()
     console.info(`Testing definitions for ${JSON.stringify(components)}`)
     components.forEach(coordinates => {
