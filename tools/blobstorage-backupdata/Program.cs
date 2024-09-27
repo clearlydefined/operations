@@ -16,7 +16,7 @@ internal sealed class Program
         ILogger logger = loggerFactory.CreateLogger(nameof(Program));
         logger.LogInformation("Backup job started.");
         var backupJob = CreateBackupJob(loggerFactory);
-        try 
+        try
         {
             backupJob.ProcessJob().Wait();
         }
@@ -25,7 +25,7 @@ internal sealed class Program
             foreach (var e in ae.InnerExceptions)
             {
                 logger.LogError(e, "Backup job failed.");
-            }   
+            }
         }
         catch (Exception e)
         {
@@ -49,6 +49,7 @@ internal sealed class Program
         string mongoClientConnectionString = GetEnvironmentVariable("MONGO_CONNECTION_STRING");
         string blobServiceConnectionString = GetEnvironmentVariable("BLOB_SERVICE_CONNECTION_STRING");
         string blobContainerName = GetEnvironmentVariable("BLOB_CONTAINER_NAME");
+        string definitionBlobContainerName = GetEnvironmentVariable("DEFINITION_BLOB_CONTAINER_NAME");
 
         var dbClient = new MongoClient(mongoClientConnectionString);
         var blobOptions = new BlobClientOptions
@@ -62,9 +63,13 @@ internal sealed class Program
                 NetworkTimeout = TimeSpan.FromSeconds(100)
             }
         };
+
         var blobServiceClient = new BlobServiceClient(blobServiceConnectionString, blobOptions);
+
+        var definitionBlobContainerClient = blobServiceClient.GetBlobContainerClient(definitionBlobContainerName);
         var blobContainerClient = blobServiceClient.GetBlobContainerClient(blobContainerName);
 
-        return new BackupJob(blobContainerClient, dbClient, DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc), loggerFactory, new FilterRenderer());
+
+        return new BackupJob(blobContainerClient, definitionBlobContainerClient, dbClient, DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc), loggerFactory, new FilterRenderer());
     }
 }

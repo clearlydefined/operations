@@ -13,7 +13,8 @@ using Microsoft.Extensions.Logging;
 
 internal sealed class BackupJob
 {
-    private readonly BlobContainerClient BlobContainerClient;
+    private readonly BlobContainerClient SnapshotBlobContainerClient;
+    private readonly BlobContainerClient DefinitionBlobContainerClient;
     private readonly IMongoClient MongoClient;
     private readonly DateTime Now;
     private readonly ILogger Logger;
@@ -25,9 +26,10 @@ internal sealed class BackupJob
     private const string UpdatedFieldName = "_meta.updated";
     private const string MetaFieldName = "_meta";
 
-    public BackupJob(BlobContainerClient blobContainerClient, IMongoClient mongoClient, DateTime now, ILoggerFactory loggerFactory, IFilterRenderer filterRenderer)
+    public BackupJob(BlobContainerClient snapshotBlobContainerClient, BlobContainerClient definitionBlobContainerClient, IMongoClient mongoClient, DateTime now, ILoggerFactory loggerFactory, IFilterRenderer filterRenderer)
     {
-        BlobContainerClient = blobContainerClient;
+        SnapshotBlobContainerClient = snapshotBlobContainerClient;
+        DefinitionBlobContainerClient = definitionBlobContainerClient;
         MongoClient = mongoClient;
         Now = now;
         Logger = loggerFactory.CreateLogger(nameof(BackupJob));
@@ -109,7 +111,15 @@ internal sealed class BackupJob
                         {
                             throw new Exception("Blob name is null or empty.");
                         }
-                        await UploadString(jObject.ToString(), blobName);
+                        var definitionCoordinates = jObject.ConstructBlobUrl();
+                        if (string.IsNullOrWhiteSpace(definitionCoordinates))
+                        {
+                            throw new Exception("Definition blob name is null or empty.");
+                        }
+                        // Get the data from the definition blob store
+                        string definitionBlobData = await GetDefinition(definitionCoordinates);
+
+                        await UploadString(definitionBlobData, blobName);
                         AddChangesToIndex(changesIndex, jObject, blobName);
                     }
                     catch (Exception e)
@@ -163,13 +173,32 @@ internal sealed class BackupJob
             "changes/index");
     }
 
+    private async Task<string> ReadFromBlob(
+        BlobContainerClient blobContainerClient, string blobName)
+    {
+        try
+        {
+            var blobClient = blobContainerClient.GetBlobClient(blobName);
+            var response = await blobClient.DownloadContentAsync();
+            var content = response.Value.Content.ToString();
+            Logger.LogInformation("Content of the blob: {blobName}, content: {content}", blobName, content);
+
+            return content;
+        }
+        catch (Exception e)
+        {
+            Logger.LogError("Failed to read from definition blob: {blobName}, error message: {exceptionMessage}", blobName, e.Message);
+            throw;
+        }
+    }
+
     private async Task UploadString(
         string blobContent,
         string blobName)
     {
         try
         {
-            var blobClient = BlobContainerClient.GetBlobClient(blobName);
+            var blobClient = SnapshotBlobContainerClient.GetBlobClient(blobName);
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(blobContent));
             await blobClient.UploadAsync(stream, overwrite: true);
         }
@@ -180,13 +209,26 @@ internal sealed class BackupJob
         }
     }
 
+    internal async Task<string> GetDefinition(string coordinatePath)
+    {
+        try
+        {
+            var data = await ReadFromBlob(DefinitionBlobContainerClient, coordinatePath);
+            return data;
+        }
+        catch (Exception e)
+        {
+            Logger.LogError("Failed to get definition from blob storage, exception: {exceptionMessage}", e.Message);
+            throw;
+        }
+    }
+
     internal async Task<string[]> GetIndex()
     {
         try
         {
-            var blobClient = BlobContainerClient.GetBlobClient("changes/index");
-            return (await blobClient.DownloadContentAsync()).Value.Content.ToString()
-                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            var data = await ReadFromBlob(SnapshotBlobContainerClient, "changes/index");
+            return data.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         }
         catch (Exception e)
         {
