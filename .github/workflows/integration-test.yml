@@ -2,7 +2,11 @@ name: Integration Test
 
 on:
   workflow_dispatch:
-    ## The tests take a long time to run and can be potentially quite costly, so set it to run manually
+    inputs:
+      baseFolderPath:
+        description: 'Base folder path for diffs'
+        required: true
+        default: 'diffs'
 
 permissions:
   contents: read
@@ -37,3 +41,12 @@ jobs:
 
       - name: Verify service functions
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
+
+      - name: Generate structured diffs
+        run: npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
+
+      - name: Upload diffs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffs-${{ matrix.dynamicCoordinates == 'true' && 'dynamic' || 'static' }}
+          path: ${{ github.event.inputs.baseFolderPath }}
