@@ -49,6 +49,11 @@ describe('HarvestResultFetcher', function () {
       strictEqual(result, true)
     })
 
+    it('should return false when tool version is not provided', async function () {
+      const result = await resultMonitor.isHarvestedbyTool('licensee', '')
+      strictEqual(result, false)
+    })
+
     it('should detect when component is completely harvested', async function () {
       sinon.stub(resultMonitor, 'fetchHarvestResult').resolves(metadata())
       const result = await resultMonitor.isHarvestComplete(defaultToolChecks)
@@ -146,6 +151,17 @@ describe('HarvestResultFetcher', function () {
         ['scancode', '30.3.0']
       ])
     })
+
+    it('should handle no result for tools', async function () {
+      const harvestResults = []
+      fetchStub.resolves(new Response(JSON.stringify(harvestResults)))
+      const toolVersions = await resultMonitor.fetchToolVersions()
+      deepStrictEqual(toolVersions, [
+        ['licensee', ''],
+        ['reuse', ''],
+        ['scancode', '']
+      ])
+    })
   })
 
   describe('pollForToolVersionsComplete', function () {
@@ -178,6 +194,64 @@ describe('HarvestResultFetcher', function () {
         ['licensee', '9.14.0'],
         ['reuse', '3.2.1'],
         ['scancode', '30.3.0']
+      ])
+    })
+
+    it('should handle partially harvested results correctly', async function () {
+      sinon
+        .stub(resultMonitor, 'fetchToolVersions')
+        .onFirstCall()
+        .resolves([
+          ['licensee', '9.14.0'],
+          ['reuse', '3.2.2'],
+          ['scancode', '']
+        ])
+        .onSecondCall()
+        .resolves([
+          ['licensee', '9.14.0'],
+          ['reuse', '3.2.1'],
+          ['reuse', '3.2.2'],
+          ['scancode', '30.3.0']
+        ])
+      sinon
+        .stub(resultMonitor, 'isHarvestedbyTool')
+        .withArgs('licensee', '9.14.0')
+        .resolves(true)
+        .withArgs('reuse', '3.2.1')
+        .resolves(true)
+        .withArgs('scancode', '30.3.0')
+        .resolves(true)
+      const toolVersions = await resultMonitor.pollForToolVersionsComplete(poller, Date.now())
+      deepStrictEqual(toolVersions, [
+        ['licensee', '9.14.0'],
+        ['reuse', '3.2.1'],
+        ['scancode', '30.3.0']
+      ])
+    })
+
+    it('should handle tool results with multiple schema versions correctly on subsequent polls', async function () {
+      sinon.stub(resultMonitor, 'fetchToolVersions').resolves([
+        ['licensee', '9.14.0'],
+        ['reuse', '3.2.1'],
+        ['reuse', '3.2.2'],
+        ['scancode', '30.3.0']
+      ])
+      sinon
+        .stub(resultMonitor, 'isHarvestedbyTool')
+        .withArgs('licensee', '9.14.0')
+        .onFirstCall()
+        .resolves(false)
+        .onSecondCall()
+        .resolves(true)
+        .withArgs('reuse', '3.2.1')
+        .resolves(true)
+        .withArgs('scancode', '30.3.0')
+        .resolves(true)
+      const toolVersions = await resultMonitor.pollForToolVersionsComplete(poller, Date.now())
+      deepStrictEqual(toolVersions, [
+        ['reuse', '3.2.1'],
+        ['scancode', '30.3.0'],
+        ['licensee', '9.14.0']
       ])
     })
   })

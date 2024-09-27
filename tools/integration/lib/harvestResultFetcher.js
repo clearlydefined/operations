@@ -14,12 +14,13 @@ class HarvestResultFetcher {
   async fetchToolVersions(tools = defaultTools) {
     const listHarvestResultApi = `${this.apiBaseUrl}/harvest/${this._coordinates}?form=list`
     const harvestResultUrls = await this._fetch(listHarvestResultApi).then(r => r.json())
-    return tools.flatMap(tool =>
-      harvestResultUrls
+    return tools.flatMap(tool => {
+      const found = harvestResultUrls
         .filter(url => url.includes(`/${tool}/`))
         .map(url => url.substring(`${this._coordinates}/${tool}/`.length))
         .map(version => [tool, version])
-    )
+      return found.length ? found : [[tool, '']]
+    })
   }
 
   async _pollForCompletion(poller) {
@@ -54,13 +55,14 @@ class HarvestResultFetcher {
   async isHarvestComplete(toolVersions, startTime, statuses = new Map()) {
     const harvestChecks = (toolVersions || []).map(async ([tool, toolVersion]) => {
       const completed = statuses.get(tool)?.completed || (await this.isHarvestedbyTool(tool, toolVersion, startTime))
-      if (completed) statuses.set(tool, { toolVersion, completed })
+      if (completed && !statuses.get(tool)) statuses.set(tool, { toolVersion, completed })
       return tool
     })
     return Promise.all(harvestChecks).then(tools => tools.every(tool => statuses.get(tool)?.completed))
   }
 
   async isHarvestedbyTool(tool, toolVersion, startTime = 0) {
+    if (!tool || !toolVersion) return false
     const harvested = await this.fetchHarvestResult(tool, toolVersion)
     if (!harvested._metadata) return false
     const fetchedAt = new Date(harvested._metadata.fetchedAt)
