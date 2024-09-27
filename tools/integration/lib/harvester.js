@@ -20,7 +20,7 @@ class Harvester {
     const tool = this._harvestToolChecks?.length === 1 ? this._harvestToolChecks[0][0] : 'component'
     return components.map(coordinates => {
       const result = { tool, coordinates }
-      if (reharvest) result.policy = 'always'
+      if (reharvest) result.policy = 'reharvestAlways'
       return result
     })
   }
@@ -57,10 +57,6 @@ class Harvester {
     if (!component) throw new Error('Component not set')
     console.log('Start to detect schema versions for harvest tools')
     const startTime = Date.now()
-    //make sure that we have one entire set of harvest results (old or new)
-    await this.harvest([component])
-    await new Promise(resolve => setTimeout(resolve, poller.interval))
-
     //trigger a reharvest to overwrite the old result, so we can verify the timestamp is new for completion
     await this.harvest([component], true)
 
