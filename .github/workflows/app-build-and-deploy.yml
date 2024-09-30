@@ -104,7 +104,7 @@ jobs:
     with:
       deploy-env: ${{ inputs.deploy-env }}
       application-type: ${{ inputs.application-type }}
-      image-tag: ${{ needs.get-version.outputs.version }}
+      application-version: ${{ needs.get-version.outputs.version }}
       build-args: ${{ inputs.docker-build-args }}
 
   deploy-primary-app-to-azure:

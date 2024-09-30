@@ -20,7 +20,7 @@ on:
         description: 'application type (i.e. api | worker | ui) - used as a label for the Docker image'
         required: true
         type: string
-      image-tag:
+      application-version:
         description: 'the tag to use for the image (e.g. prod: v1.2.0, dev: v1.2.0+dev:1D3F567890)'
         required: true
         type: string
@@ -61,7 +61,7 @@ jobs:
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
             "${{ github.repository }}" \
             "${{ inputs.deploy-env }}" \
-            "${{ inputs.image-tag }}") || (echo "$script_log" && exit 1)
+            "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           image_name=$(echo "$script_log" | tail -n 1)
           echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
@@ -87,7 +87,11 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          build-args: ${{ inputs.build-args }}
+          build-args: |
+            APP_VERSION=${{ inputs.application-version }}
+            BUILD_SHA=${{ github.sha }}
+            BUILD_NUMBER=${{ inputs.application-version }}
+            ${{ inputs.build-args }}
           tags: ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
           labels: |
             env=${{ inputs.deploy-env }}

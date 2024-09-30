@@ -26,10 +26,6 @@ on:
         description: 'Azure application name of application to deploy (i.e. clearlydefined-api | cdcrawler | clearlydefined)'
         required: true
         type: string
-      application-version:
-        description: 'the tag to use for the image (e.g. prod: v1.2.0, dev: v1.2.0+dev:1D3F567890)'
-        required: true
-        type: string
       image-name-with-tag:
         description: 'Docker image name with the tag (e.g. ghcr.io/clearlydefined/clearlydefined-api:v1.2.0)'
         required: true
@@ -68,16 +64,6 @@ jobs:
               {
                 "name": "DOCKER_REGISTRY_SERVER_URL",
                 "value": "https://ghcr.io",
-                "slotSetting": false
-              },
-              {
-                "name": "APP_VERSION",
-                "value": "${{ inputs.application-version }}",
-                "slotSetting": false
-              },
-              {
-                "name": "BUILD_SHA",
-                "value": "${{ github.sha }}",
                 "slotSetting": false
               }
             ]
