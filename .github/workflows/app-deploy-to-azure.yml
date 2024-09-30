@@ -54,33 +54,33 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set DOCKER configs in Azure web app
-        uses: azure/appservice-settings@v1.1.1
-        with:
-          app-name: ${{ inputs.azure-webapp-name }}
-          app-settings-json: |
-            [
-              {
-                "name": "DOCKER_CUSTOM_IMAGE_NAME",
-                "value": "${{ inputs.image-name-with-tag }}",
-                "slotSetting": false
-              },
-              {
-                "name": "DOCKER_REGISTRY_SERVER_URL",
-                "value": "https://ghcr.io",
-                "slotSetting": false
-              },
-              {
-                "name": "APP_VERSION",
-                "value": "${{ inputs.application-version }}",
-                "slotSetting": false
-              },
-              {
-                "name": "BUILD_SHA",
-                "value": "${{ github.sha }}",
-                "slotSetting": false
-              }
-            ]
+      # - name: Set DOCKER configs in Azure web app
+      #   uses: azure/appservice-settings@v1.1.1
+      #   with:
+      #     app-name: ${{ inputs.azure-webapp-name }}
+      #     app-settings-json: |
+      #       [
+      #         {
+      #           "name": "DOCKER_CUSTOM_IMAGE_NAME",
+      #           "value": "${{ inputs.image-name-with-tag }}",
+      #           "slotSetting": false
+      #         },
+      #         {
+      #           "name": "DOCKER_REGISTRY_SERVER_URL",
+      #           "value": "https://ghcr.io",
+      #           "slotSetting": false
+      #         },
+      #         {
+      #           "name": "APP_VERSION",
+      #           "value": "${{ inputs.application-version }}",
+      #           "slotSetting": false
+      #         },
+      #         {
+      #           "name": "BUILD_SHA",
+      #           "value": "${{ github.sha }}",
+      #           "slotSetting": false
+      #         }
+      #       ]
   
       # v3.0.1 passes when AZURE_WEBAPP_PUBLISH_PROFILE_PROD isn't set, but should fail.
       # Added secret check above to ensure it is set.
