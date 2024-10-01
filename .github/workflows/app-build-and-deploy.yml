@@ -1,5 +1,5 @@
 # This workflow will build a docker image, push it to ghcr.io, and deploy it to an Azure WebApp.
-# v2.0.0 - This tag coordinates the other reusable parts of this workflow.
+# v3.0.0 - This tag coordinates the other reusable parts of this workflow.
 #   * app-build-docker-image.yml
 #   * app-deploy-to-azure.yml
 #   * app-is-deployable.yml
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v2.0.0'
+          ref: 'v3.0.0'
           path: 'operations'
       - name: Get version from package-lock.json
         id: get_version
