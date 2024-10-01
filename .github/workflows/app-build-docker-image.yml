@@ -80,6 +80,13 @@ jobs:
           username: ${{ github.actor }} # user that kicked off the action
           password: ${{ secrets.GITHUB_TOKEN }} # token created when the action launched (short lived)
 
+      - name: Log into Docker Hub
+        uses: docker/login-action@v3.0.0
+        with:
+          username: 
+
+
+
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5.2.0
@@ -90,7 +97,6 @@ jobs:
           build-args: |
             APP_VERSION=${{ inputs.application-version }}
             BUILD_SHA=${{ github.sha }}
-            BUILD_NUMBER=${{ inputs.application-version }}
             ${{ inputs.build-args }}
           tags: ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
           labels: |
