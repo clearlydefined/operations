@@ -134,5 +134,4 @@ jobs:
     with:
       deploy-env: ${{ inputs.deploy-env }}
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.secondary-azure-app-name-postfix }}
-      application-version: ${{ needs.get-version.outputs.version }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
