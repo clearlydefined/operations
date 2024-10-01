@@ -125,7 +125,7 @@ jobs:
     name: Deploy to secondary Azure app
     if: ${{ inputs.secondary-azure-app-name-postfix != '' }}
     needs: [get-version, build-and-publish-image]
-    uses: clearlydefined/operations/.github/workflows/app-deploy-to-azure.yml@v2.0.0
+    uses: ./.github/workflows/app-deploy-to-azure.yml
     secrets:
       AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_SECONDARY_WEBAPP_PUBLISH_PROFILE }}
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
