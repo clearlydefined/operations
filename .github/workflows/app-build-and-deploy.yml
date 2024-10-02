@@ -108,6 +108,7 @@ jobs:
     secrets:
       DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }} 
     with:
       deploy-env: ${{ inputs.deploy-env }}
       application-type: ${{ inputs.application-type }}
