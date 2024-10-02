@@ -23,6 +23,9 @@ on:
       PRODUCTION_DEPLOYERS:
         description: 'Name of the team that defines who can deploy to production - Defined in org action secrets'
         required: true
+      DOCKERHUB_TOKEN: 
+        description: 'Token to be used if publishing image to dockerhub, input.docker-hub-username must also be provided'
+        required: false
 
     inputs:
       deploy-env:
@@ -47,6 +50,10 @@ on:
         default: ''
       docker-build-args:
         description: 'optionally pass in build args to the Docker build command (e.g. "MY_VAR=my_value")'
+        required: false
+        type: string
+      docker-hub-username:
+        description: 'optionally pass to publish image to docker-hub'
         required: false
         type: string
     
@@ -106,6 +113,7 @@ jobs:
       application-type: ${{ inputs.application-type }}
       application-version: ${{ needs.get-version.outputs.version }}
       build-args: ${{ inputs.docker-build-args }}
+      docker-hub-username: ${{ inputs.docker-hub-username }}
 
   deploy-primary-app-to-azure:
     name: Deploy to primary Azure app
