@@ -90,7 +90,7 @@ jobs:
 
       - name: Log into Docker Hub
         if: ${{ inputs.docker-hub-username != '' }}
-        uses: docker/login-action@v3.0.0
+        uses: docker/login-action@v3.3.0
         with:
           username: ${{ inputs.docker-hub-username }} 
           password: ${{ secrets.DOCKERHUB_TOKEN }} 
