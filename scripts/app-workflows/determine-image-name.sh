@@ -8,11 +8,12 @@
 # Outputs
 #   image_name_with_tag: the full image name with tag (e.g. ghcr.io/clearlydefined/service:v1.2.0)
 
-repo="$1"
-deploy_env="$2"
-image_tag="$3"
+image_base_name-dev = "$1"
+repo="$2"
+deploy_env="$3"
+image_tag="$4"
 
-image_base_name="ghcr.io/$repo" # e.g. ghcr.io/clearlydefined/service
+image_base_name="$image_base_name/$repo" # e.g. ghcr.io/clearlydefined/service
 if [[ "$deploy_env" == 'prod' ]] ; then
     image_name_with_tag="$image_base_name:$image_tag"
 elif [[ "$deploy_env" == 'dev' ]] ; then

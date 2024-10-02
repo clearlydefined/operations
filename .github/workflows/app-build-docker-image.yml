@@ -50,7 +50,7 @@ jobs:
       DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
 
-  determine-image-name:
+  determine-ghcr-image-name:
     name: Determine Image Name
     runs-on: ubuntu-latest
     outputs:
@@ -67,6 +67,33 @@ jobs:
         run: |
           echo "BUILD_ARGS=${{ inputs.build-args }}"
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
+            "ghcr.io" \
+            "${{ github.repository }}" \
+            "${{ inputs.deploy-env }}" \
+            "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          image_name=$(echo "$script_log" | tail -n 1)
+          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
+
+  determine-dockerhub-image-name:
+    if: ${{ inputs.docker-hub-username != '' }}
+    name: Determine Image Name
+    runs-on: ubuntu-latest
+    outputs:
+      docker-image-name-with-tag: "${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          ref: 'v2.0.0'
+          path: 'operations'
+      - name: Determine Docker Image Name
+        id: determine_image_name
+        run: |
+          echo "BUILD_ARGS=${{ inputs.build-args }}"
+          script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
+            "${{ inputs.docker-hub-username }}" \
             "${{ github.repository }}" \
             "${{ inputs.deploy-env }}" \
             "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
@@ -77,16 +104,9 @@ jobs:
   build-docker-image:
     name: Build Image
     runs-on: ubuntu-latest
-    needs: [check-deployable, determine-image-name]
+    needs: [check-deployable, determine-ghcr-image-name, determine-dockerhub-image-name]
     steps:
       - uses: actions/checkout@v4.1.1
-
-      - name: Log into ghcr registry
-        uses: docker/login-action@v3.0.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }} # user that kicked off the action
-          password: ${{ secrets.GITHUB_TOKEN }} # token created when the action launched (short lived)
 
       - name: Log into Docker Hub
         if: ${{ inputs.docker-hub-username != '' }}
@@ -94,6 +114,13 @@ jobs:
         with:
           username: ${{ inputs.docker-hub-username }} 
           password: ${{ secrets.DOCKERHUB_TOKEN }} 
+
+      - name: Log into ghcr registry
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }} # user that kicked off the action
+          password: ${{ secrets.GITHUB_TOKEN }} # token created when the action launched (short lived)
 
       - name: Build and push Docker image
         id: build-and-push
@@ -106,7 +133,9 @@ jobs:
             APP_VERSION=${{ inputs.application-version }}
             BUILD_SHA=${{ github.sha }}
             ${{ inputs.build-args }}
-          tags: ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
+          tags: |
+            ${{ needs.determine-ghcr-image-name.outputs.docker-image-name-with-tag }}
+            ${{ needs.determine-dockerhub-image-name.outputs.docker-image-name-with-tag }}
           labels: |
             env=${{ inputs.deploy-env }}
             type=${{ inputs.application-type }}          
