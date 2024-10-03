@@ -62,8 +62,8 @@ jobs:
           repository: 'clearlydefined/operations'
           ref: '3adf6fb9656eee09cd8afbd6cffbff5da29a30d6'
           path: 'operations'
-      - name: Determine Docker Image Name
-        id: determine_image_name
+      - name: Determine gchr Image Name
+        id: determine_gchr_image_name
         run: |
           echo "BUILD_ARGS=${{ inputs.build-args }}"
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
@@ -75,22 +75,9 @@ jobs:
           image_name=$(echo "$script_log" | tail -n 1)
           echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
 
-  determine-dockerhub-image-name:
-    name: Determine Image Name
-    runs-on: ubuntu-latest
-    outputs:
-      docker-image-name-with-tag: "${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"
-    steps:
-      - name: Checkout this repo
+      - name: Determine Dockerhub Image Name
         if: ${{ inputs.docker-hub-username != '' }}
-        uses: actions/checkout@v4.1.1
-        with:
-          repository: 'clearlydefined/operations'
-          ref: '3b4ec17688a881e77b35c16f3f758fc2705a1e8d'
-          path: 'operations'
-      - name: Determine Docker Image Name
-        if: ${{ inputs.docker-hub-username != '' }}
-        id: determine_image_name
+        id: determine_dockerhub_name
         run: |
           echo "BUILD_ARGS=${{ inputs.build-args }}"
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
@@ -100,7 +87,34 @@ jobs:
             "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           image_name=$(echo "$script_log" | tail -n 1)
-          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_NAME_WITH_TAG=\n$image_name" >> $GITHUB_ENV
+
+  # determine-dockerhub-image-name:
+  #   name: Determine Image Name
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     docker-image-name-with-tag: "${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"
+  #   steps:
+  #     - name: Checkout this repo
+  #       if: ${{ inputs.docker-hub-username != '' }}
+  #       uses: actions/checkout@v4.1.1
+  #       with:
+  #         repository: 'clearlydefined/operations'
+  #         ref: '3b4ec17688a881e77b35c16f3f758fc2705a1e8d'
+  #         path: 'operations'
+  #     - name: Determine Docker Image Name
+  #       if: ${{ inputs.docker-hub-username != '' }}
+  #       id: determine_image_name
+  #       run: |
+  #         echo "BUILD_ARGS=${{ inputs.build-args }}"
+  #         script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
+  #           "${{ inputs.docker-hub-username }}" \
+  #           "${{ github.repository }}" \
+  #           "${{ inputs.deploy-env }}" \
+  #           "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
+  #         echo -e "---- script log\n$script_log\n----"; \
+  #         image_name=$(echo "$script_log" | tail -n 1)
+  #         echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
 
   build-docker-image:
     name: Build Image
