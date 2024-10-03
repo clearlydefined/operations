@@ -149,7 +149,7 @@ jobs:
             BUILD_SHA=${{ github.sha }}
             ${{ inputs.build-args }}
           tags: |
-            ${{ needs.determine-ghcr-image-name.outputs.docker-image-name-with-tag }}
+            ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
           labels: |
             env=${{ inputs.deploy-env }}
             type=${{ inputs.application-type }}          
