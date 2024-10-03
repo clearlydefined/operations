@@ -61,7 +61,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: '3adf6fb9656eee09cd8afbd6cffbff5da29a30d6'
+          ref: 'd6f322edeaf369efb34d6b68582f8d90f54f222d'
           path: 'operations'
       - name: Determine gchr Image Name
         id: determine_gchr_image_name
