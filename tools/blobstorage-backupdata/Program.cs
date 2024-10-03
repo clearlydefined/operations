@@ -7,25 +7,19 @@ using MongoDB.Driver;
 
 internal sealed class Program
 {
-    internal static void Main()
+    internal static async Task Main()
     {
+        DotNetEnv.Env.Load();
         string? useJsonLoggingEnvVar = Environment.GetEnvironmentVariable("USE_JSON_LOGGING");
         _ = bool.TryParse(useJsonLoggingEnvVar, out bool useJsonLogging);
         using ILoggerFactory loggerFactory = CustomLoggerFactory.Create(useJsonLogging);
 
         ILogger logger = loggerFactory.CreateLogger(nameof(Program));
         logger.LogInformation("Backup job started.");
-        var backupJob = CreateBackupJob(loggerFactory);
         try 
         {
-            backupJob.ProcessJob().Wait();
-        }
-        catch (AggregateException ae)
-        {
-            foreach (var e in ae.InnerExceptions)
-            {
-                logger.LogError(e, "Backup job failed.");
-            }   
+            var backupJob = CreateBackupJob(loggerFactory);
+            await backupJob.ProcessJob();
         }
         catch (Exception e)
         {
