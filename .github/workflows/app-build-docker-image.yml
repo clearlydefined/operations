@@ -87,7 +87,7 @@ jobs:
             "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           image_name=$(echo "$script_log" | tail -n 1)
-          echo "DOCKER_IMAGE_NAME_WITH_TAG=\n$image_name" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_NAME_WITH_TAG="${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"$'\n'"$image_name"" >> $GITHUB_ENV
 
   # determine-dockerhub-image-name:
   #   name: Determine Image Name
