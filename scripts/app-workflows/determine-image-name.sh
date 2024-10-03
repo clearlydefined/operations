@@ -18,6 +18,11 @@ if [[ "$registry" == 'ghcr.io' ]]; then
   image_base_name="$registry/$repo" # e.g. ghcr.io/clearlydefined/service
 fi
 
+if [[ "$registry" != 'ghcr.io' ]]; then
+  reponame="${repo#*/}"
+  image_base_name="$registry/$reponame" # e.g. <dockerhubuser>/service
+fi
+
 if [[ "$deploy_env" == 'prod' ]] ; then
     image_name_with_tag="$image_base_name:$image_tag"
 elif [[ "$deploy_env" == 'dev' ]] ; then
