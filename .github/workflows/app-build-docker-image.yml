@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v2.0.0'
+          ref: '3adf6fb9656eee09cd8afbd6cffbff5da29a30d6'
           path: 'operations'
       - name: Determine Docker Image Name
         id: determine_image_name
@@ -86,7 +86,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v2.0.0'
+          ref: '3adf6fb9656eee09cd8afbd6cffbff5da29a30d6'
           path: 'operations'
       - name: Determine Docker Image Name
         id: determine_image_name
