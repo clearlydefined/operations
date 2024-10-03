@@ -50,7 +50,7 @@ jobs:
       DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
 
-  determine-ghcr-image-name:
+  determine-image-name:
     name: Determine Image Name
     runs-on: ubuntu-latest
     outputs:
@@ -119,7 +119,7 @@ jobs:
   build-docker-image:
     name: Build Image
     runs-on: ubuntu-latest
-    needs: [check-deployable, determine-ghcr-image-name, determine-dockerhub-image-name]
+    needs: [check-deployable, determine-image-name]
     steps:
       - uses: actions/checkout@v4.1.1
 
