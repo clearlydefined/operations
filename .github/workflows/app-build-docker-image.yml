@@ -76,19 +76,20 @@ jobs:
           echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
 
   determine-dockerhub-image-name:
-    if: ${{ inputs.docker-hub-username != '' }}
     name: Determine Image Name
     runs-on: ubuntu-latest
     outputs:
       docker-image-name-with-tag: "${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"
     steps:
       - name: Checkout this repo
+        if: ${{ inputs.docker-hub-username != '' }}
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
           ref: '3b4ec17688a881e77b35c16f3f758fc2705a1e8d'
           path: 'operations'
       - name: Determine Docker Image Name
+        if: ${{ inputs.docker-hub-username != '' }}
         id: determine_image_name
         run: |
           echo "BUILD_ARGS=${{ inputs.build-args }}"
