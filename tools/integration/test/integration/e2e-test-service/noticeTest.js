@@ -3,11 +3,11 @@
 
 const { deepStrictEqual } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../testConfig')
+const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
 
-describe('Validate notice files between dev and prod', function () {
+describe('Validate notice files between dev and prod', async function () {
   this.timeout(definition.timeout)
 
   //Rest a bit to avoid overloading the servers
@@ -20,7 +20,7 @@ describe('Validate notice files between dev and prod', function () {
         .reply(200, notice)
     })
   })
-
+  const components = await getComponents()
   components.forEach(coordinates => {
     it(`should return the same notice as prod for ${coordinates}`, () => fetchAndCompareNotices(coordinates))
   })

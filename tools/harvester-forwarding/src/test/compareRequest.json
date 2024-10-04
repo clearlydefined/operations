@@ -1,0 +1,224 @@
+{
+    "productionDoc":{
+        "described": {
+          "releaseDate": "2021-12-12",
+          "urls": {
+            "registry": "https://pkg.go.dev/github.com/docker/cli",
+            "version": "https://pkg.go.dev/github.com/docker/cli@v20.10.12+incompatible",
+            "download": "https://proxy.golang.org/github.com/docker/cli/@v/v20.10.12+incompatible.zip"
+          },
+          "hashes": {
+            "sha1": "d6a524762d88242708dac60e0f61485876348a5c",
+            "sha256": "d52fcb80bdcd3eeaebd25e231769b2780149a39d85ad2b42923132426a0486fb"
+          },
+          "files": 1228,
+          "tools": [
+            "clearlydefined/1.2.0",
+            "licensee/9.14.0",
+            "scancode/30.3.0"
+          ],
+          "toolScore": {
+            "total": 100,
+            "date": 30,
+            "source": 70
+          },
+          "sourceLocation": {
+            "type": "go",
+            "provider": "golang",
+            "namespace": "github.com%2Fdocker",
+            "name": "cli",
+            "revision": "v20.10.12+incompatible",
+            "url": "https://pkg.go.dev/github.com/docker/cli@v20.10.12+incompatible"
+          },
+          "score": {
+            "total": 100,
+            "date": 30,
+            "source": 70
+          }
+        },
+        "licensed": {
+          "declared": "Apache-2.0",
+          "toolScore": {
+            "total": 45,
+            "declared": 30,
+            "discovered": 0,
+            "consistency": 0,
+            "spdx": 15,
+            "texts": 0
+          },
+          "facets": {
+            "core": {
+              "attribution": {
+                "unknown": 1222,
+                "parties": [
+                  "Copyright 2010 The Go Authors",
+                  "Copyright (c) 2013, Felix Riedel",
+                  "Copyright 2012-2017 Docker, Inc.",
+                  "Copyright 2013-2017 Docker, Inc.",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors",
+                  "Copyright (c) 2004, 2006 The Linux Foundation and its contributors"
+                ]
+              },
+              "discovered": {
+                "unknown": 1224,
+                "expressions": [
+                  "Apache-2.0",
+                  "BSD-3-Clause",
+                  "NOASSERTION"
+                ]
+              },
+              "files": 1228
+            }
+          },
+          "score": {
+            "total": 45,
+            "declared": 30,
+            "discovered": 0,
+            "consistency": 0,
+            "spdx": 15,
+            "texts": 0
+          }
+        },
+        "coordinates": {
+          "type": "go",
+          "provider": "golang",
+          "namespace": "github.com%2Fdocker",
+          "name": "cli",
+          "revision": "v20.10.12+incompatible"
+        },
+        "_meta": {
+          "schemaVersion": "1.6.1",
+          "updated": "2022-06-02T01:36:50.040Z"
+        },
+        "scores": {
+          "effective": 72,
+          "tool": 72
+        }
+      },
+    "stagingDoc":{
+      "described": {
+        "releaseDate": "2021-12-12",
+        "urls": {
+          "registry": "https://pkg.go.dev/github.com/docker/cli",
+          "version": "https://pkg.go.dev/github.com/docker/cli@v20.10.12+incompatible",
+          "download": "https://proxy.golang.org/github.com/docker/cli/@v/v20.10.12+incompatible.zip"
+        },
+        "hashes": {
+          "sha1": "d6a524762d88242708dac60e0f61485876348a5c",
+          "sha256": "d52fcb80bdcd3eeaebd25e231769b2780149a39d85ad2b42923132426a0486fb"
+        },
+        "files": 1228,
+        "tools": [
+          "clearlydefined/1.2.1",
+          "reuse/3.2.1",
+          "licensee/9.18.1",
+          "scancode/32.3.0"
+        ],
+        "toolScore": {
+          "total": 100,
+          "date": 30,
+          "source": 70
+        },
+        "sourceLocation": {
+          "type": "go",
+          "provider": "golang",
+          "namespace": "github.com%2fdocker",
+          "name": "cli",
+          "revision": "v20.10.12+incompatible",
+          "url": "https://pkg.go.dev/github.com/docker/cli@v20.10.12+incompatible"
+        },
+        "score": {
+          "total": 100,
+          "date": 30,
+          "source": 70
+        }
+      },
+      "licensed": {
+        "declared": "Apache-2.0",
+        "toolScore": {
+          "total": 45,
+          "declared": 30,
+          "discovered": 0,
+          "consistency": 0,
+          "spdx": 15,
+          "texts": 0
+        },
+        "facets": {
+          "core": {
+            "attribution": {
+              "unknown": 1222,
+              "parties": [
+                "Copyright 2010 The Go Authors",
+                "Copyright (c) 2013, Felix Riedel",
+                "Copyright 2012-2017 Docker, Inc.",
+                "Copyright 2013-2017 Docker, Inc.",
+                "Copyright (c) 2004, 2006 The Linux Foundation and its contributors"
+              ]
+            },
+            "discovered": {
+              "unknown": 1221,
+              "expressions": [
+                "Apache-2.0",
+                "BSD-3-Clause",
+                "LicenseRef-scancode-dco-1.1"
+              ]
+            },
+            "files": 1228
+          }
+        },
+        "score": {
+          "total": 45,
+          "declared": 30,
+          "discovered": 0,
+          "consistency": 0,
+          "spdx": 15,
+          "texts": 0
+        }
+      },
+      "coordinates": {
+        "type": "go",
+        "provider": "golang",
+        "namespace": "github.com%2fdocker",
+        "name": "cli",
+        "revision": "v20.10.12+incompatible"
+      },
+      "_meta": {
+        "schemaVersion": "1.7.0",
+        "updated": "2024-09-13T12:20:43.514Z"
+      },
+      "scores": {
+        "effective": 72,
+        "tool": 72
+      }
+    },
+    "ignoredKeys":["_meta", "licensed.score", "licensed.toolScore", "described.score", "described.toolScore"]
+}
