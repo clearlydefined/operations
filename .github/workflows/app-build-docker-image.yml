@@ -81,7 +81,7 @@ jobs:
         if: ${{ inputs.docker-hub-username != '' }}
         id: add-dockerhub
         run: |
-          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_TAGS }},${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_IMAGE_TAGS }},${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
 
 
   build-docker-image:
