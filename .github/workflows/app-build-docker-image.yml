@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: '3.1.0'
+          ref: '5ef92010ae13ec5263ee7509311dbb1f2edac44c'
           path: 'operations'
       - name: Determine Image Name
         id: determine_image_name
