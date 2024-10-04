@@ -6,7 +6,7 @@
 #   $3 - image-tag: the tag to use for the image (e.g. prod: v1.2.0, dev: v1.2.0+dev:1D3F567890)
 #
 # Outputs
-#   image_name_with_tag: the full image name with tag (e.g. ghcr.io/clearlydefined/service:v1.2.0)
+#   image_name_with_tag: the full image name with tag (e.g. service:v1.2.0, service-dev:v1.2.0+dev:1D3F567890)
 
 repo_name="$1"
 deploy_env="$2"
