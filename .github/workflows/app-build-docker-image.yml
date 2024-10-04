@@ -79,7 +79,7 @@ jobs:
           echo "DOCKER_IMAGE_TAGS=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
       - name: add-dockerhub
         if: ${{ inputs.docker-hub-username != '' }}
-        id: add dockerhub image if required
+        id: add-dockerhub
         run: |
           echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_TAGS }},${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
 
@@ -90,7 +90,6 @@ jobs:
     needs: [check-deployable, build-image-names]
     steps:
       - uses: actions/checkout@v4.1.1
-
       - name: Log into Docker Hub
         if: ${{ inputs.docker-hub-username != '' }}
         uses: docker/login-action@v3.3.0
