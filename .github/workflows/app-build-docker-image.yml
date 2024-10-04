@@ -63,7 +63,7 @@ jobs:
           ref: '5ef92010ae13ec5263ee7509311dbb1f2edac44c'
           path: 'operations'
       - name: Determine Image Name
-        id: determine_image_name
+        id: determine-image-name
         run: |
           echo "BUILD_ARGS=${{ inputs.build-args }}"
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
@@ -74,10 +74,10 @@ jobs:
           image_name=$(echo "$script_log" | tail -n 1)
           echo "IMAGE_NAME=$image_name" >> $GITHUB_ENV
       - name: Add ghcr.io 
-        id: add dockerhub image if required
+        id: add-ghcr
         run: |
           echo "DOCKER_IMAGE_TAGS=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
-      - name: Add Dockerhub if required
+      - name: add-dockerhub
         if: ${{ inputs.docker-hub-username != '' }}
         id: add dockerhub image if required
         run: |
