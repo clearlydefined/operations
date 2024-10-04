@@ -10,6 +10,10 @@ on:
       PRODUCTION_DEPLOYERS:
         description: 'Name of the team that defines who can deploy to production - Defined in org action secrets'
         required: true
+      DOCKERHUB_TOKEN: 
+        description: 'Token to be used if publishing image to dockerhub, input.docker-hub-username must also be provided'
+        required: false
+
 
     inputs:
       deploy-env:
@@ -28,6 +32,10 @@ on:
         description: 'optionally pass in build args to the Docker build command (e.g. "MY_VAR=my_value")'
         required: false
         type: string
+      docker-hub-username:
+        description: 'optionally pass to publish image to docker-hub'
+        required: false
+        type: string
       
     outputs:
       docker-image-name-with-tag: 
@@ -42,36 +50,52 @@ jobs:
       DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       PRODUCTION_DEPLOYERS: ${{ secrets.PRODUCTION_DEPLOYERS }}
 
-  determine-image-name:
+  build-image-names:
     name: Determine Image Name
     runs-on: ubuntu-latest
-    outputs:
-      docker-image-name-with-tag: "${{ env.DOCKER_IMAGE_NAME_WITH_TAG }}"
+    outputs: 
+      names-with-tags: ${{ env.DOCKER_IMAGE_TAGS }}
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v3.0.0'
+          ref: '3.1.0'
           path: 'operations'
-      - name: Determine Docker Image Name
-        id: determine_image_name
+      - name: Determine Image Name
+        id: determine-image-name
         run: |
           echo "BUILD_ARGS=${{ inputs.build-args }}"
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
-            "${{ github.repository }}" \
+            "${{ github.event.repository.name  }}" \
             "${{ inputs.deploy-env }}" \
             "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           image_name=$(echo "$script_log" | tail -n 1)
-          echo "DOCKER_IMAGE_NAME_WITH_TAG=$image_name" >> $GITHUB_ENV
+          echo "IMAGE_NAME=$image_name" >> $GITHUB_ENV
+      - name: Add ghcr.io 
+        id: add-ghcr
+        run: |
+          echo "DOCKER_IMAGE_TAGS=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+      - name: add-dockerhub
+        if: ${{ inputs.docker-hub-username != '' }}
+        id: add-dockerhub
+        run: |
+          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_IMAGE_TAGS }},${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+
 
   build-docker-image:
     name: Build Image
     runs-on: ubuntu-latest
-    needs: [check-deployable, determine-image-name]
+    needs: [check-deployable, build-image-names]
     steps:
       - uses: actions/checkout@v4.1.1
+      - name: Log into Docker Hub
+        if: ${{ inputs.docker-hub-username != '' }}
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ inputs.docker-hub-username }} 
+          password: ${{ secrets.DOCKERHUB_TOKEN }} 
 
       - name: Log into ghcr registry
         uses: docker/login-action@v3.0.0
@@ -91,7 +115,8 @@ jobs:
             APP_VERSION=${{ inputs.application-version }}
             BUILD_SHA=${{ github.sha }}
             ${{ inputs.build-args }}
-          tags: ${{ needs.determine-image-name.outputs.docker-image-name-with-tag }}
+          tags: |
+            ${{ needs.build-image-names.outputs.names-with-tags }}
           labels: |
             env=${{ inputs.deploy-env }}
             type=${{ inputs.application-type }}          
