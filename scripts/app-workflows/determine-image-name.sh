@@ -17,13 +17,13 @@ image_tag="$4"
 image_base_name="$repo"
 
 # if gchr we need to include the path to GH repo
-if [[ "$registry" == 'ghcr.io' ]]; then
-  image_base_name="$registry/$repo" # e.g. ghcr.io/clearlydefined/service
+if [[ "$prefix" == 'ghcr.io' ]]; then
+  image_base_name="$prefix/$repo" # e.g. ghcr.io/clearlydefined/service
 fi
 
-if [[ "$registry" != 'ghcr.io' ]]; then
+if [[ "$prefix" != 'ghcr.io' ]]; then
   reponame="${repo#*/}"
-  image_base_name="$registry/$reponame" # e.g. <dockerhubuser>/service
+  image_base_name="$prefix/$reponame" # e.g. <dockerhubuser>/service
 fi
 
 if [[ "$deploy_env" == 'prod' ]] ; then
