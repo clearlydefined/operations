@@ -57,7 +57,6 @@ on:
         required: false
         type: string
     
-
 jobs:
   determine-trigger:
     name: Determine if this was triggered by a release or workflow_dispatch
@@ -86,8 +85,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          # ref: 'v3.0.0'
-          ref: '73e1d7a7e30df3235db59a0eeafaa21c25784134'
+          ref: 'v3.1.0'
           path: 'operations'
       - name: Get version from package-lock.json
         id: get_version
