@@ -8,7 +8,7 @@ const { devApiBaseUrl, prodApiBaseUrl, components, definition } = require('../te
 const nock = require('nock')
 const fs = require('fs')
 
-describe('Validation definitions between dev and prod', function () {
+describe('Validate definitions', function () {
   this.timeout(definition.timeout)
 
   //Rest a bit to avoid overloading the servers
@@ -86,19 +86,21 @@ function compareDefinition(recomputedDef, expectedDef) {
 
 function compareLicensed(result, expectation) {
   let actual = omit(result.licensed, ['facets'])
-  const expected = omit(expectation.licensed, ['facets'])
+  let expected = omit(expectation.licensed, ['facets'])
+  actual = { declared: undefined, ...actual }
+  expected = { declared: undefined, ...expected }
   deepStrictEqualExpectedEntries(actual, expected)
 }
 
 function compareDescribed(result, expectation) {
-  let actual = omit(result.described, ['tools'])
+  const actual = omit(result.described, ['tools'])
   const expected = omit(expectation.described, ['tools'])
   deepStrictEqualExpectedEntries(actual, expected)
 }
 
 function deepStrictEqualExpectedEntries(actual, expected) {
-  actual = pick(actual, Object.keys(expected))
-  deepStrictEqual(actual, expected)
+  const pickedActual = pick(actual, Object.keys(expected))
+  deepStrictEqual(pickedActual, expected)
 }
 
 function compareFiles(result, expectation) {
