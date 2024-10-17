@@ -17,7 +17,7 @@ class HarvestResultFetcher {
     return tools.flatMap(tool => {
       const found = harvestResultUrls
         .filter(url => url.includes(`/${tool}/`))
-        .map(url => url.substring(`${this._coordinates}/${tool}/`.length))
+        .map(url => url.match(/[^/]+$/)[0])
         .map(version => [tool, version])
       return found.length ? found : [[tool, '']]
     })

@@ -152,6 +152,28 @@ describe('HarvestResultFetcher', function () {
       ])
     })
 
+    it('should process the result for coordinates containing double-encoded slash', async function () {
+      const coordinates = 'go/golang/github.com%252fogen-go/ogen/v0.0.0-20211007041714-5bab77a84e75'
+      fetchStub = sinon.stub()
+      resultMonitor = new HarvestResultFetcher(apiBaseUrl, coordinates, fetchStub)
+
+      const harvestResults = [
+        'go/golang/github.com%2fogen-go/ogen/v0.0.0-20211007041714-5bab77a84e75/clearlydefined/1.3.1',
+        'go/golang/github.com%2fogen-go/ogen/v0.0.0-20211007041714-5bab77a84e75/licensee/9.14.0',
+        'go/golang/github.com%2fogen-go/ogen/v0.0.0-20211007041714-5bab77a84e75/reuse/3.2.1',
+        'go/golang/github.com%2fogen-go/ogen/v0.0.0-20211007041714-5bab77a84e75/reuse/3.2.2',
+        'go/golang/github.com%2fogen-go/ogen/v0.0.0-20211007041714-5bab77a84e75/scancode/30.3.0'
+      ]
+      fetchStub.resolves(new Response(JSON.stringify(harvestResults)))
+      const toolVersions = await resultMonitor.fetchToolVersions()
+      deepStrictEqual(toolVersions, [
+        ['licensee', '9.14.0'],
+        ['reuse', '3.2.1'],
+        ['reuse', '3.2.2'],
+        ['scancode', '30.3.0']
+      ])
+    })
+
     it('should handle no result for tools', async function () {
       const harvestResults = []
       fetchStub.resolves(new Response(JSON.stringify(harvestResults)))
