@@ -53,4 +53,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: diffs-${{ matrix.dynamicCoordinates == 'true' && 'dynamic' || 'static' }}
-          path: ${{ github.event.inputs.baseFolderPath }}
+          path: ./tools/integration/${{ github.event.inputs.baseFolderPath }}
