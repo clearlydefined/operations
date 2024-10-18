@@ -3,19 +3,14 @@ name: Integration Test
 on:
   workflow_dispatch:
     inputs:
-      runType:
-        type: choice
-        description: To run tests with dynamic or fixed coordinates or both
-        options:
-        - dynamic
-        - fixed
-        - all
-        required: true
-
       baseFolderPath:
         description: 'Base folder path for diffs'
         required: true
         default: 'diffs'
+      dynamicCoordinates:
+        description: 'Array of booleans for dynamic coordinates (e.g., [true, false])'
+        required: true
+        default: '[true, false]'
 
 permissions:
   contents: read
@@ -25,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
+      matrix:
+        dynamicCoordinates: ${{ fromJson(github.event.inputs.dynamicCoordinates) }}
     defaults:
       run:
         working-directory: ./tools/integration
@@ -44,12 +41,10 @@ jobs:
         run: npm test
         
       - name: Trigger harvest and verify completion
-        if: ${{ inputs.runType == 'dynamic' || 'all' }}
-        run: DYNAMIC_COORDINATES=true npm run e2e-test-harvest
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
-        if: ${{ inputs.runType == 'fixed' || 'all' }}
-        run: DYNAMIC_COORDINATES=false npm run e2e-test-service
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
 
       - name: Generate structured diffs
         run: npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
