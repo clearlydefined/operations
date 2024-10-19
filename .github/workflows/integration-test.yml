@@ -49,7 +49,7 @@ jobs:
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
 
       - name: Generate structured diffs
-        run: npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
 
       - name: Upload diffs artifact
         uses: actions/upload-artifact@v4
