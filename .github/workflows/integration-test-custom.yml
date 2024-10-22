@@ -1,4 +1,4 @@
-name: Integration Test
+name: Integration Test On Custom Infra
 
 on:
   workflow_dispatch:
@@ -45,8 +45,7 @@ jobs:
       vm_ip: ${{ steps.create_vm.outputs.publicIpAddress }}
     steps:
       - name: Azure Login
-        uses: azure/login@v1
-        
+        uses: azure/login@v2.2.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -192,12 +191,22 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: GITHUB_TOKEN
           script: |
-            # Clone repositories
-            ${{ env.REPOS }}
+            # First clone the compose repo
+            COMPOSE_REPO="${{ env.COMPOSE_REPO }}"
+            echo "Cloning compose repo https://github.com/${COMPOSE_REPO}.git"
+            git clone "https://github.com/${COMPOSE_REPO}.git"
             
             # Navigate to compose repo
-            REPO_NAME=$(echo ${{ env.COMPOSE_REPO }} | cut -d'/' -f2)
+            REPO_NAME=$(echo ${COMPOSE_REPO} | cut -d'/' -f2)
             cd $REPO_NAME
+            
+            # Clone other repositories inside the compose repo directory
+            echo "${{ env.REPOS }}" | while read repo; do
+              if [ ! -z "$repo" ] && [ "$repo" != "$COMPOSE_REPO" ]; then
+                echo "Cloning https://github.com/${repo}.git"
+                git clone "https://github.com/${repo}.git"
+              fi
+            done
             
             # Copy sample_env to .env and replace tokens
             cp sample_env .env
@@ -253,3 +262,13 @@ jobs:
       - name: Mark build status
         if: steps.verify-service-functions.outcome == 'failure'
         run: exit 1
+      
+      - name: Cleanup VM and Resources
+        if: always()
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az group delete \
+              --name ${{ github.event.inputs.resource_group }} \
+              --yes \
+              --no-wait
