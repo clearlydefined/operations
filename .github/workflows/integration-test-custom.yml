@@ -1,0 +1,255 @@
+name: Integration Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseFolderPath:
+        description: 'Base folder path for diffs'
+        required: true
+        default: 'diffs'
+      dynamicCoordinates:
+        description: 'Array of booleans for dynamic coordinates (e.g., [true, false])'
+        required: true
+        default: '[true, false]'
+      resource_group:
+        description: 'Azure Resource Group Name'
+        required: true
+        default: 'integration-test-rg'
+      location:
+        description: 'Azure Region'
+        required: true
+        default: 'eastus'
+      vm_name:
+        description: 'VM Name'
+        required: true
+        default: 'integration-test-vm'
+
+permissions:
+  contents: read
+
+env:
+  REPOS: |
+    clearlydefined/service
+    clearlydefined/crawler
+    clearlydefined/website
+  COMPOSE_REPO: "clearlydefined/docker_dev_env_experiment"
+
+jobs:
+  deploy-and-run:
+    runs-on: ubuntu-latest
+    # Add permissions for the GitHub token
+    permissions:
+      contents: read
+      packages: read
+    outputs:
+      vm_ip: ${{ steps.create_vm.outputs.publicIpAddress }}
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Resource Group
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az group create \
+              --name ${{ github.event.inputs.resource_group }} \
+              --location ${{ github.event.inputs.location }}
+      
+      - name: Create VM with NSG
+        id: create_vm
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          resourceGroupName: ${{ github.event.inputs.resource_group }}
+          template: |
+            {
+              "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {},
+              "variables": {
+                "vmName": "${{ github.event.inputs.vm_name }}",
+                "nsgName": "${{ github.event.inputs.vm_name }}-nsg"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Network/networkSecurityGroups",
+                  "apiVersion": "2021-02-01",
+                  "name": "[variables('nsgName')]",
+                  "location": "[resourceGroup().location]",
+                  "properties": {
+                    "securityRules": [
+                      {
+                        "name": "allow-ssh",
+                        "properties": {
+                          "priority": 1000,
+                          "protocol": "Tcp",
+                          "access": "Allow",
+                          "direction": "Inbound",
+                          "sourceAddressPrefix": "*",
+                          "sourcePortRange": "*",
+                          "destinationAddressPrefix": "*",
+                          "destinationPortRange": "22"
+                        }
+                      },
+                      {
+                        "name": "allow-4000",
+                        "properties": {
+                          "priority": 1010,
+                          "protocol": "Tcp",
+                          "access": "Allow",
+                          "direction": "Inbound",
+                          "sourceAddressPrefix": "*",
+                          "sourcePortRange": "*",
+                          "destinationAddressPrefix": "*",
+                          "destinationPortRange": "4000"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.Compute/virtualMachines",
+                  "apiVersion": "2021-03-01",
+                  "name": "[variables('vmName')]",
+                  "location": "[resourceGroup().location]",
+                  "dependsOn": [
+                    "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+                  ],
+                  "properties": {
+                    "hardwareProfile": {
+                      "vmSize": "Standard_D16_v5"
+                    },
+                    "osProfile": {
+                      "computerName": "[variables('vmName')]",
+                      "adminUsername": "azureuser",
+                      "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                          "publicKeys": [
+                            {
+                              "path": "/home/azureuser/.ssh/authorized_keys",
+                              "keyData": "${{ secrets.SSH_PUBLIC_KEY }}"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "storageProfile": {
+                      "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "0001-com-ubuntu-server-jammy",
+                        "sku": "22_04-lts",
+                        "version": "latest"
+                      }
+                    },
+                    "networkProfile": {
+                      "networkInterfaces": [
+                        {
+                          "properties": {
+                            "networkSecurityGroup": {
+                              "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "outputs": {
+                "publicIpAddress": {
+                  "type": "string",
+                  "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('vmName'), '-ip'))).ipAddress]"
+                }
+              }
+            }
+      
+      - name: Install Docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.create_vm.outputs.publicIpAddress }}
+          username: azureuser
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
+            sudo systemctl enable docker
+            sudo systemctl start docker
+            sudo usermod -aG docker $USER
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Clone Repos and Setup Environment
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          host: ${{ steps.create_vm.outputs.publicIpAddress }}
+          username: azureuser
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: GITHUB_TOKEN
+          script: |
+            # Clone repositories
+            ${{ env.REPOS }}
+            
+            # Navigate to compose repo
+            REPO_NAME=$(echo ${{ env.COMPOSE_REPO }} | cut -d'/' -f2)
+            cd $REPO_NAME
+            
+            # Copy sample_env to .env and replace tokens
+            cp sample_env .env
+            
+            # Replace both GitHub tokens with the provided token
+            sed -i "s/^CRAWLER_GITHUB_TOKEN=.*/CRAWLER_GITHUB_TOKEN=${GITHUB_TOKEN}/" .env
+            sed -i "s/^CURATION_GITHUB_TOKEN=.*/CURATION_GITHUB_TOKEN=${GITHUB_TOKEN}/" .env
+            
+            # Start containers
+            sudo docker-compose up -d
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        dynamicCoordinates: ${{ fromJson(github.event.inputs.dynamicCoordinates) }}
+    defaults:
+      run:
+        working-directory: ./tools/integration
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: './tools/integration/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests on tools
+        run: npm test
+        
+      - name: Trigger harvest and verify completion
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
+
+      - name: Verify service functions
+        id: verify-service-functions
+        continue-on-error: true
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
+
+      - name: Generate structured diffs
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
+
+      - name: Upload diffs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffs-${{ matrix.dynamicCoordinates == 'true' && 'dynamic' || 'static' }}
+          path: ./tools/integration/${{ github.event.inputs.baseFolderPath }}
+
+      - name: Mark build status
+        if: steps.verify-service-functions.outcome == 'failure'
+        run: exit 1
