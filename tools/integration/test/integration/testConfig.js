@@ -3,7 +3,7 @@
 const fs = require('fs').promises
 const path = require('path')
 
-const devApiBaseUrl = 'https://dev-api.clearlydefined.io'
+const devApiBaseUrl = 'http://135.225.130.27:4000'
 const prodApiBaseUrl = 'https://api.clearlydefined.io'
 
 const pollingInterval = 1000 * 60 * 5 // 5 minutes
