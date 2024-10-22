@@ -1,13 +1,6 @@
 # Operational home for ClearlyDefined
 
-This repo is dedicated to operational concerns for ClearlyDefined, including the layout on Azure and DevOps implications.
-
-Some high level subpages exist:  
-* [Thorough Infrastucture Overview](./overview.md)
-* [Crawler Contacts](./crawler-contacts.md)
-* [ClearlyDefined's identities in other systems](./clearly-defined-identities.md)  
-* [Cloud resources](./cloud-resources.md)
-* [Alerts](./alerts.md)  
+This repo is dedicated to operational concerns for ClearlyDefined
 
 ## Consumer resources
 | Resource | dev | prod |
@@ -31,5 +24,9 @@ Contact info:
 [Crawler](https://github.com/clearlydefined/crawler)  
 [Operations](https://github.com/clearlydefined/operations)
 
-### Build / Deployment
-[Azure DevOps builds](https://dev.azure.com/clearlydefined/ClearlyDefined/_build)
+## Infrastructure
+
+For details on how ClearlyDefined services are deployed see private repo
+https://github.com/clearlydefined/infrastructure
+
+Runbooks for specific operations [here](https://github.com/clearlydefined/infrastructure/runbooks)
