@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { callFetch } = require('../../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
+const { getDevApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const { strictEqual } = require('assert')
 
 ;(async function () {
@@ -33,15 +33,16 @@ async function findAttachments(apiBaseUrl, coordinates) {
 
 async function compareAttachment(sha256) {
   const [devAttachment, prodAttachment] = await Promise.all(
-    [callFetch(`${devApiBaseUrl}/attachments/${sha256}`), callFetch(`${prodApiBaseUrl}/attachments/${sha256}`)].map(p =>
-      p.then(r => r.text())
-    )
+    [
+      callFetch(`${getDevApiBaseUrl()}/attachments/${sha256}`),
+      callFetch(`${prodApiBaseUrl}/attachments/${sha256}`)
+    ].map(p => p.then(r => r.text()))
   )
   strictEqual(devAttachment, prodAttachment)
 }
 
 async function getDefinition(apiBaseUrl, coordinates, reCompute = false) {
-  reCompute = apiBaseUrl === devApiBaseUrl && reCompute
+  reCompute = apiBaseUrl === getDevApiBaseUrl() && reCompute
   let url = `${apiBaseUrl}/definitions/${coordinates}`
   if (reCompute) url += '?force=true'
   return await callFetch(url).then(r => r.json())
