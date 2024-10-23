@@ -263,6 +263,10 @@ jobs:
           name: diffs-${{ matrix.dynamicCoordinates == 'true' && 'dynamic' || 'static' }}
           path: ./tools/integration/${{ github.event.inputs.baseFolderPath }}
 
+      - name: Noop
+        if: always()
+        run: echo "Noop"
+        
       - name: Mark build status
         if: steps.verify-service-functions.outcome == 'failure'
         run: exit 1
