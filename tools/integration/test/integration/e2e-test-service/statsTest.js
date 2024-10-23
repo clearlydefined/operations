@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { callFetch } = require('../../../lib/fetch')
-const { devApiBaseUrl, definition } = require('../testConfig')
+const { getDevApiBaseUrl, definition } = require('../testConfig')
 const { ok } = require('assert')
 
 describe('Test for StatsService', function () {
@@ -12,7 +12,7 @@ describe('Test for StatsService', function () {
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout)))
 
   it('should retrieve the list of supported stats', async function () {
-    const url = `${devApiBaseUrl}/stats`
+    const url = `${getDevApiBaseUrl()}/stats`
     const result = await callFetch(url).then(r => r.json())
     const expected = [
       'total',
@@ -35,14 +35,14 @@ describe('Test for StatsService', function () {
   })
 
   it('should retrieve stats for total', async function () {
-    const url = `${devApiBaseUrl}/stats/total`
+    const url = `${getDevApiBaseUrl()}/stats/total`
     const result = await callFetch(url).then(r => r.json())
     ok(result.value.totalCount > 0)
     ok(result.value.declaredLicenseBreakdown)
   })
 
   it('should retrieve stats for composer', async function () {
-    const url = `${devApiBaseUrl}/stats/composer`
+    const url = `${getDevApiBaseUrl()}/stats/composer`
     const result = await callFetch(url).then(r => r.json())
     ok(result.value.totalCount > 0)
     ok(result.value.declaredLicenseBreakdown)

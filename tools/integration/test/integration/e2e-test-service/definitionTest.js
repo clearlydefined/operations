@@ -4,7 +4,7 @@
 const { omit, isEqual, pick } = require('lodash')
 const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
+const { getDevApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
 
@@ -35,7 +35,7 @@ describe('Validate definitions', function () {
       it(`should find definition for ${coordinates}`, async function () {
         const [foundDef, expectedDef] = await Promise.all([
           findDefinition(coordinates),
-          getDefinition(devApiBaseUrl, coordinates)
+          getDefinition(getDevApiBaseUrl(), coordinates)
         ])
         deepStrictEqualExpectedEntries(foundDef, omit(expectedDef, ['files']))
       })
@@ -43,19 +43,19 @@ describe('Validate definitions', function () {
 
     describe('Search coordinates via pattern', function () {
       it(`should find coordinates for aws-sdk-java`, async function () {
-        const response = await callFetch(`${devApiBaseUrl}/definitions?pattern=aws-sdk-java`).then(r => r.json())
+        const response = await callFetch(`${getDevApiBaseUrl()}/definitions?pattern=aws-sdk-java`).then(r => r.json())
         ok(response.length > 0)
       })
     })
 
     describe('Post to /definitions', function () {
       it(`should get definition via post to /definitions for ${coordinates}`, async function () {
-        const postDefinitions = callFetch(`${devApiBaseUrl}/definitions`, buildPostOpts([coordinates])).then(r =>
+        const postDefinitions = callFetch(`${getDevApiBaseUrl()}/definitions`, buildPostOpts([coordinates])).then(r =>
           r.json()
         )
         const [actualDef, expectedDef] = await Promise.all([
           postDefinitions.then(r => r[coordinates]),
-          getDefinition(devApiBaseUrl, coordinates)
+          getDefinition(getDevApiBaseUrl(), coordinates)
         ])
         deepStrictEqualExpectedEntries(actualDef, expectedDef)
       })
@@ -65,14 +65,14 @@ describe('Validate definitions', function () {
 
 async function fetchAndCompareDefinition(coordinates) {
   const [recomputedDef, expectedDef] = await Promise.all([
-    getDefinition(devApiBaseUrl, coordinates, true),
+    getDefinition(getDevApiBaseUrl(), coordinates, true),
     getDefinition(prodApiBaseUrl, coordinates)
   ])
   compareDefinition(recomputedDef, expectedDef)
 }
 
 async function getDefinition(apiBaseUrl, coordinates, reCompute = false) {
-  reCompute = apiBaseUrl === devApiBaseUrl && reCompute
+  reCompute = apiBaseUrl === getDevApiBaseUrl() && reCompute
   let url = `${apiBaseUrl}/definitions/${coordinates}`
   if (reCompute) url += '?force=true'
   return await callFetch(url).then(r => r.json())
@@ -135,7 +135,7 @@ async function findDefinition(coordinates) {
   let coordinatesString = `type=${type}&provider=${provider}&name=${name}`
   coordinatesString += namespace && namespace !== '-' ? `&namespace=${namespace}` : ''
   const response = await callFetch(
-    `${devApiBaseUrl}/definitions?${coordinatesString}&sortDesc=true&sort=revision`
+    `${getDevApiBaseUrl()}/definitions?${coordinatesString}&sortDesc=true&sort=revision`
   ).then(r => r.json())
   return response.data.find(d => d.coordinates.revision === revision)
 }

@@ -220,6 +220,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    needs: deploy-and-run
+    env:
+      DEV_API_BASE_URL: http://${{ needs.deploy-and-run.outputs.vm_ip }}:4000
     strategy:
       max-parallel: 1
       matrix:
@@ -243,15 +246,15 @@ jobs:
         run: npm test
         
       - name: Trigger harvest and verify completion
-        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
         id: verify-service-functions
         continue-on-error: true
-        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
 
       - name: Generate structured diffs
-        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
 
       - name: Upload diffs artifact
         uses: actions/upload-artifact@v4

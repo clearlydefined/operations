@@ -1,7 +1,7 @@
 const fs = require('fs').promises
 const path = require('path')
 const { callFetch } = require('../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, getComponents } = require('./testConfig')
+const { getDevApiBaseUrl, prodApiBaseUrl, getComponents } = require('./testConfig')
 const { compareDocuments } = require('../../lib/compareDefinitions')
 
 async function main() {
@@ -22,7 +22,7 @@ async function main() {
 
 async function fetchAndCompareDefinition(coordinates, baseFolderPath) {
   const [recomputedDef, expectedDef] = await Promise.all([
-    getDefinition(devApiBaseUrl, coordinates, true),
+    getDefinition(getDevApiBaseUrl(), coordinates, true),
     getDefinition(prodApiBaseUrl, coordinates)
   ])
   const diff = compareDocuments(recomputedDef, expectedDef, [
@@ -37,7 +37,7 @@ async function fetchAndCompareDefinition(coordinates, baseFolderPath) {
 }
 
 async function getDefinition(apiBaseUrl, coordinates, reCompute = false) {
-  reCompute = apiBaseUrl === devApiBaseUrl && reCompute
+  reCompute = apiBaseUrl === getDevApiBaseUrl() && reCompute
   let url = `${apiBaseUrl}/definitions/${coordinates}`
   if (reCompute) url += '?force=true'
   return await callFetch(url).then(r => r.json())
