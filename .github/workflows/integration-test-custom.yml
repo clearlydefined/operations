@@ -23,6 +23,11 @@ on:
         description: 'VM Name'
         required: true
         default: 'integration-test-vm'
+      repo_refs:
+        description: 'Repo refs in format "clearlydefined/service:master,clearlydefined/crawler:master"'
+        required: true
+        default: 'clearlydefined/docker_dev_env_experiment:main,clearlydefined/service:master,clearlydefined/crawler:master,clearlydefined/website:master'
+
 
 permissions:
   contents: read
@@ -185,16 +190,23 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          REPO_REFS: ${{ inputs.repo_refs }}
         with:
           host: ${{ steps.create_vm.outputs.publicIpAddress }}
           username: azureuser
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: GITHUB_TOKEN
+          envs: GITHUB_TOKEN,REPO_REFS
           script: |
+            # Function to get ref for a repo
+            get_ref() {
+              echo "$REPO_REFS" | tr ',' '\n' | grep "^$1:" | cut -d':' -f2 || echo "master"
+            }
+            
             # First clone the compose repo
             COMPOSE_REPO="${{ env.COMPOSE_REPO }}"
-            echo "Cloning compose repo https://github.com/${COMPOSE_REPO}.git"
-            git clone "https://github.com/${COMPOSE_REPO}.git"
+            COMPOSE_REF=$(get_ref "$COMPOSE_REPO")
+            echo "Cloning compose repo https://github.com/${COMPOSE_REPO}.git branch/ref: ${COMPOSE_REF}"
+            git clone "https://github.com/${COMPOSE_REPO}.git" -b "$COMPOSE_REF"
             
             # Navigate to compose repo
             REPO_NAME=$(echo ${COMPOSE_REPO} | cut -d'/' -f2)
@@ -203,8 +215,9 @@ jobs:
             # Clone other repositories inside the compose repo directory
             echo "${{ env.REPOS }}" | while read repo; do
               if [ ! -z "$repo" ] && [ "$repo" != "$COMPOSE_REPO" ]; then
-                echo "Cloning https://github.com/${repo}.git"
-                git clone "https://github.com/${repo}.git"
+                REF=$(get_ref "$repo")
+                echo "Cloning https://github.com/${repo}.git branch/ref: ${REF}"
+                git clone "https://github.com/${repo}.git" -b "$REF"
               fi
             done
             
