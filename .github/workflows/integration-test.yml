@@ -49,7 +49,12 @@ jobs:
         uses: azure/login@v2.2.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
+
+      - name: Cleanup VM and Resources
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: az group list --query "[].name"
+  
       - name: Create VM with NSG
         id: create_vm
         uses: azure/arm-deploy@v2
