@@ -39,7 +39,7 @@ on:
       
     outputs:
       docker-image-name-with-tag: 
-        value: ${{ jobs.determine-image-name.outputs.docker-image-name-with-tag }}
+        value: ${{ jobs.build-image-names.outputs.docker-image-to-use }}
 
 jobs:
   check-deployable:
@@ -55,12 +55,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       names-with-tags: ${{ env.DOCKER_IMAGE_TAGS }}
+      docker-image-to-use: ${{ env.DOCKER_IMAGE_TO_USE }}
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v3.1.1'
+          ref: 'v3.1.2'
           path: 'operations'
       - name: Determine Image Name
         id: determine-image-name
@@ -76,13 +77,17 @@ jobs:
       - name: Add ghcr.io 
         id: add-ghcr
         run: |
-          echo "DOCKER_IMAGE_TAGS=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+          ghcr_image_tags="ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}"
+          echo "DOCKER_IMAGE_TAGS=$ghcr_image_tags" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_TO_USE=$ghcr_image_tags" >> $GITHUB_ENV
       - name: add-dockerhub
         if: ${{ inputs.docker-hub-username != '' }}
         id: add-dockerhub
         run: |
-          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_IMAGE_TAGS }},${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
-
+          docker_image_tags="${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}"
+          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_IMAGE_TAGS }}, $docker_image_tags" >> $GITHUB_ENV
+          # use Docker Hub image if it is created by overwriting DOCKER_IMAGE_TO_USE
+          echo "DOCKER_IMAGE_TO_USE=$docker_image_tags" >> $GITHUB_ENV
 
   build-docker-image:
     name: Build Image
