@@ -85,7 +85,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v3.1.1'
+          ref: 'v3.1.2'
           path: 'operations'
       - name: Get version from package-lock.json
         id: get_version
