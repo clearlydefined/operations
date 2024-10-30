@@ -17,7 +17,8 @@ const fs = require('fs')
 
     before(() => {
       loadFixtures().forEach(([coordinatesString, notice]) => {
-        if(coordinatesString.includes('conda')) coordinatesString = components.filter(component => component.includes('conda'))[0]
+        if (coordinatesString.includes('conda'))
+          coordinatesString = components.filter(component => component.includes('conda'))[0]
         nock(prodApiBaseUrl, { allowUnmocked: true })
           .post('/notices', { coordinates: [coordinatesString] })
           .reply(200, notice)
