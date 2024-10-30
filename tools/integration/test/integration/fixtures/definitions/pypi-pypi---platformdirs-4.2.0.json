@@ -1,0 +1,249 @@
+{
+    "described": {
+        "releaseDate": "2024-01-31",
+        "urls": {
+            "registry": "https://pypi.org/project/platformdirs",
+            "version": "https://pypi.org/project/platformdirs/4.2.0",
+            "download": "https://files.pythonhosted.org/packages/96/dc/c1d911bf5bb0fdc58cc05010e9f3efe3b67970cef779ba7fbc3183b987a8/platformdirs-4.2.0.tar.gz"
+        },
+        "hashes": {
+            "sha1": "8e5e4abe3c83b56037478c0902c48944072fcad8",
+            "sha256": "ef0cc731df711022c174543cb70a9b5bd22e5a9337c8624ef2c2ceb8ddad8768"
+        },
+        "files": 22,
+        "tools": [
+            "clearlydefined/1.4.1",
+            "reuse/3.2.1",
+            "licensee/9.18.1",
+            "scancode/32.3.0"
+        ],
+        "toolScore": {
+            "total": 100,
+            "date": 30,
+            "source": 70
+        },
+        "sourceLocation": {
+            "type": "pypi",
+            "provider": "pypi",
+            "name": "platformdirs",
+            "revision": "4.2.0",
+            "url": "https://pypi.org/project/platformdirs/4.2.0/"
+        },
+        "score": {
+            "total": 100,
+            "date": 30,
+            "source": 70
+        }
+    },
+    "licensed": {
+        "declared": "MIT",
+        "toolScore": {
+            "total": 75,
+            "declared": 30,
+            "discovered": 0,
+            "consistency": 15,
+            "spdx": 15,
+            "texts": 15
+        },
+        "facets": {
+            "core": {
+                "attribution": {
+                    "unknown": 22
+                },
+                "discovered": {
+                    "unknown": 19,
+                    "expressions": [
+                        "MIT"
+                    ]
+                },
+                "files": 22
+            }
+        },
+        "score": {
+            "total": 75,
+            "declared": 30,
+            "discovered": 0,
+            "consistency": 15,
+            "spdx": 15,
+            "texts": 15
+        }
+    },
+    "files": [
+        {
+            "path": "platformdirs-4.2.0/LICENSE",
+            "license": "MIT",
+            "natures": [
+                "license"
+            ],
+            "hashes": {
+                "sha1": "f511a8a63af8c6e36004b593478436bbc560ee0c",
+                "sha256": "29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6"
+            },
+            "token": "29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6"
+        },
+        {
+            "path": "platformdirs-4.2.0/PKG-INFO",
+            "license": "MIT",
+            "hashes": {
+                "sha1": "010e4708258f9583b9ad67e7cd9f2f015bbcbcc2",
+                "sha256": "5f9ea6f9bfc91e2a8ead4026facfdd62077be9f9bf5f01e705e1436bf6b43ed4"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/pyproject.toml",
+            "license": "MIT",
+            "hashes": {
+                "sha1": "d9c954519a14ad44890b7921b48b8b9ee2520ea3",
+                "sha256": "e396c3c18db31e1f3653d01483a0f7f504368c4620d008c84bcbcc9896556fa6"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/README.rst",
+            "hashes": {
+                "sha1": "8c679c6d304ba99c6df27368681400fc5b45e3ee",
+                "sha256": "66e2e93f591510acd47dba38d5fac81ac3cab601e3c01655977360469038dae7"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tox.ini",
+            "hashes": {
+                "sha1": "83f63ebf2e3cc3ff3afb0c244f563faf792c83ab",
+                "sha256": "03805f1775347287b204fc446b1fcad76888b7df872c18eab1503b42fcea16a4"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/__init__.py",
+            "hashes": {
+                "sha1": "65a9dd928399d731679f801e74e99201b3bf5a0b",
+                "sha256": "080b9bdf4182636eabe670f3c64878c47e1598cb53eaf3bea57d3eb9365ddc94"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/__main__.py",
+            "hashes": {
+                "sha1": "c8a1a6fd175aa2b1a111b5a7a01c2ca8194ab8ae",
+                "sha256": "c9b5b1b66a7a8a0236c6ec8751844956d68de31a223f65871bff1d79bb43044a"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/android.py",
+            "hashes": {
+                "sha1": "48671b58c2591d065c77b3926e2fe425b4a215dd",
+                "sha256": "352c6cff37157adf41415bb41bdda5031ad92d8ebc39de4e84fc9555a911390a"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/api.py",
+            "hashes": {
+                "sha1": "2ecb1f9ebdcd8e206dc0be768b16b7a8effa34a6",
+                "sha256": "2d8b41f1ba232b1b453b9bcb40ffd48326e150d441f94dea66480e114d9899c9"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/macos.py",
+            "hashes": {
+                "sha1": "44e687f07158727e21d9c670aa767fd1089c234e",
+                "sha256": "21e2a3c35a345be3c1e89c98ecd73e00affc7791db62f9e642e7fb8e26fcdc53"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/py.typed",
+            "hashes": {
+                "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/unix.py",
+            "hashes": {
+                "sha1": "0de6cc5abab31a0a0a8994b48f632414ceaddd3c",
+                "sha256": "d275980babd839ca85b44740427cbde5a400164e8a08714622cce937b43f5b05"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/version.py",
+            "hashes": {
+                "sha1": "8c3192b4d845cdc3da6d85b2e1ab2d6a952bbf8a",
+                "sha256": "cc73c2816dea25ac5a88da67bfdc8bd1177cf32afb8b6f7bf9f0f7480bb04468"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/src/platformdirs/windows.py",
+            "hashes": {
+                "sha1": "84e71c9c21b4c47886f5af576bbbe1508eb99d69",
+                "sha256": "37e4e131838778dd987d43a871e606b2e2871f1f5816ff1e65b582e35ef4edb4"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/conftest.py",
+            "hashes": {
+                "sha1": "2321db14f705ee5e705904b7d8a7fdda23580c97",
+                "sha256": "aba49d7c1df9f11705002c9a64c0a518b43584bce32a986c7b720f4ed698a6cf"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/test_android.py",
+            "hashes": {
+                "sha1": "63159cfe1b6e97ae031ffa885ef6527ed0dd7970",
+                "sha256": "dbbe9107b999f76d6e42eb733b08e1ba76ee33564382665f4eba9d3c7c7d51db"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/test_api.py",
+            "hashes": {
+                "sha1": "d09664e0e4cdf73f940ed609e334521907341a9c",
+                "sha256": "734275bb1405a700242003225427dcbfe052a80921b2e5c338f804b49e6a3fe0"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/test_comp_with_appdirs.py",
+            "hashes": {
+                "sha1": "687b0e356b046d29a4da01487d875f79de9b337f",
+                "sha256": "4de56bf8920ad4a9935da097a0b71b3d268987839051b060ef39136dc64dc074"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/test_macos.py",
+            "hashes": {
+                "sha1": "5ca1fcb8650416ab6e891b62da91f15dea7d6e72",
+                "sha256": "937ffb6af99bd921e5bc71e0fee6e25389ef5f4eb8d95b2a5677b44c4f9c5e98"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/test_main.py",
+            "hashes": {
+                "sha1": "932b3c68d8302df3bb82aec1a2a8c019f6ef7127",
+                "sha256": "67a27bd53a946e9d0761136704aa4e2a08a1056124e9167556fd133c09e03826"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/tests/test_unix.py",
+            "hashes": {
+                "sha1": "8f6cfe8996cfffdd753de42a8db604373e7b70ec",
+                "sha256": "a0aac4c1a1c64b33d53bc30ceb617e0c481077dfd65dd1ac86a3dd1f6b767f1c"
+            }
+        },
+        {
+            "path": "platformdirs-4.2.0/.gitignore",
+            "hashes": {
+                "sha1": "85dbf6748909ab5077078325839395907415df56",
+                "sha256": "5f0b11fbd816ca2f8b294719d3d994286f2f2e835b7b8d844db36ea6d2e569fc"
+            }
+        }
+    ],
+    "coordinates": {
+        "type": "pypi",
+        "provider": "pypi",
+        "name": "platformdirs",
+        "revision": "4.2.0"
+    },
+    "_meta": {
+        "schemaVersion": "1.7.0",
+        "updated": "2024-10-24T06:47:54.862Z"
+    },
+    "scores": {
+        "effective": 87,
+        "tool": 87
+    },
+    "_id": "pypi/pypi/-/platformdirs/4.2.0"
+}
