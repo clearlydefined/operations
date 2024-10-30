@@ -17,8 +17,6 @@ const fs = require('fs')
 
     before(() => {
       loadFixtures().forEach(([coordinatesString, notice]) => {
-        if (coordinatesString.includes('conda'))
-          coordinatesString = components.filter(component => component.includes('conda'))[0]
         nock(prodApiBaseUrl, { allowUnmocked: true })
           .post('/notices', { coordinates: [coordinatesString] })
           .reply(200, notice)
@@ -57,7 +55,11 @@ function loadFixtures() {
     .filter(f => f.endsWith('.json'))
     .map(jsonFile => {
       const notice = JSON.parse(fs.readFileSync(`${location}/${jsonFile}`))
-      const coordinatesString = jsonFile.replaceAll('-', '/').replaceAll('///', '/-/').replace('.json', '')
+      const coordinatesString = jsonFile
+        .replaceAll('-', '/')
+        .replaceAll('///', '/-/')
+        .replaceAll('//', '-')
+        .replace('.json', '')
       return [coordinatesString, notice]
     })
 }
