@@ -17,10 +17,10 @@
     },
     "files": 53,
     "tools": [
-      "clearlydefined/1.2.0",
+      "clearlydefined/2.2.0",
       "reuse/3.2.1",
-      "licensee/9.14.0",
-      "scancode/30.3.0"
+      "licensee/9.18.1",
+      "scancode/32.3.0"
     ],
     "toolScore": {
       "total": 100,
@@ -56,7 +56,7 @@
           ]
         },
         "discovered": {
-          "unknown": 47,
+          "unknown": 46,
           "expressions": [
             "MIT"
           ]
@@ -98,6 +98,7 @@
     },
     {
       "path": "README.md",
+      "license": "MIT",
       "hashes": {
         "sha1": "f2f54c7ed2178108a86e1fa58344a5c3ccc1da1e",
         "sha256": "c338b0c0fbf0e334e50a2e0762900fc3ab55a3efb93a5f1e81ca6a5610c91246"
@@ -473,11 +474,12 @@
     "revision": "0.1.0"
   },
   "_meta": {
-    "schemaVersion": "1.6.1",
-    "updated": "2024-04-13T00:13:04.644Z"
+    "schemaVersion": "1.7.0",
+    "updated": "2024-10-24T02:12:43.390Z"
   },
   "scores": {
     "effective": 88,
     "tool": 88
-  }
+  },
+  "_id": "pod/cocoapods/-/softbutton/0.1.0"
 }

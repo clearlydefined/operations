@@ -37,7 +37,7 @@ const fs = require('fs')
             findDefinition(coordinates),
             getDefinition(devApiBaseUrl, coordinates)
           ])
-          deepStrictEqualExpectedEntries(foundDef, omit(expectedDef, ['files']))
+          deepStrictEqualExpectedEntries(foundDef, omit(expectedDef, ['files', '_id']))
         })
       })
 

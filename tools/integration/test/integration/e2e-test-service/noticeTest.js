@@ -55,7 +55,11 @@ function loadFixtures() {
     .filter(f => f.endsWith('.json'))
     .map(jsonFile => {
       const notice = JSON.parse(fs.readFileSync(`${location}/${jsonFile}`))
-      const coordinatesString = jsonFile.replaceAll('-', '/').replaceAll('///', '/-/').replace('.json', '')
+      const coordinatesString = jsonFile
+        .replaceAll('-', '/')
+        .replaceAll('///', '/-/')
+        .replaceAll('//', '-')
+        .replace('.json', '')
       return [coordinatesString, notice]
     })
 }
