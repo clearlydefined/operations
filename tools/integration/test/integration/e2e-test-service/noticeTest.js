@@ -7,24 +7,26 @@ const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('..
 const nock = require('nock')
 const fs = require('fs')
 
-describe('Validate notice files between dev and prod', async function () {
-  this.timeout(definition.timeout)
+;(async function () {
+  const components = await getComponents()
+  describe('Validate notice files between dev and prod', async function () {
+    this.timeout(definition.timeout)
 
-  //Rest a bit to avoid overloading the servers
-  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
+    //Rest a bit to avoid overloading the servers
+    afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
-  before(() => {
-    loadFixtures().forEach(([coordinatesString, notice]) => {
-      nock(prodApiBaseUrl, { allowUnmocked: true })
-        .post('/notices', { coordinates: [coordinatesString] })
-        .reply(200, notice)
+    before(() => {
+      loadFixtures().forEach(([coordinatesString, notice]) => {
+        nock(prodApiBaseUrl, { allowUnmocked: true })
+          .post('/notices', { coordinates: [coordinatesString] })
+          .reply(200, notice)
+      })
+    })
+    components.forEach(coordinates => {
+      it(`should return the same notice as prod for ${coordinates}`, () => fetchAndCompareNotices(coordinates))
     })
   })
-  const components = await getComponents()
-  components.forEach(coordinates => {
-    it(`should return the same notice as prod for ${coordinates}`, () => fetchAndCompareNotices(coordinates))
-  })
-})
+})()
 
 async function fetchAndCompareNotices(coordinates) {
   const [computedNotice, expectedNotice] = await Promise.all(

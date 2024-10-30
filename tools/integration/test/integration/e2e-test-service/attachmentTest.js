@@ -5,17 +5,19 @@ const { callFetch } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const { strictEqual } = require('assert')
 
-describe('Validation attachments between dev and prod', async function () {
-  this.timeout(definition.timeout * 2)
-
-  //Rest a bit to avoid overloading the servers
-  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
-
+;(async function () {
   const components = await getComponents()
-  components.forEach(coordinates => {
-    it(`should have the same attachement as prod for ${coordinates}`, () => fetchAndCompareAttachments(coordinates))
+  describe('Validation attachments between dev and prod', async function () {
+    this.timeout(definition.timeout * 2)
+
+    //Rest a bit to avoid overloading the servers
+    afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
+
+    components.forEach(coordinates => {
+      it(`should have the same attachement as prod for ${coordinates}`, () => fetchAndCompareAttachments(coordinates))
+    })
   })
-})
+})()
 
 async function fetchAndCompareAttachments(coordinates) {
   const expectedAttachments = await findAttachments(prodApiBaseUrl, coordinates)
