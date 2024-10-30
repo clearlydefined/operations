@@ -1,0 +1,179 @@
+{
+    "described": {
+        "releaseDate": "2010-12-30",
+        "urls": {
+            "registry": "https://npmjs.com/package/redis",
+            "version": "https://npmjs.com/package/redis/v/0.1.0",
+            "download": "https://registry.npmjs.com/redis/-/redis-0.1.0.tgz"
+        },
+        "hashes": {
+            "sha1": "6f1c493aec95638f654058a7001f42b5df6ba517",
+            "sha256": "a9184ac8e24f06a3cc7e4bcdd7cdc4ed444a70e5b9ff4123d5943f52ea9e0956"
+        },
+        "files": 13,
+        "tools": [
+            "clearlydefined/1.3.4",
+            "reuse/3.2.1",
+            "licensee/9.18.1",
+            "scancode/32.3.0"
+        ],
+        "toolScore": {
+            "total": 30,
+            "date": 30,
+            "source": 0
+        },
+        "score": {
+            "total": 30,
+            "date": 30,
+            "source": 0
+        }
+    },
+    "licensed": {
+        "declared": "MIT",
+        "toolScore": {
+            "total": 62,
+            "declared": 30,
+            "discovered": 2,
+            "consistency": 15,
+            "spdx": 15,
+            "texts": 0
+        },
+        "facets": {
+            "core": {
+                "attribution": {
+                    "unknown": 12,
+                    "parties": [
+                        "Copyright (c) 2010 Matthew Ranney, http://ranney.com"
+                    ]
+                },
+                "discovered": {
+                    "unknown": 12,
+                    "expressions": [
+                        "MIT"
+                    ]
+                },
+                "files": 13
+            }
+        },
+        "score": {
+            "total": 62,
+            "declared": 30,
+            "discovered": 2,
+            "consistency": 15,
+            "spdx": 15,
+            "texts": 0
+        }
+    },
+    "files": [
+        {
+            "path": "1289345666949-0.39057215326465666/._example.js",
+            "hashes": {
+                "sha1": "d4f45238f683a7169d1b071097afe7ba0955dc06",
+                "sha256": "2e0c018503ef71712e80375102bec6adc93edd4e91fd1e88e12ce85c2928cc56"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/._example_file.js",
+            "hashes": {
+                "sha1": "3e033af882119d5d414f0dc731fc4bc89d3e699a",
+                "sha256": "c4a071f14a42e57e3632474facf790ab0efc40f1a934fb6f0d73c58cfd9ea22c"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/._index.js",
+            "hashes": {
+                "sha1": "c762a486be08c9e66ea890ab6b19f28a0a98a927",
+                "sha256": "d12314a60f0b70f5c956e52124b738ad80a43593cff7519fa865bc85639c0121"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/._package.json",
+            "hashes": {
+                "sha1": "065512db016cd6f3479a5479fa05eb160d970532",
+                "sha256": "a60be88e0c587c6e9423332579f32f5c4247cba112e07dc1a9d2963df99bc932"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/._README.md",
+            "hashes": {
+                "sha1": "710b125777e8265bdcd6707c982dbf79c344ac76",
+                "sha256": "785976b9e16d46c9232fb8442a1053b31d5f8fd566bd51fa4fea51277eb6e581"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/._test.js",
+            "hashes": {
+                "sha1": "7b1ac01d650c69067e5cbe0b32a9eda5dc612506",
+                "sha256": "51c79247346d393d8b6ff9f466d44e4569eb40c3a88ce16318e7807d54a0cf6e"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/buffer_bench.js",
+            "hashes": {
+                "sha1": "be71d0a189d8f1b8bbacbdae8d72083fff8056f5",
+                "sha256": "8d5160c4a30cc3a4e129b79dc079e55ad3235c834e4312d85f8ea77474378cff"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/example.js",
+            "hashes": {
+                "sha1": "5b1596bc13ac0119ffe47255a20e0e076e4b9d00",
+                "sha256": "76c600d4f7c12685bfb393e0cd847bc4382150dc4a6cd207ff69609f95c707de"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/example_file.js",
+            "hashes": {
+                "sha1": "6989db9a5a9351b75197256011ca87450067904d",
+                "sha256": "d19a07b0d594b40d2e5819376aed9f15f02f014601da746b8f371407f4097cec"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/index.js",
+            "hashes": {
+                "sha1": "e6ee39085148cb9a22842b028f6915ecf995628a",
+                "sha256": "dd9bfda2a0a5be735b832cc9c94b7773d5dc3989e617b188dafc229c2f340a5a"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/package.json",
+            "hashes": {
+                "sha1": "c14b0b82819974f5d492bbbd9aa5acc5c98354fe",
+                "sha256": "1dba188119034e5ab687c12a6204abbc9bee750ac4a5d00f12ce0c87ac8df88d"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/README.md",
+            "license": "MIT",
+            "attributions": [
+                "Copyright (c) 2010 Matthew Ranney, http://ranney.com"
+            ],
+            "hashes": {
+                "sha1": "04bb71d6c7b54bad3a80f23bc6e3637697b21a25",
+                "sha256": "826b685d6dc7846742a62cf2bff5bf96b6bef945d2959c9d4a75514eb9e71baf"
+            }
+        },
+        {
+            "path": "1289345666949-0.39057215326465666/test.js",
+            "hashes": {
+                "sha1": "c12fb6c8eae1c245f020a0ab7a5daefad43dd148",
+                "sha256": "acba4d42c2292f58dd397143eef868c6c7e872757d8b82c6f84896667802d42f"
+            }
+        }
+    ],
+    "coordinates": {
+        "type": "npm",
+        "provider": "npmjs",
+        "name": "redis",
+        "revision": "0.1.0"
+    },
+    "_meta": {
+        "schemaVersion": "1.7.0",
+        "updated": "2024-10-23T08:22:24.920Z"
+    },
+    "scores": {
+        "effective": 46,
+        "tool": 46
+    },
+    "_id": "npm/npmjs/-/redis/0.1.0"
+}
