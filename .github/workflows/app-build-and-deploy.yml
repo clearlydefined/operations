@@ -137,17 +137,24 @@ jobs:
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.azure-app-name-postfix }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
 
+  pause-between-primary-deploy-and-verification:
+    needs: deploy-primary-app-to-azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pause for 3 minutes
+        run: sleep 180  # Sleep for 180 seconds (3 minutes)
+    
   verify-primary-app:
     name: Verify primary health endpoint
     if: ${{inputs.primary-verification-url != '' }}
-    needs: [get-version, deploy-primary-app-to-azure]
+    needs: [get-version, pause-between-primary-deploy-and-verification]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'elr/verify-health'
+          ref: 'v3.1.2'
           path: 'operations'
       - name: Validate primary deploy
         id: validate-primary
@@ -183,17 +190,24 @@ jobs:
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.secondary-azure-app-name-postfix }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
 
+  pause-between-secondary-deploy-and-verification:
+    needs: deploy-secondary-app-to-azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pause for 3 minutes
+        run: sleep 180  # Sleep for 180 seconds (3 minutes)
+        
   verify-secondary-app:
     name: Verify secondary health endpoint
     if: ${{ inputs.secondary-azure-app-name-postfix != '' && inputs.secondary-verification-url != '' }}
-    needs: [get-version, deploy-secondary-app-to-azure]
+    needs: [get-version, pause-between-secondary-deploy-and-verification]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'elr/verify-health'
+          ref: 'v3.1.2'
           path: 'operations'
       - name: Validate secondary deploy
         id: validate-secondary
