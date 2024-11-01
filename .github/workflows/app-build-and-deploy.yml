@@ -154,7 +154,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v3.1.2'
+          ref: 'elr/verify-health'
           path: 'operations'
       - name: Validate primary deploy
         id: validate-primary
@@ -207,7 +207,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: 'v3.1.2'
+          ref: 'elr/verify-health'
           path: 'operations'
       - name: Validate secondary deploy
         id: validate-secondary
