@@ -21,16 +21,16 @@ Contact info:
 ### Services
 
 Service AKA API:
-[Repo](https://github.com/clearlydefined/service)
-[Configuration Guide](service_config/service.md)
+- [Repo](https://github.com/clearlydefined/service)
+- [Configuration Guide](service_config/service.md)
 
 Website:
-[Repo](https://github.com/clearlydefined/website)
-[Configuration Guide](service_config/website.md)
+- [Repo](https://github.com/clearlydefined/website)
+- [Configuration Guide](service_config/website.md)
 
 Crawler:
-[Crawler](https://github.com/clearlydefined/crawler)
-[Configuration Guide](service_config/crawler.md)
+- [Crawler](https://github.com/clearlydefined/crawler)
+- [Configuration Guide](service_config/crawler.md)
 
 ## Infrastructure
 
