@@ -163,6 +163,7 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_STORE_PROVIDER
 * CRAWLER_WEBHOOK_TOKEN
 * CRAWLER_WEBHOOK_URL
+* CRAWLER_SCANCODE_PARALLELISM
 * DOCKER_CUSTOM_IMAGE_NAME
 * DOCKER_ENABLE_CI
 * DOCKER_REGISTRY_SERVER_PASSWORD
@@ -263,6 +264,13 @@ These environmental variables are used to define the url for the ClearlyDefined 
 In this case, the webhook url is "https://dev-api.clearlydefined.io/webhook".
 
 The token is what we use to authenticate to the API (so that only the crawler can call that part of the ClearlyDefined Service api)
+
+**CRAWLER_SCANCODE_PARALLELISM**
+
+This environment variable is a number of `scancode-toolkit` processes to run in parallel. `scancode-toolkit` is one of the main
+tools that collect the licensing data that goes into the final definition, and increasing parallelism, if the CPU allows,
+speeds up processing of individual definitions. The default value is `2`, and a good ballpark value is ~80% of total CPUs 
+available for crawler.
 
 **DOCKER**
 
