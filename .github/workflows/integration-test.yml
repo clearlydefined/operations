@@ -46,7 +46,7 @@ jobs:
       - name: Verify service functions
         id: verify-service-functions
         continue-on-error: true
-        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-definition
 
       - name: Generate structured diffs
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
