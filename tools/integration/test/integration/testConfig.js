@@ -9,6 +9,7 @@ function getDevApiBaseUrl() {
   return url
 }
 const prodApiBaseUrl = 'https://api.clearlydefined.io'
+const devApiBaseUrl = getDevApiBaseUrl()
 
 const pollingInterval = 1000 * 60 * 1 // 1 minute
 const pollingMaxTime = 1000 * 60 * 60 // 60 minutes
@@ -76,7 +77,7 @@ const componentsDynamic = async () => {
 }
 
 module.exports = {
-  getDevApiBaseUrl,
+  devApiBaseUrl,
   prodApiBaseUrl,
   getComponents,
   harvest: {

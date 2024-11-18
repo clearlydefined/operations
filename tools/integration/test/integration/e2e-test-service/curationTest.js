@@ -3,7 +3,7 @@
 
 const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { getDevApiBaseUrl, definition } = require('../testConfig')
+const { devApiBaseUrl, definition } = require('../testConfig')
 
 describe('Validate curation', function () {
   this.timeout(definition.timeout)
@@ -24,7 +24,7 @@ describe('Validate curation', function () {
 
     before('curate', async function () {
       const curationResponse = await callFetch(
-        `${getDevApiBaseUrl()}/curations`,
+        `${devApiBaseUrl}/curations`,
         buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
       ).then(r => r.json())
       prNumber = curationResponse.prNumber
@@ -35,22 +35,22 @@ describe('Validate curation', function () {
     })
 
     it(`should get the curation by PR via /curations/${coordinates}/pr`, async function () {
-      const fetchedCuration = await callFetch(`${getDevApiBaseUrl()}/curations/${coordinates}/pr/${prNumber}`).then(r =>
+      const fetchedCuration = await callFetch(`${devApiBaseUrl}/curations/${coordinates}/pr/${prNumber}`).then(r =>
         r.json()
       )
       deepStrictEqual(fetchedCuration, curation)
     })
 
     it(`should reflect the PR in definition preview via definitions/${coordinates}/pr`, async function () {
-      const curatedDefinition = await callFetch(`${getDevApiBaseUrl()}/definitions/${coordinates}/pr/${prNumber}`).then(
-        r => r.json()
+      const curatedDefinition = await callFetch(`${devApiBaseUrl}/definitions/${coordinates}/pr/${prNumber}`).then(r =>
+        r.json()
       )
       strictEqual(curatedDefinition.described.releaseDate, curation.described.releaseDate)
     })
 
     it(`should get of list of PRs for component via /curations/${type}/${provider}/${namespace}/${name}`, async function () {
-      const response = await callFetch(`${getDevApiBaseUrl()}/curations/${type}/${provider}/${namespace}/${name}`).then(
-        r => r.json()
+      const response = await callFetch(`${devApiBaseUrl}/curations/${type}/${provider}/${namespace}/${name}`).then(r =>
+        r.json()
       )
       const proposedPR = response.contributions.filter(c => c.prNumber === prNumber)
       ok(proposedPR)
@@ -58,10 +58,9 @@ describe('Validate curation', function () {
 
     it('should get PRs for components via post /curations', async function () {
       const revisionlessCoordinates = `${type}/${provider}/${namespace}/${name}`
-      const response = await callFetch(
-        `${getDevApiBaseUrl()}/curations`,
-        buildPostOpts([revisionlessCoordinates])
-      ).then(r => r.json())
+      const response = await callFetch(`${devApiBaseUrl}/curations`, buildPostOpts([revisionlessCoordinates])).then(r =>
+        r.json()
+      )
       const proposedPR = response[revisionlessCoordinates].contributions.filter(c => c.prNumber === prNumber)
       ok(proposedPR)
     })
@@ -75,12 +74,12 @@ describe('Validate curation', function () {
       }
     }
     it(`should get merged curation for coordinates via /curations/${curatedCoordinates}`, async function () {
-      const response = await callFetch(`${getDevApiBaseUrl()}/curations/${curatedCoordinates}`).then(r => r.json())
+      const response = await callFetch(`${devApiBaseUrl}/curations/${curatedCoordinates}`).then(r => r.json())
       deepStrictEqual(response, expected)
     })
 
     it(`should reflect merged curation in definition for coordinates ${curatedCoordinates}`, async function () {
-      const curatedDefinition = await getDefinition(getDevApiBaseUrl(), curatedCoordinates, true)
+      const curatedDefinition = await getDefinition(devApiBaseUrl, curatedCoordinates, true)
       deepStrictEqual(curatedDefinition.licensed.declared, expected.licensed.declared)
     })
   })
@@ -106,7 +105,7 @@ function buildCurationOpts(coordinates, type, provider, namespace, name, revisio
 }
 
 async function getDefinition(apiBaseUrl, coordinates, reCompute = false) {
-  reCompute = apiBaseUrl === getDevApiBaseUrl() && reCompute
+  reCompute = apiBaseUrl === devApiBaseUrl && reCompute
   let url = `${apiBaseUrl}/definitions/${coordinates}`
   if (reCompute) url += '?force=true'
   return await callFetch(url).then(r => r.json())

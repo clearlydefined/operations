@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const { getComponents, getDevApiBaseUrl, harvest } = require('./testConfig')
+const { getComponents, devApiBaseUrl, harvest } = require('./testConfig')
 const Poller = require('../../lib/poller')
 const Harvester = require('../../lib/harvester')
 const { strictEqual } = require('assert')
@@ -24,7 +24,7 @@ async function harvestTillCompletion(components) {
   if (components.length === 0) return new Map()
 
   const { poll, tools } = harvest
-  const harvester = new Harvester(getDevApiBaseUrl())
+  const harvester = new Harvester(devApiBaseUrl)
 
   const oneComponent = components.shift()
   const versionPoller = new Poller(poll.interval / 5, poll.maxTime)

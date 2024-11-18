@@ -3,7 +3,7 @@
 
 const { deepStrictEqual } = require('assert')
 const { callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { getDevApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
+const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
 
@@ -32,7 +32,7 @@ async function fetchAndCompareNotices(coordinates) {
   const [computedNotice, expectedNotice] = await Promise.all(
     [
       callFetch(
-        `${getDevApiBaseUrl()}/notices`,
+        `${devApiBaseUrl}/notices`,
         buildPostOpts({
           coordinates: [coordinates]
         })
