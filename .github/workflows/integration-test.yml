@@ -45,7 +45,7 @@ jobs:
         run: npm test
         
       - name: Trigger harvest and verify completion if required
-        if: github.event.inputs.skipHarvest == 'false'
+        if: github.event.inputs.skipHarvest == 'false' || matrix.dynamicCoordinates == 'true'
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
