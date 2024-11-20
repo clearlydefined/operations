@@ -86,6 +86,6 @@ module.exports = {
     timeout: 1000 * 60 * 60 * 4 // 4 hours for harvesting all the components
   },
   definition: {
-    timeout: 1000 * 10 // for each component
+    timeout: 1000 * 60 // for each component
   }
 }
