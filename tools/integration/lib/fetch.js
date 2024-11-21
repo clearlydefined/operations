@@ -14,12 +14,12 @@ function buildPostOpts(json) {
   }
 }
 
-async function callFetch(url, fetchOpts = {}) {
+async function callFetch(url, fetchOpts) {
   const response = await fetchResponse(url, fetchOpts)
   return verifyResponse(response)
 }
 
-async function fetchResponse(url, fetchOpts) {
+async function fetchResponse(url, fetchOpts = {}) {
   console.log(`Calling fetch. URL: ${url}, Options: ${JSON.stringify(fetchOpts)}`)
   return await fetch(url, fetchOpts)
 }
