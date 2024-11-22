@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const { deepStrictEqual, strictEqual, ok } = require('assert')
-const { callFetch, buildPostOpts } = require('../../../lib/fetch')
+const { callFetchWithRetry: callFetch, buildPostOpts } = require('../../../lib/fetch')
 const { devApiBaseUrl, definition } = require('../testConfig')
 
 describe('Validate curation', function () {

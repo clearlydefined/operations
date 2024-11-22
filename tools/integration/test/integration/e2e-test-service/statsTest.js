@@ -1,7 +1,7 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const { callFetch } = require('../../../lib/fetch')
+const { callFetchWithRetry: callFetch } = require('../../../lib/fetch')
 const { devApiBaseUrl, definition } = require('../testConfig')
 const { ok } = require('assert')
 
