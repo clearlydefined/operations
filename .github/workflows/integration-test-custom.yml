@@ -214,10 +214,10 @@ jobs:
       - name: Trigger harvest and verify completion
         run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
-      - name: Verify service functions
+      - name: Verify definition tests
         id: verify-service-functions
         continue-on-error: true
-        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-definition
 
       - name: Generate structured diffs
         run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}

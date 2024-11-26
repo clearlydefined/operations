@@ -11,6 +11,10 @@ on:
         description: 'Array of booleans for dynamic coordinates (e.g., [true, false])'
         required: true
         default: '[true, false]'
+      skipHarvest:
+        description: "Skip harvest and verify completion"
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
@@ -40,13 +44,14 @@ jobs:
       - name: Run tests on tools
         run: npm test
         
-      - name: Trigger harvest and verify completion
+      - name: Trigger harvest and verify completion if required
+        if: github.event.inputs.skipHarvest == 'false' || matrix.dynamicCoordinates == 'true'
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
         id: verify-service-functions
         continue-on-error: true
-        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-definition
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
 
       - name: Generate structured diffs
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
