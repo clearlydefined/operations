@@ -3,7 +3,7 @@
 
 const { omit, isEqual, pick } = require('lodash')
 const { deepStrictEqual, strictEqual, ok } = require('assert')
-const { callFetch, buildPostOpts } = require('../../../lib/fetch')
+const { callFetchWithRetry: callFetch, buildPostOpts } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
