@@ -543,15 +543,22 @@ This is an optional flag to `enable` logging of Node's `v8` module's memory usag
 Value is either `true` or `false`
 > Note: if this env var is not present, it equates to `false`
 
+> example:  
+> `LOG_NODE_HEAPSTATS` = `true`
+
 - [Node.js v8 engine docs - getHeapSpaceStatistics()](https://nodejs.org/docs/v22.12.0/api/v8.html#v8getheapspacestatistics)
 
 - [Node.js v8 engine docs - getHeapStatistics()](https://nodejs.org/docs/v22.12.0/api/v8.html#v8getheapstatistics)
 
 **LOG_NODE_HEAPSTATS_INTERVAL_MS**
 
-This is an optional environment variable that sets the interval to log heap statistics (When enabled). This is a number in `ms` (`milliseconds`).
+This is an optional environment variable that sets the interval to log heap statistics (When enabled).
 
-> NOTE: The default value is `30,000 ms` (`30 seconds`)
+Value is a number in `ms` (`milliseconds`).
+> NOTE: The default value is `30000` ms (`30` seconds)
+
+> example:   
+> `LOG_NODE_HEAPSTATS_INTERVAL_MS` = `10000`
 
 **MULTIVERSION_CURATION_FF**
 
