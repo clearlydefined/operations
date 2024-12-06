@@ -78,7 +78,10 @@ Pre-releases append a confidence indicator. The initial confidence level (e.g. a
    * For beta or release candidates versions:
      * full testing to determine if it is ready to be move to a full release.  
    * For the full release:
-     * test to be sure the deploy was successful
+     * check the health endpoint
+       * service:  (_may want to include link directly to US and EU endpoints since the general endpoint could hit either_)
+         * https://api.clearlydefined.io/
+     * run [integration tests](https://github.com/clearlydefined/operations/actions/workflows/integration-test.yml) from operations repo actions (_NOTE: The defaults run only the static tests, which is fine for now but will be updating to run dynamic tests too.  WIP_)
 
 ## Accepatance Test
 
