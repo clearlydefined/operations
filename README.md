@@ -32,4 +32,5 @@ Contact info:
 [Operations](https://github.com/clearlydefined/operations)
 
 ### Build / Deployment
-[Azure DevOps builds](https://dev.azure.com/clearlydefined/ClearlyDefined/_build)
+
+[Release Management](./release-management.md)
