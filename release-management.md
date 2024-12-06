@@ -40,21 +40,19 @@ Pre-releases append a confidence indicator. The initial confidence level (e.g. a
    * when testing is complete and maintainers agree, set the release version (e.g. v2.4.0)
 2. Update the version
    * For beta or release candidates versions:
-     * in master branch, run `npm version <NEW_VERSION>` (e.g. `npm version v2.4.0-rc.3`)
+     * in master branch, run `npm version <NEW_VERSION>` (e.g. `npm version v2.4.0-rc.3 --no-git-tag-version`)
      * commit updated version to `master` branch
      * push commit directly to `master` branch (**_This is the only time you should directly push to master_**)
    * For the full release:
-     * in master branch, run `npm version <NEW_VERSION>` (e.g. `npm version v2.4.0`)
+     * in master branch, run `npm version <NEW_VERSION>` (e.g. `npm version v2.4.0 --no-git-tag-version`)
      * commit updated version to `master` branch
      * push commit directly to `master` branch (**_This is the only time you should directly push to master_**)
 3. Update code being published
    * For beta or release candidates versions:
      * _Nothing to do as these releases come from the current state of the `master` branch._
    * For the full release:
-     * if the code in `master` is going to be the full release
-       * merge `master` into `prod`
-     * if the code in `prod` is going to be the full release
-       * port just the version commit to `prod` branch
+     * DO NOT CREATE A PR as this causes the histories to be out of sync
+     * rebase `prod` on revision... `master` (`git checkout prod && git rebase master && git push origin prod`) TODO: double check the git commands work, as I do this in Tower.
 4. Create a tag
    * For beta or release candidates versions:
      * in `master` branch, create a tag of head commit named for the version (e.g. `v2.4.0-rc.3`) (_the one including the version update_)
