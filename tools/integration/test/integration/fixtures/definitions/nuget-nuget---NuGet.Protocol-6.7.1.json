@@ -1,0 +1,168 @@
+{
+    "described": {
+        "releaseDate": "2024-02-14",
+        "urls": {
+            "registry": "https://nuget.org/packages/NuGet.Protocol",
+            "version": "https://nuget.org/packages/NuGet.Protocol/6.7.1",
+            "download": "https://nuget.org/api/v2/package/NuGet.Protocol/6.7.1"
+        },
+        "hashes": {
+            "sha1": "21bf49486dfeffceb90ee08184ce4a0826bc167a",
+            "sha256": "5c0f71a3298b4a55dba87bfe69a85e83629a6f2bd626c924fa795312ee9bb43f"
+        },
+        "files": 11,
+        "tools": [
+            "clearlydefined/1.4.2",
+            "reuse/3.2.1",
+            "licensee/9.18.1",
+            "scancode/32.3.0"
+        ],
+        "toolScore": {
+            "total": 30,
+            "date": 30,
+            "source": 0
+        },
+        "score": {
+            "total": 30,
+            "date": 30,
+            "source": 0
+        }
+    },
+    "licensed": {
+        "declared": "Apache-2.0",
+        "toolScore": {
+            "total": 47,
+            "declared": 30,
+            "discovered": 2,
+            "consistency": 0,
+            "spdx": 15,
+            "texts": 0
+        },
+        "facets": {
+            "core": {
+                "attribution": {
+                    "unknown": 10,
+                    "parties": [
+                        "(c) Microsoft Corporation"
+                    ]
+                },
+                "discovered": {
+                    "unknown": 9,
+                    "expressions": [
+                        "Apache-2.0",
+                        "Apache-2.0 AND (ECL-2.0 AND Apache-2.0)"
+                    ]
+                },
+                "files": 11
+            }
+        },
+        "score": {
+            "total": 47,
+            "declared": 30,
+            "discovered": 2,
+            "consistency": 0,
+            "spdx": 15,
+            "texts": 0
+        }
+    },
+    "files": [
+        {
+            "path": ".signature.p7s",
+            "hashes": {
+                "sha1": "a867a20b70b9850318784938364e9c6c214ef693",
+                "sha256": "3e9f256ecf6d0a70ec1316be01b8d6777d40154deaeca9635fa54346452afa88"
+            }
+        },
+        {
+            "path": "[Content_Types].xml",
+            "hashes": {
+                "sha1": "0b306caa8f4cd10eb4139d628403276e91609aa0",
+                "sha256": "11482180807807bbdde9556462a60d7afdeadef7c32e7b13286dea3f72192642"
+            }
+        },
+        {
+            "path": "icon.png",
+            "hashes": {
+                "sha1": "e205e240c947185639ddf259ab2711126a16f713",
+                "sha256": "cf31ee932953a0801bdb4a6f5998e8855fdfc3f0fe3a59dac8c2ff33c79eebeb"
+            }
+        },
+        {
+            "path": "NuGet.Protocol.nuspec",
+            "license": "Apache-2.0",
+            "attributions": [
+                "(c) Microsoft Corporation"
+            ],
+            "hashes": {
+                "sha1": "94b5bbfb0e08ee3586ee7cc7c503b5c4ade2e997",
+                "sha256": "2d9c3b5b9ff0d9aca7461e21b66c9f8b69e259b557ce7b34898eb71f3efda465"
+            }
+        },
+        {
+            "path": "README.md",
+            "hashes": {
+                "sha1": "2345e8251f9ebb2fe1cc3dfbd923ee66f4ac14f9",
+                "sha256": "2d283a2f4799e372f3b2afc6124382d841d75057355cdc3927ad2d7fa9323b07"
+            }
+        },
+        {
+            "path": "_rels/.rels",
+            "hashes": {
+                "sha1": "756e8c35b7f7ee791910a3b5d560c28d49fbc6bb",
+                "sha256": "16894df0ba62c2eb912cff3a999d80e0e201b19d5f25dc908759c2cb217afdb5"
+            }
+        },
+        {
+            "path": "clearlydefined/downloaded/LICENSE",
+            "license": "Apache-2.0 AND (ECL-2.0 AND Apache-2.0)",
+            "hashes": {
+                "sha1": "6215cb16583ad28f22e1a7c905ee5bbee1044635",
+                "sha256": "e38b0854f4b591f3297571e73c665bd4266e8c8f9c55fb580942e51a4da619a8"
+            },
+            "token": "e38b0854f4b591f3297571e73c665bd4266e8c8f9c55fb580942e51a4da619a8"
+        },
+        {
+            "path": "lib/net472/NuGet.Protocol.dll",
+            "hashes": {
+                "sha1": "050e17c9fe4efb24dc60b12d099301b29e5132bf",
+                "sha256": "f48ec73c754b3d780534ce510ceb12f4f1dd7066514f1f8c6e56f7eb353a92c8"
+            }
+        },
+        {
+            "path": "lib/net5.0/NuGet.Protocol.dll",
+            "hashes": {
+                "sha1": "3da9c4d99668d09533ee87213f7101306f6e5e0e",
+                "sha256": "61ff83ef7241bd7b4573c0913e2d32246e0aba115b42af260b267742d3b9aef1"
+            }
+        },
+        {
+            "path": "lib/netstandard2.0/NuGet.Protocol.dll",
+            "hashes": {
+                "sha1": "ceb9083ac58a39ee9286e77ce24b609f062463dd",
+                "sha256": "869b25b1dde48edb790c4acab01c44775ffbbc16a79a79a94aca0747d5ad595d"
+            }
+        },
+        {
+            "path": "package/services/metadata/core-properties/ca707bad8f054272a397032c19946840.psmdcp",
+            "hashes": {
+                "sha1": "5988a74822ea0aa95d3cdcbe17f889d6275fdfa2",
+                "sha256": "cc485c62966b5c865b51070b38834a61aa9e0f5e6dede5cb0e56eb05321edbd8"
+            }
+        }
+    ],
+    "coordinates": {
+        "type": "nuget",
+        "provider": "nuget",
+        "name": "NuGet.Protocol",
+        "revision": "6.7.1"
+    },
+    "_meta": {
+        "schemaVersion": "1.7.0",
+        "updated": "2024-10-24T05:59:49.622Z"
+    },
+    "scores": {
+        "effective": 38,
+        "tool": 38
+    },
+    "_id": "nuget/nuget/-/nuget.protocol/6.7.1"
+}

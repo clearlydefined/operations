@@ -2,29 +2,31 @@
 // SPDX-License-Identifier: MIT
 
 const { deepStrictEqual } = require('assert')
-const { callFetch, buildPostOpts } = require('../../../lib/fetch')
+const { callFetchWithRetry: callFetch, buildPostOpts } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
 
-describe('Validate notice files between dev and prod', async function () {
-  this.timeout(definition.timeout)
+;(async function () {
+  const components = await getComponents()
+  describe('Validate notice files between dev and prod', async function () {
+    this.timeout(definition.timeout)
 
-  //Rest a bit to avoid overloading the servers
-  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
+    //Rest a bit to avoid overloading the servers
+    afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
-  before(() => {
-    loadFixtures().forEach(([coordinatesString, notice]) => {
-      nock(prodApiBaseUrl, { allowUnmocked: true })
-        .post('/notices', { coordinates: [coordinatesString] })
-        .reply(200, notice)
+    before(() => {
+      loadFixtures().forEach(([coordinatesString, notice]) => {
+        nock(prodApiBaseUrl, { allowUnmocked: true })
+          .post('/notices', { coordinates: [coordinatesString] })
+          .reply(200, notice)
+      })
+    })
+    components.forEach(coordinates => {
+      it(`should return the same notice as prod for ${coordinates}`, () => fetchAndCompareNotices(coordinates))
     })
   })
-  const components = await getComponents()
-  components.forEach(coordinates => {
-    it(`should return the same notice as prod for ${coordinates}`, () => fetchAndCompareNotices(coordinates))
-  })
-})
+})()
 
 async function fetchAndCompareNotices(coordinates) {
   const [computedNotice, expectedNotice] = await Promise.all(
@@ -53,7 +55,11 @@ function loadFixtures() {
     .filter(f => f.endsWith('.json'))
     .map(jsonFile => {
       const notice = JSON.parse(fs.readFileSync(`${location}/${jsonFile}`))
-      const coordinatesString = jsonFile.replaceAll('-', '/').replaceAll('///', '/-/').replace('.json', '')
+      const coordinatesString = jsonFile
+        .replaceAll('-', '/')
+        .replaceAll('///', '/-/')
+        .replaceAll('//', '-')
+        .replace('.json', '')
       return [coordinatesString, notice]
     })
 }

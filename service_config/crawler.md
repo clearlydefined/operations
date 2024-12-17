@@ -9,6 +9,7 @@
     - [CRAWLER\_NAME](#crawler_name)
     - [CRAWLER\_QUEUE\_PREFIX](#crawler_queue_prefix)
     - [CRAWLER\_QUEUE\_PROVIDER](#crawler_queue_provider)
+    - [CRAWLER\_SCANCODE\_PARALLELISM](#crawler_scancode_parallelism)
     - [CRAWLER\_SERVICE\_AUTH\_TOKEN](#crawler_service_auth_token)
     - [CRAWLER\_SERVICE\_URL](#crawler_service_url)
       - [CRAWLER\_STORE\_PROVIDER](#crawler_store_provider)
@@ -37,6 +38,7 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_QUEUE_AZURE_CONNECTION_STRING
 * CRAWLER_QUEUE_PREFIX
 * CRAWLER_QUEUE_PROVIDER
+* CRAWLER_SCANCODE_PARALLELISM
 * CRAWLER_SERVICE_AUTH_TOKEN
 * CRAWLER_SERVICE_URL
 * CRAWLER_STORE_PROVIDER
@@ -99,6 +101,13 @@ We use an [Azure Storage Queue](https://docs.microsoft.com/en-us/azure/storage/q
 
 This is an optional variable that's used if you want to have your queues in a different Azure account from the results azblobs. Intended to be used if you are hosting the crawler yourself and submitting results to CD's Azure blobs.
 So that your queue data is segregated from the CD Azure account. For security and compliance regulations.
+
+### CRAWLER_SCANCODE_PARALLELISM
+
+This environment variable is a number of `scancode-toolkit` processes to run in parallel. `scancode-toolkit` is one of the main
+tools that collect the licensing data that goes into the final definition, and increasing parallelism, if the CPU allows,
+speeds up processing of individual definitions. The default value is `2`, and a good ballpark value is ~80% of total CPUs
+available for crawler.
 
 ### CRAWLER_SERVICE_AUTH_TOKEN
 

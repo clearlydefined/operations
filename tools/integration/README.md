@@ -16,6 +16,6 @@
    - Base URLs for the development and production systems, along with polling interval and timeout settings,
    - Current harvest tools. This is used for polling harvest results to check whether the harvest is complete. When scan tools are added or removed during the harvest process, this list needs to be updated as well.
 
-1. Test fixtures are grouped by endpoints at [./test/integration/fixtures](./test/integration/fixtures). You can use these fixtures to override responses from the production system when necessary.
+1. Test fixtures are grouped by endpoints at [./test/integration/fixtures](./test/integration/fixtures). You can use these fixtures to override responses from the production system when necessary. Notes on fixtures are documented at [fixtures.md](./fixtures.md).
 1. The classes used in the integration tests are located at [./lib](./lib). Tests for those tooling classes are located at ./test/lib. Run `npm test` to test the tooling classes.
 1. Sample API test calls to the production deployment can be found at [./api-test](./api-test). The [Insomnia collection](./api-test/clearlydefined_prod_api_test_insomnia_collection.json) is organized by endpoints (definitions, harvest, and notices). Refer to the [Swagger UI](https://api.clearlydefined.io/api-docs/#/) for detailed documentation. The `Ping/health check` can be used as the first check to see if the service is up and running.

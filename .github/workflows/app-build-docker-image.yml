@@ -39,7 +39,7 @@ on:
       
     outputs:
       docker-image-name-with-tag: 
-        value: ${{ jobs.determine-image-name.outputs.docker-image-name-with-tag }}
+        value: ${{ jobs.build-image-names.outputs.docker-image-to-use }}
 
 jobs:
   check-deployable:
@@ -55,12 +55,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       names-with-tags: ${{ env.DOCKER_IMAGE_TAGS }}
+      docker-image-to-use: ${{ env.DOCKER_IMAGE_TO_USE }}
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4.1.1
         with:
           repository: 'clearlydefined/operations'
-          ref: '3.1.0'
+          ref: 'v3.2.0'
           path: 'operations'
       - name: Determine Image Name
         id: determine-image-name
@@ -68,21 +69,25 @@ jobs:
           echo "BUILD_ARGS=${{ inputs.build-args }}"
           script_log=$(./operations/scripts/app-workflows/determine-image-name.sh \
             "${{ github.event.repository.name  }}" \
-            "${{ inputs.deploy-env }}" \
-            "${{ inputs.application-version }}") || (echo "$script_log" && exit 1)
+            "${{ inputs.deploy-env }}") || (echo "$script_log" && exit 1)
           echo -e "---- script log\n$script_log\n----"; \
           image_name=$(echo "$script_log" | tail -n 1)
           echo "IMAGE_NAME=$image_name" >> $GITHUB_ENV
       - name: Add ghcr.io 
         id: add-ghcr
         run: |
-          echo "DOCKER_IMAGE_TAGS=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+          ghcr_image_tags="ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ inputs.application-version }}"
+          echo "DOCKER_IMAGE_TAGS=$ghcr_image_tags" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_TO_USE=$ghcr_image_tags" >> $GITHUB_ENV
       - name: add-dockerhub
         if: ${{ inputs.docker-hub-username != '' }}
         id: add-dockerhub
         run: |
-          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_IMAGE_TAGS }},${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
-
+          docker_image_tag="${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}:${{ inputs.application-version }}"
+          latest_image_tag="${{ inputs.docker-hub-username }}/${{ env.IMAGE_NAME }}:latest"
+          echo "DOCKER_IMAGE_TAGS=${{ env.DOCKER_IMAGE_TAGS }}, $docker_image_tag, $latest_image_tag" >> $GITHUB_ENV
+          # use Docker Hub image if it is created by overwriting DOCKER_IMAGE_TO_USE
+          echo "DOCKER_IMAGE_TO_USE=$docker_image_tags" >> $GITHUB_ENV
 
   build-docker-image:
     name: Build Image

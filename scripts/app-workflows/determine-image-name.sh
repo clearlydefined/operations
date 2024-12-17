@@ -3,24 +3,22 @@
 # Inputs
 #   $1 - repo_name: the reponame where the image will be published (e.g. 'service')
 #   $2 - deploy_env: environment to deploy (i.e. dev | prod) - used as a label for the Docker image
-#   $3 - image-tag: the tag to use for the image (e.g. prod: v1.2.0, dev: v1.2.0+dev:1D3F567890)
 #
 # Outputs
-#   image_name_with_tag: the full image name with tag (e.g. service:v1.2.0, service-dev:v1.2.0+dev:1D3F567890)
+#   image_name: the image name without tags (e.g. service, service-dev)
 
 repo_name="$1"
 deploy_env="$2"
-image_tag="$3"
 
-image_name_with_tag=""
+image_name=""
 if [[ "$deploy_env" == 'prod' ]] ; then
-    image_name_with_tag="$repo_name:$image_tag"
+    image_name="$repo_name"
 elif [[ "$deploy_env" == 'dev' ]] ; then
-    image_name_with_tag="$repo_name-dev:$image_tag"
+    image_name="$repo_name-dev"
 else
     echo "ERROR: Invalid deploy environment: $deploy_env. Must be 'dev' or 'prod'"
     exit 1
 fi
 
-echo "determine_image_name -> outputs -> image_name_with_tag: $image_name_with_tag"
-echo "$image_name_with_tag"
+echo "determine_image_name -> outputs -> image_name: $image_name"
+echo "$image_name"

@@ -1,0 +1,260 @@
+name: Integration Test On Custom Infra
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseFolderPath:
+        description: 'Base folder path for diffs'
+        required: true
+        default: 'diffs'
+      dynamicCoordinates:
+        description: 'Array of booleans for dynamic coordinates (e.g., [true, false])'
+        required: true
+        default: '[true, false]'
+      location:
+        description: 'Azure Region'
+        required: true
+        default: 'eastus'
+      vm_name:
+        description: 'VM Name'
+        required: true
+        default: 'integration-test-vm'
+      repo_refs:
+        description: 'Repo refs in format "clearlydefined/service:master,clearlydefined/crawler:master"'
+        required: true
+        default: 'clearlydefined/docker_dev_env_experiment:main,clearlydefined/service:master,clearlydefined/crawler:master,clearlydefined/website:master'
+
+
+permissions:
+  contents: read
+
+env:
+  REPOS: |
+    clearlydefined/service
+    clearlydefined/crawler
+    clearlydefined/website
+  COMPOSE_REPO: "clearlydefined/docker_dev_env_experiment"
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    # Add permissions for the GitHub token
+    permissions:
+      contents: read
+      packages: read
+    defaults:
+      run:
+        working-directory: ./tools/integration
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: './tools/integration/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests on tools
+        run: npm test
+
+  deploy-and-run:
+    runs-on: ubuntu-latest
+    needs: unit-test
+    # Add permissions for the GitHub token
+    permissions:
+      contents: read
+      packages: read
+    outputs:
+      vm_ip: ${{ steps.create_vm.outputs.publicIpAddress }}
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - name: Azure Login
+        uses: azure/login@v2.2.0
+        with:
+          creds: ${{ secrets.VM_INT_AZURE_CREDENTIALS }}
+
+      - name: Cleanup existing resources
+        id: cleanup
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: integration-test-vm
+          template: ${{ github.workspace }}/.github/workflows/cleanup-template.json
+          deploymentMode: Complete
+          deploymentName: cleanup-deployment
+      
+      - name: Wait for cleanup to complete
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            echo "Waiting for cleanup deployment to complete..."
+            az deployment group wait \
+              --name cleanup-deployment \
+              --resource-group integration-test-vm \
+              --created
+
+      - name: Create VM with NSG
+        id: create_vm
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: integration-test-vm
+          template: ${{ github.workspace }}/.github/workflows/vm-template.json
+          parameters: vmName="${{ github.event.inputs.vm_name }}" location="${{ github.event.inputs.location }}" sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}"
+      
+      - name: Wait SSH to become available
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.create_vm.outputs.publicIpAddress }}
+          username: azureuser
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            for i in `seq 1 12`; do
+              echo "Attempt $i: Waiting for SSH to become available"
+              if nc -zvw3 ${{ steps.create_vm.outputs.publicIpAddress }} 22; then
+                echo "SSH is available!"
+                exit 0
+              fi
+              sleep 10
+            done
+            echo "SSH is not available after 2 minutes; failing"
+            exit 1
+
+      - name: Install Docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.create_vm.outputs.publicIpAddress }}
+          username: azureuser
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
+            sudo systemctl enable docker
+            sudo systemctl start docker
+            sudo usermod -aG docker $USER
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Clone Repos and Setup Environment
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.IT_GH_ACCESS_TOKEN }}
+          REPO_REFS: ${{ inputs.repo_refs }}
+        with:
+          host: ${{ steps.create_vm.outputs.publicIpAddress }}
+          username: azureuser
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: GITHUB_TOKEN,REPO_REFS
+          script: |
+            # Function to get ref for a repo
+            get_ref() {
+              echo "$REPO_REFS" | tr ',' '\n' | grep "^$1:" | cut -d':' -f2 || echo "master"
+            }
+            
+            # First clone the compose repo
+            COMPOSE_REPO="${{ env.COMPOSE_REPO }}"
+            COMPOSE_REF=$(get_ref "$COMPOSE_REPO")
+            echo "Cloning compose repo https://github.com/${COMPOSE_REPO}.git branch/ref: ${COMPOSE_REF}"
+            git clone "https://github.com/${COMPOSE_REPO}.git" -b "$COMPOSE_REF"
+            
+            # Navigate to compose repo
+            REPO_NAME=$(echo ${COMPOSE_REPO} | cut -d'/' -f2)
+            cd $REPO_NAME
+            
+            # Clone other repositories inside the compose repo directory
+            echo "${{ env.REPOS }}" | while read repo; do
+              if [ ! -z "$repo" ] && [ "$repo" != "$COMPOSE_REPO" ]; then
+                REF=$(get_ref "$repo")
+                echo "Cloning https://github.com/${repo}.git branch/ref: ${REF}"
+                git clone "https://github.com/${repo}.git" -b "$REF"
+              fi
+            done
+            
+            # Copy sample_env to .env and replace tokens
+            cp sample_env .env
+            
+            # Replace both GitHub tokens with the provided token
+            sed -i "s/^CRAWLER_GITHUB_TOKEN=.*/CRAWLER_GITHUB_TOKEN=${GITHUB_TOKEN}/" .env
+            sed -i "s/^CURATION_GITHUB_TOKEN=.*/CURATION_GITHUB_TOKEN=${GITHUB_TOKEN}/" .env
+            echo "" >> .env && echo "CRAWLER_SCANCODE_PARALLELISM=14" >> .env
+            
+            # Start containers
+            sudo docker-compose up -d
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: deploy-and-run
+    env:
+      DEV_API_BASE_URL: http://${{ needs.deploy-and-run.outputs.vm_ip }}:4000
+    strategy:
+      fail-fast: false
+      matrix:
+        dynamicCoordinates: ${{ fromJson(github.event.inputs.dynamicCoordinates) }}
+    defaults:
+      run:
+        working-directory: ./tools/integration
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: './tools/integration/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Trigger harvest and verify completion
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
+
+      - name: Verify definition tests
+        id: verify-service-functions
+        continue-on-error: true
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-definition
+
+      - name: Generate structured diffs
+        run: DEV_API_BASE_URL=${{ env.DEV_API_BASE_URL }} DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
+
+      - name: Upload diffs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffs-${{ matrix.dynamicCoordinates == 'true' && 'dynamic' || 'static' }}
+          path: ./tools/integration/${{ github.event.inputs.baseFolderPath }}
+      
+      - name: Mark build status
+        if: steps.verify-service-functions.outcome == 'failure'
+        run: exit 1
+        
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: integration-test
+    if: ${{ always() }}
+    # Add permissions for the GitHub token
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - name: Azure Login
+        uses: azure/login@v2.2.0
+        with:
+          creds: ${{ secrets.VM_INT_AZURE_CREDENTIALS }}
+
+      - name: Cleanup existing resources
+        id: cleanup
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: integration-test-vm
+          template: ${{ github.workspace }}/.github/workflows/cleanup-template.json
+          deploymentMode: Complete
+          deploymentName: cleanup-deployment

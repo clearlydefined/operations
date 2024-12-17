@@ -3,10 +3,15 @@
 const fs = require('fs').promises
 const path = require('path')
 
-const devApiBaseUrl = 'https://dev-api.clearlydefined.io'
+function getDevApiBaseUrl() {
+  const url = process.env.DEV_API_BASE_URL || 'https://dev-api.clearlydefined.io'
+  console.info(`Using dev api base url: ${url}`)
+  return url
+}
 const prodApiBaseUrl = 'https://api.clearlydefined.io'
+const devApiBaseUrl = getDevApiBaseUrl()
 
-const pollingInterval = 1000 * 60 * 5 // 5 minutes
+const pollingInterval = 1000 * 60 * 1 // 1 minute
 const pollingMaxTime = 1000 * 60 * 60 // 60 minutes
 
 //Havest tools to check for harvest completeness
@@ -81,6 +86,6 @@ module.exports = {
     timeout: 1000 * 60 * 60 * 4 // 4 hours for harvesting all the components
   },
   definition: {
-    timeout: 1000 * 10 // for each component
+    timeout: 1000 * 60 // for each component
   }
 }

@@ -7,6 +7,14 @@ on:
         description: 'Base folder path for diffs'
         required: true
         default: 'diffs'
+      dynamicCoordinates:
+        description: 'Array of booleans for dynamic coordinates (e.g., [true, false])'
+        required: true
+        default: '[true, false]'
+      skipHarvest:
+        description: "Skip harvest and verify completion"
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
@@ -17,7 +25,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        dynamicCoordinates: [true, false]
+        dynamicCoordinates: ${{ fromJson(github.event.inputs.dynamicCoordinates) }}
     defaults:
       run:
         working-directory: ./tools/integration
@@ -36,17 +44,24 @@ jobs:
       - name: Run tests on tools
         run: npm test
         
-      - name: Trigger harvest and verify completion
+      - name: Trigger harvest and verify completion if required
+        if: github.event.inputs.skipHarvest == 'false' || matrix.dynamicCoordinates == 'true'
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
+        id: verify-service-functions
+        continue-on-error: true
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
 
       - name: Generate structured diffs
-        run: npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
 
       - name: Upload diffs artifact
         uses: actions/upload-artifact@v4
         with:
           name: diffs-${{ matrix.dynamicCoordinates == 'true' && 'dynamic' || 'static' }}
-          path: ${{ github.event.inputs.baseFolderPath }}
+          path: ./tools/integration/${{ github.event.inputs.baseFolderPath }}
+
+      - name: Mark build status
+        if: steps.verify-service-functions.outcome == 'failure'
+        run: exit 1
