@@ -2,34 +2,40 @@ const assert = require('assert')
 const { callFetch } = require('../../../lib/fetch')
 const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
 
-const ORIGIN_EXCLUSIONS = ['go/golang', 'debsrc/debian', 'maven/mavengoogle']
-const ORIGIN_REVISIONS_EXCLUSIONS = ['debsrc/debian']
-const EXTRA_COMPONENTS = ['maven/mavencentral/org.apache.httpcomponents', 'maven/mavencentral/org.apache.httpcompon']
+const ORIGIN_EXCLUSION_LIST = ['go/golang', 'debsrc/debian', 'maven/mavengoogle']
+const ORIGIN_REVISIONS_EXCLUSION_LIST = ['debsrc/debian']
+
+const MAVEN_COMPONENT_GROUP_ID = 'maven/mavencentral/org.apache.httpcomponents'
+const MAVEN_COMPONENT_PARTIAL_GROUP_ID = 'maven/mavencentral/org.apache.httpcompon'
+const GRADLE_COMPONENT_ENDPOINT = 'gradleplugin/io.github.lognet.grpc-spring-boot'
 
 ;(async function validateOriginsApi() {
   const components = await getComponents()
 
-  describe('Validate origins API between dev and prod', function () {
+  describe('Validate Origins API Between Dev and Prod', function () {
     this.timeout(definition.timeout)
 
-    // Rest interval to avoid overloading the servers
     afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
-    components.forEach(component => {
-      if (shouldCheckOrigins(component)) {
-        it(`checks origins API response for ${component}`, () => fetchAndCompareOrigins(component))
-      }
-      if (shouldCheckOriginsWithRevisions(component)) {
-        it(`checks origins API with revisions response for ${component}`, () =>
-          fetchAndCompareOriginsWithRevisions(component))
-      }
+    components.filter(isOriginAllowed).forEach(component => {
+      it(`Validates Origins API response for ${component}`, () => compareOrigins(component))
     })
 
-    EXTRA_COMPONENTS.forEach(component => {
-      if (shouldCheckOrigins(component)) {
-        it(`checks origins API response for ${component}`, () => fetchAndCompareOrigins(component))
-      }
+    components.filter(isOriginWithRevisionsAllowed).forEach(component => {
+      it(`Validates Origins API response with revisions for ${component}`, () => compareOriginsWithRevisions(component))
     })
+
+    it('Validates Origins API response for a Maven component with only a group ID', () =>
+      compareOrigins(MAVEN_COMPONENT_GROUP_ID))
+
+    it('Validates Origins API response for a Maven component with a partial group ID for suggestion checks', () =>
+      compareOrigins(MAVEN_COMPONENT_PARTIAL_GROUP_ID))
+
+    it('Validates Origins API response for a Gradle plugin component', () =>
+      compareEndpoints(GRADLE_COMPONENT_ENDPOINT))
+
+    it('Validates Origins API with revisions response for a Gradle plugin component', () =>
+      compareEndpoints(`${GRADLE_COMPONENT_ENDPOINT}/revisions`))
   })
 })()
 
@@ -37,26 +43,26 @@ function extractIds(response) {
   return response.map(item => item.id)
 }
 
-function assertOriginsMatch(actual, expected) {
+function assertResponsesMatch(actual, expected) {
   const sortedActualIds = extractIds(actual).sort()
   const sortedExpectedIds = extractIds(expected).sort()
 
   assert.deepStrictEqual(sortedActualIds, sortedExpectedIds)
 }
 
-function isNotInExclusionList(list, coordinate) {
-  return !list.some(excluded => coordinate.includes(excluded))
+function isCoordinateAllowed(coordinate, exclusionList) {
+  return !exclusionList.some(excluded => coordinate.includes(excluded))
 }
 
-function shouldCheckOrigins(coordinate) {
-  return isNotInExclusionList(ORIGIN_EXCLUSIONS, coordinate)
+function isOriginAllowed(coordinate) {
+  return isCoordinateAllowed(coordinate, ORIGIN_EXCLUSION_LIST)
 }
 
-function shouldCheckOriginsWithRevisions(coordinate) {
-  return isNotInExclusionList(ORIGIN_REVISIONS_EXCLUSIONS, coordinate)
+function isOriginWithRevisionsAllowed(coordinate) {
+  return isCoordinateAllowed(coordinate, ORIGIN_REVISIONS_EXCLUSION_LIST)
 }
 
-function resolveProviderType(type, provider) {
+function getProviderType(type, provider) {
   switch (type) {
     case 'git':
       return 'github'
@@ -72,37 +78,36 @@ function resolveProviderType(type, provider) {
 }
 
 function parseCoordinates(coordinates) {
-  const [type, provider, namespaceToken, name, version] = coordinates.split('/')
-  const namespace = namespaceToken === '-' ? '' : namespaceToken
+  const [type, provider, namespaceOrEmpty, name, version] = coordinates.split('/')
+  const namespace = namespaceOrEmpty === '-' ? '' : namespaceOrEmpty
   return { type, provider, namespace, name, version }
 }
-function buildCondaURL(coordinates) {
+
+function buildCondaUrl(coordinates) {
   const { type, provider, name } = parseCoordinates(coordinates)
   return `${type}/${provider}/${name}`
 }
 
 function buildOriginUrl(coordinates) {
   const { type, provider, namespace, name } = parseCoordinates(coordinates)
-  const resolvedType = resolveProviderType(type, provider)
+  const resolvedType = getProviderType(type, provider)
   return `${resolvedType}${namespace ? `/${namespace}` : ''}${name ? `/${name}` : ''}`
 }
 
-async function fetchAndCompareOriginsWithRevisions(coordinates) {
-  const originUrl = buildOriginUrl(coordinates)
+async function compareEndpoints(endpoint) {
   const [devResponse, prodResponse] = await Promise.all([
-    callFetch(`${devApiBaseUrl}/origins/${originUrl}/revisions`).then(res => res.json()),
-    callFetch(`${prodApiBaseUrl}/origins/${originUrl}/revisions`).then(res => res.json())
+    callFetch(`${devApiBaseUrl}/origins/${endpoint}`).then(res => res.json()),
+    callFetch(`${prodApiBaseUrl}/origins/${endpoint}`).then(res => res.json())
   ])
-  assertOriginsMatch(devResponse, prodResponse)
+  assertResponsesMatch(devResponse, prodResponse)
 }
 
-async function fetchAndCompareOrigins(coordinates) {
-  const originUrl = coordinates.startsWith('conda/') ? buildCondaURL(coordinates) : buildOriginUrl(coordinates)
+async function compareOriginsWithRevisions(coordinates) {
+  const originUrl = buildOriginUrl(coordinates)
+  compareEndpoints(`${originUrl}/revisions`)
+}
 
-  const [devResponse, prodResponse] = await Promise.all([
-    callFetch(`${devApiBaseUrl}/origins/${originUrl}`).then(res => res.json()),
-    callFetch(`${prodApiBaseUrl}/origins/${originUrl}`).then(res => res.json())
-  ])
-
-  assertOriginsMatch(devResponse, prodResponse)
+async function compareOrigins(coordinates) {
+  const originUrl = coordinates.startsWith('conda/') ? buildCondaUrl(coordinates) : buildOriginUrl(coordinates)
+  compareEndpoints(`${originUrl}`)
 }
