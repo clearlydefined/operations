@@ -65,9 +65,8 @@ function isOriginWithRevisionsAllowed(coordinate) {
 function getProviderType(type, provider) {
   switch (type) {
     case 'git':
-      return 'github'
     case 'gem':
-      return 'rubygems'
+      return provider
     case 'conda':
       return `conda/${provider}`
     case 'maven':
@@ -104,10 +103,10 @@ async function compareEndpoints(endpoint) {
 
 async function compareOriginsWithRevisions(coordinates) {
   const originUrl = buildOriginUrl(coordinates)
-  compareEndpoints(`${originUrl}/revisions`)
+  await compareEndpoints(`${originUrl}/revisions`)
 }
 
 async function compareOrigins(coordinates) {
   const originUrl = coordinates.startsWith('conda/') ? buildCondaUrl(coordinates) : buildOriginUrl(coordinates)
-  compareEndpoints(`${originUrl}`)
+  await compareEndpoints(`${originUrl}`)
 }
