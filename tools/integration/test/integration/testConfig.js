@@ -87,5 +87,8 @@ module.exports = {
   },
   definition: {
     timeout: 1000 * 60 // for each component
+  },
+  origins:{
+    timeout: 1000 * 60 * 2
   }
 }

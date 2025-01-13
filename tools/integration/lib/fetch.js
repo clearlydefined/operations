@@ -46,7 +46,7 @@ async function fetchWithRetry(fetcher, retryOpts) {
   const response = await withRetry(async () => {
     const resp = await fetcher()
     // retry on 5xx
-    if (resp.status >= 500) verifyResponse(resp)
+    if (resp?.status >= 500 ) verifyResponse(resp)
     return resp
   }, retryOpts)
   return verifyResponse(response)
