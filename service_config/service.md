@@ -79,6 +79,11 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * DEFINITION_MONGO_TRIMMED_COLLECTION_NAME
 * DEFINITION_MONGO_CONNECTION_STRING
 * DEFINITION_STORE_PROVIDER
+* DEFINITION_UPGRADE_DEQUEUE_BATCH_SIZE
+* DEFINITION_UPGRADE_PROVIDER
+* DEFINITION_UPGRADE_QUEUE_PROVIDER
+* DEFINITION_UPGRADE_QUEUE_CONNECTION_STRING
+* DEFINITION_UPGRADE_QUEUE_NAME
 * DOCKER_CUSTOM_IMAGE_NAME
 * DOCKER_ENABLE_CI
 * DOCKER_REGISTRY_SERVER_PASSWORD
@@ -232,6 +237,30 @@ This was the Mongo collection which stores the entire definition information in 
 ### DEFINITION_MONGO_CONNECTION_STRING
 
 This is the string we use to connect to the **clearlydefined** Mongo DB in the enviroments Azure Cosmos DB account.
+
+### DEFINITION_UPGRADE_PROVIDER
+This is a string value that specifies how the service handles the definition when its schema version becomes stale.
+
+**Valid values**: `versionCheck`, `upgradeQueue`
+**Default**: `versionCheck`
+
+- `versionCheck`: If this option is selected then the service will check the schema version and recompute the definition on-the-fly if it becomes stale.
+- `upgradeQueue`: If this option is selected then service will return the existing definition, and if the schema has changed, the service will queue a recompute operation. The updated definition will be returned in subsequent requests once the recomputation is completed.
+
+### DEFINITION_UPGRADE_QUEUE_PROVIDER
+This string value determines which queuing implementation will be used to queue upgrades (recomputes).
+
+**Valid values**: `memory`, `azure`
+**Default**: `memory`
+
+### DEFINITION_UPGRADE_QUEUE_CONNECTION_STRING
+This is a field for the connection string to the Azure Storage Queue. If no value is provided, the connection information from `HARVEST_AZBLOB_CONNECTION_STRING` will be used.
+
+### DEFINITION_UPGRADE_QUEUE_NAME
+This string value specifies the name of the upgrade (recompute) queue. **Default**: `definitions-upgrade`
+
+###  DEFINITION_UPGRADE_DEQUEUE_BATCH_SIZE
+This string value defines the number of messages that will be dequeued at once from the upgrade (recompute) queue. **Default**: `16`
 
 ### DOCKER
 
