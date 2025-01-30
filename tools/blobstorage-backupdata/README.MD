@@ -15,7 +15,9 @@ parties to maintain the complete mirror of ClearlyDefined definitions, and doing
 ## Published data structure
 
 The changes published into a storage account named `clearlydefinedprod`, in a container named
-`production-snapshots`. This container doesn't allow for listing of objects, because of costs
+`changes-notifications`, so that the complete base URL is
+`https://clearlydefinedprod.blob.core.windows.net/changes-notifications`. 
+This container doesn't allow for listing of objects, because of costs
 considerations. Instead, the following mechanism is used to notify users of new changes.
 
 The files contained in the storage container can be split into two categories:
@@ -110,7 +112,7 @@ excluding the `files` part.
 </details>
 
 ### Indexing files
-Indexing files are contained in the `changes` sub-directory of the `production-snapshots` container.
+Indexing files are contained in the `changes` sub-directory of the `changes-notifications` container.
 There are further two categories of these files:
 1. Changeset files,
 2. `index` file.
@@ -216,10 +218,10 @@ The software responsible for producing the data according to the definition abov
 `blobstorage-backupdata`. It's published as a Docker image to GitHub container registry and 
 deployed to Azure Container Instances. It's scheduled to run hourly.
 
-Every time it runs it inspects the `changes\index` file and calculates the time interval
+Every time it runs it inspects the `changes/index` file and calculates the time interval
 where no changes have been published yet. It then requests the changes made in this calculated
 interval from the main database, and publishes the resulting definitions and changesets. It also
-updates the `changes\index` file by adding the published changeset entries.
+updates the `changes/index` file by adding the published changeset entries.
 
 ### Operations
 `blobstorage-backupdata` is built on every merge to main branch. It done using GitHub action defined in
