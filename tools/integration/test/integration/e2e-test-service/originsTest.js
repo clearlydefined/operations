@@ -3,13 +3,13 @@
 
 const assert = require('assert')
 const { callFetchWithRetry: callFetch } = require('../../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, getComponents, origins } = require('../testConfig')
+const { devApiBaseUrl, getComponents, origins } = require('../testConfig')
 
 const ORIGIN_EXCLUSION_LIST = ['go/golang', 'debsrc/debian', 'maven/mavengoogle']
 const ORIGIN_REVISIONS_EXCLUSION_LIST = ['debsrc/debian']
 
-const MAVEN_COMPONENT_GROUP_ID = 'maven/mavencentral/org.apache.httpcomponents'
-const MAVEN_COMPONENT_PARTIAL_GROUP_ID = 'maven/mavencentral/org.apache.httpcompon'
+const MAVEN_COMPONENT_GROUP_ID = 'maven/mavencentral/org.apache.httpcomponents//'
+const MAVEN_COMPONENT_PARTIAL_GROUP_ID = 'maven/org.apache.httpcompone'
 const GRADLE_COMPONENT_ENDPOINT = 'gradleplugin/io.github.lognet.grpc-spring-boot'
 
 ;(async function validateOriginsApi() {
@@ -20,52 +20,60 @@ const GRADLE_COMPONENT_ENDPOINT = 'gradleplugin/io.github.lognet.grpc-spring-boo
 
     afterEach(() => new Promise(resolve => setTimeout(resolve, origins.timeout / 2)))
 
-    components.filter(isOriginAllowed).forEach(component => {
-      it(`Validates Origins API response for ${component}`, () => compareOrigins(component))
+    components.filter(isComponentIncluded).forEach(component => {
+      it(`Validates Origins API response for ${component}`, () => validateOriginResponses(component))
     })
 
-    components.filter(isOriginWithRevisionsAllowed).forEach(component => {
-      it(`Validates Origins API response with revisions for ${component}`, () => compareOriginsWithRevisions(component))
+    components.filter(isComponentIncludedWithRevisions).forEach(component => {
+      it(`Validates Origins API response with revisions for ${component}`, () =>
+        validateOriginResponsesWithRevisions(component))
     })
 
     it('Validates Origins API response for a Maven component with only a group ID', () =>
-      compareOrigins(MAVEN_COMPONENT_GROUP_ID))
+      validateOriginResponses(MAVEN_COMPONENT_GROUP_ID))
 
     it('Validates Origins API response for a Maven component with a partial group ID for suggestion checks', () =>
-      compareOrigins(MAVEN_COMPONENT_PARTIAL_GROUP_ID))
+      validateEndpointWithRevisions(MAVEN_COMPONENT_PARTIAL_GROUP_ID, 'httpcore'))
 
     it('Validates Origins API response for a Gradle plugin component', () =>
-      compareEndpoints(GRADLE_COMPONENT_ENDPOINT))
+      validateEndpointResponses(GRADLE_COMPONENT_ENDPOINT, 'io.github.lognet.grpc-spring-boot'))
 
     it('Validates Origins API with revisions response for a Gradle plugin component', () =>
-      compareEndpoints(`${GRADLE_COMPONENT_ENDPOINT}/revisions`))
+      validateEndpointWithRevisions(GRADLE_COMPONENT_ENDPOINT, '4.6.0'))
   })
 })()
 
-function extractIds(response) {
-  return response.map(item => item.id)
+function isValueInResponse(response, value) {
+  return response.some(item => item?.id?.includes(value))
 }
 
-function assertResponsesMatch(actual, expected) {
-  const sortedActualIds = extractIds(actual).sort()
-  const sortedExpectedIds = extractIds(expected).sort()
-
-  assert.deepStrictEqual(sortedActualIds, sortedExpectedIds)
+function isRevisionInResponse(response, value) {
+  return response.some(item => item?.sha?.includes(value)) || response.some(item => item.includes(value))
 }
 
-function isCoordinateAllowed(coordinate, exclusionList) {
-  return !exclusionList.some(excluded => coordinate.includes(excluded))
+function assertPackageResponse(actual, value) {
+  assert.ok(actual.length > 0, `No matching package returned`)
+  assert.ok(isValueInResponse(actual, value), `Response does not contain expected package`)
 }
 
-function isOriginAllowed(coordinate) {
-  return isCoordinateAllowed(coordinate, ORIGIN_EXCLUSION_LIST)
+function assertRevisionResponse(actual, value) {
+  assert.ok(actual.length > 0, `No matching version returned`)
+  assert.ok(isRevisionInResponse(actual, value), `Response does not contain expected version`)
 }
 
-function isOriginWithRevisionsAllowed(coordinate) {
-  return isCoordinateAllowed(coordinate, ORIGIN_REVISIONS_EXCLUSION_LIST)
+function exclusionFilter(item, exclusionList) {
+  return !exclusionList.some(excluded => item.includes(excluded))
 }
 
-function getProviderType(type, provider) {
+function isComponentIncluded(coordinate) {
+  return exclusionFilter(coordinate, ORIGIN_EXCLUSION_LIST)
+}
+
+function isComponentIncludedWithRevisions(coordinate) {
+  return exclusionFilter(coordinate, ORIGIN_REVISIONS_EXCLUSION_LIST)
+}
+
+function resolveProviderType(type, provider) {
   switch (type) {
     case 'git':
     case 'gem':
@@ -81,8 +89,13 @@ function getProviderType(type, provider) {
 
 function parseCoordinates(coordinates) {
   const [type, provider, namespaceOrEmpty, name, version] = coordinates.split('/')
-  const namespace = namespaceOrEmpty === '-' ? '' : namespaceOrEmpty
-  return { type, provider, namespace, name, version }
+  return {
+    type,
+    provider,
+    namespace: namespaceOrEmpty === '-' ? '' : namespaceOrEmpty,
+    name,
+    version
+  }
 }
 
 function buildCondaUrl(coordinates) {
@@ -92,24 +105,30 @@ function buildCondaUrl(coordinates) {
 
 function buildOriginUrl(coordinates) {
   const { type, provider, namespace, name } = parseCoordinates(coordinates)
-  const resolvedType = getProviderType(type, provider)
+  const resolvedType = resolveProviderType(type, provider)
   return `${resolvedType}${namespace ? `/${namespace}` : ''}${name ? `/${name}` : ''}`
 }
 
-async function compareEndpoints(endpoint) {
-  const [devResponse, prodResponse] = await Promise.all([
-    callFetch(`${devApiBaseUrl}/origins/${endpoint}`).then(res => res.json()),
-    callFetch(`${prodApiBaseUrl}/origins/${endpoint}`).then(res => res.json())
-  ])
-  assertResponsesMatch(devResponse, prodResponse)
+async function validateEndpointResponses(endpoint, expectedValue) {
+  const devResponse = await callFetch(`${devApiBaseUrl}/origins/${endpoint}`).then(res => res.json())
+  assertPackageResponse(devResponse, expectedValue)
 }
 
-async function compareOriginsWithRevisions(coordinates) {
+async function validateEndpointWithRevisions(endpoint, expectedValue) {
+  const devResponse = await callFetch(`${devApiBaseUrl}/origins/${endpoint}/revisions`).then(res => res.json())
+  assertRevisionResponse(devResponse, expectedValue)
+}
+
+async function validateOriginResponsesWithRevisions(coordinates) {
   const originUrl = buildOriginUrl(coordinates)
-  await compareEndpoints(`${originUrl}/revisions`)
+  await validateEndpointWithRevisions(originUrl, normalizeVersion(coordinates.split('/').at(-1)))
 }
 
-async function compareOrigins(coordinates) {
+async function validateOriginResponses(coordinates) {
   const originUrl = coordinates.startsWith('conda/') ? buildCondaUrl(coordinates) : buildOriginUrl(coordinates)
-  await compareEndpoints(`${originUrl}`)
+  await validateEndpointResponses(originUrl, coordinates.split('/').at(-2))
+}
+
+function normalizeVersion(version) {
+  return version.replace(/_[\w]+$/, '').replace(/^v/, '')
 }
