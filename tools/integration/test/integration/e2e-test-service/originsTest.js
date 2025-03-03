@@ -121,12 +121,14 @@ async function validateEndpointWithRevisions(endpoint, expectedValue) {
 
 async function validateOriginResponsesWithRevisions(coordinates) {
   const originUrl = buildOriginUrl(coordinates)
-  await validateEndpointWithRevisions(originUrl, normalizeVersion(coordinates.split('/').at(-1)))
+  const version = normalizeVersion(coordinates.split('/').at(-1))
+  await validateEndpointWithRevisions(originUrl, version)
 }
 
 async function validateOriginResponses(coordinates) {
   const originUrl = coordinates.startsWith('conda/') ? buildCondaUrl(coordinates) : buildOriginUrl(coordinates)
-  await validateEndpointResponses(originUrl, coordinates.split('/').at(-2))
+  const componentName = coordinates.split('/').at(-2)
+  await validateEndpointResponses(originUrl, componentName)
 }
 
 function normalizeVersion(version) {
