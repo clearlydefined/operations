@@ -6,7 +6,7 @@
     "test": "npm run mocha && npm run lint",
     "e2e-test-harvest": "mocha test/integration/harvestTest.js",
     "e2e-test-service": "mocha --exit \"test/integration/e2e-test-service/**/*.js\"",
-    "poste2e-test-service": "node ./lib/cleanupPR.js",
+    "e2e-test-service-cleanup": "node ./lib/cleanupPR.js",
     "e2e-test-definition": "mocha --exit \"test/integration/e2e-test-service/definitionTest.js\"",
     "mocha": "mocha --exit \"test/lib/**/*.js\"",
     "lint": "npm run prettier:check && npm run eslint",
@@ -20,6 +20,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@octokit/types": "^14.0.0",
+    "@types/node": "^22.15.5",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "lodash": "^4.17.21",
@@ -27,7 +29,8 @@
     "nock": "^13.5.4",
     "node-fetch": "^3.3.2",
     "prettier": "^3.2.5",
-    "sinon": "^17.0.1"
+    "sinon": "^17.0.1",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@octokit/rest": "^21.1.1",

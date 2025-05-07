@@ -51,7 +51,10 @@ jobs:
       - name: Verify service functions
         id: verify-service-functions
         continue-on-error: true
-        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run e2e-test-service
+        run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-service
+
+      - name: Clean up
+        run: GITHUB_TOKEN=${{ secrets.CLEARLYDEFINED_GITHUB_PAT }} npm run e2e-test-service-cleanup
 
       - name: Generate structured diffs
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run definitions-diff ${{ github.event.inputs.baseFolderPath }}
