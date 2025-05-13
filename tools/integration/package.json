@@ -6,7 +6,7 @@
     "test": "npm run mocha && npm run lint",
     "e2e-test-harvest": "mocha test/integration/harvestTest.js",
     "e2e-test-service": "mocha --exit \"test/integration/e2e-test-service/**/*.js\"",
-    "e2e-test-service-cleanup": "node ./lib/cleanupPR.js",
+    "e2e-test-service-cleanup": "node ./test/integration/cleanup.js",
     "e2e-test-definition": "mocha --exit \"test/integration/e2e-test-service/definitionTest.js\"",
     "mocha": "mocha --exit \"test/lib/**/*.js\"",
     "lint": "npm run prettier:check && npm run eslint",

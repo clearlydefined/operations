@@ -3,7 +3,7 @@
 
 const { deepStrictEqual, strictEqual, ok } = require('assert')
 const { callFetchWithRetry: callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, definition } = require('../testConfig')
+const { devApiBaseUrl, definition, curation } = require('../testConfig')
 
 describe('Validate curation', function () {
   this.timeout(definition.timeout)
@@ -12,6 +12,7 @@ describe('Validate curation', function () {
   afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
 
   const coordinates = 'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16'
+  const title = curation.title || `test ${coordinates}`
 
   describe('Propose curation', function () {
     const [type, provider, namespace, name, revision] = coordinates.split('/')
@@ -25,7 +26,7 @@ describe('Validate curation', function () {
     before('curate', async function () {
       const curationResponse = await callFetch(
         `${devApiBaseUrl}/curations`,
-        buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation)
+        buildCurationOpts(title, type, provider, namespace, name, revision, curation)
       ).then(r => r.json())
       prNumber = curationResponse.prNumber
     })
@@ -85,10 +86,10 @@ describe('Validate curation', function () {
   })
 })
 
-function buildCurationOpts(coordinates, type, provider, namespace, name, revision, curation) {
+function buildCurationOpts(title, type, provider, namespace, name, revision, curation) {
   const contributionInfo = {
     type: 'other',
-    summary: `test ${coordinates}`
+    summary: title
   }
   const patch = {
     coordinates: { type, provider, namespace, name },

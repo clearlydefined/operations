@@ -17,6 +17,13 @@ const TARGET_TITLE = 'test maven/mavencentral/org.apache.httpcomponents/httpcore
 const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
 
 /**
+ * @typedef {Object} Options
+ * @property {string} title - The title to search for.
+ * @property {string} repoOwner - The owner of the repository.
+ * @property {string} repoName - The name of the repository.
+ */
+
+/**
  * Creates an authenticated Octokit instance.
  * @returns {Promise<import('@octokit/rest').Octokit>}
  * @throws {Error} If GITHUB_TOKEN is not set.
@@ -34,17 +41,18 @@ const createOctokit = () =>
 /**
  * Finds pull requests matching the given title and created before the specified date.
  * @param {import('@octokit/rest').Octokit} octokit - The Octokit instance.
- * @param {string} givenTitle - The title to search for.
+ * @param {Options} options - The options for cleanup.
  * @param {string} dateSince - The ISO date string to filter PRs created before this date.
  * @returns {Promise<{prNumber: number, prTitle: string}[]>} The list of matching pull requests.
  */
-const findPullRequests = async (octokit, givenTitle, dateSince) => {
+const findPullRequests = async (octokit, options, dateSince) => {
+  const { title: givenTitle, repoOwner, repoName } = options
   /** @type {{prNumber: number, prTitle: string}[]} */
   const result = []
   try {
     const iterator = octokit.paginate.iterator(octokit.rest.pulls.list, {
-      owner: REPO_OWNER,
-      repo: REPO_NAME,
+      owner: repoOwner,
+      repo: repoName,
       state: 'open',
       sort: 'created',
       direction: 'desc'
@@ -58,7 +66,7 @@ const findPullRequests = async (octokit, givenTitle, dateSince) => {
     return result
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    console.error(`Failed to fetch pull requests for repo ${REPO_OWNER}/${REPO_NAME}: ${errorMessage}`)
+    console.error(`Failed to fetch pull requests for repo ${repoOwner}/${repoName}: ${errorMessage}`)
     throw error
   }
 }
@@ -97,15 +105,17 @@ const checkIsDone = (prsByDateDesc, dateSince) => {
 /**
  * Closes a pull request.
  * @param {import('@octokit/rest').Octokit} octokit - The Octokit instance.
+ * @param {Options} options - The options for cleanup.
  * @param {number} prNumber - The pull request number.
  * @returns {Promise<void>}
  * @throws {Error} If the pull request cannot be closed.
  */
-const closePullRequest = async (octokit, prNumber) => {
+const closePullRequest = async (octokit, options, prNumber) => {
+  const { repoOwner, repoName } = options
   try {
     await octokit.pulls.update({
-      owner: REPO_OWNER,
-      repo: REPO_NAME,
+      owner: repoOwner,
+      repo: repoName,
       pull_number: prNumber,
       state: 'closed'
     })
@@ -119,23 +129,27 @@ const closePullRequest = async (octokit, prNumber) => {
 
 /**
  * Cleans up pull requests with the specified title created before the given date.
+ * @param {Object} opts - The options for cleanup.
+ * @param {string} [opts.title=TARGET_TITLE] - The title to search for.
+ * @param {string} [opts.repoOwner=REPO_OWNER] - The owner of the repository.
+ * @param {string} [opts.repoName=REPO_NAME] - The name of the repository.
  * @param {string} [dateSince=oneDayAgo] - The ISO date string to filter PRs created before this date.
  * @returns {Promise<void>}
  */
-const cleanup = async (dateSince = oneDayAgo) => {
-  console.info(`Owner: ${REPO_OWNER}, Repo: ${REPO_NAME}`)
-  console.info(`Searching for PRs with title: ${TARGET_TITLE}`)
+const cleanupPR = async (opts = {}, dateSince = oneDayAgo) => {
+  const { title = TARGET_TITLE, repoOwner = REPO_OWNER, repoName = REPO_NAME } = opts
+  const options = { title, repoOwner, repoName }
+  console.info(`Cleanup options: ${JSON.stringify(options)}`)
+  console.info(`Searching for PRs with title: ${title}`)
 
   const octokit = await createOctokit()
-  const found = await findPullRequests(octokit, TARGET_TITLE, dateSince)
-  console.info(`Found ${found.length} PRs with title: ${TARGET_TITLE} before ${dateSince}`)
+  const found = await findPullRequests(octokit, options, dateSince)
+  console.info(`Found ${found.length} PRs with title: ${title} before ${dateSince}`)
 
   for (const { prTitle, prNumber } of found) {
     console.debug(`Found PR #${prNumber} with title: ${prTitle}`)
-    await closePullRequest(octokit, prNumber)
+    await closePullRequest(octokit, options, prNumber)
   }
 }
 
-cleanup()
-  .then(() => console.log('Cleanup completed.'))
-  .catch(error => console.error(`Error during cleanup: ${error.message}`))
+module.exports = { cleanupPR }
