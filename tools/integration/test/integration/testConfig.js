@@ -88,6 +88,9 @@ module.exports = {
   definition: {
     timeout: 1000 * 60 // for each component
   },
+  curation: {
+    title: 'test maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16'
+  },
   origins: {
     timeout: 1000 * 60 * 2
   }
