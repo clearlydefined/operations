@@ -6,6 +6,7 @@
     - [CRAWLER\_GITHUB\_TOKEN](#crawler_github_token)
     - [CRAWLER\_HOST](#crawler_host)
     - [CRAWLER\_INSIGHTS\_KEY](#crawler_insights_key)
+    - [CRAWLER\_LICENSEE\_PARALLELISM](#crawler_licensee_parallelism)
     - [CRAWLER\_NAME](#crawler_name)
     - [CRAWLER\_QUEUE\_PREFIX](#crawler_queue_prefix)
     - [CRAWLER\_QUEUE\_PROVIDER](#crawler_queue_provider)
@@ -34,6 +35,7 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_GITHUB_TOKEN
 * CRAWLER_HOST
 * CRAWLER_INSIGHTS_KEY
+* CRAWLER_LICENSEE_PARALLELISM
 * CRAWLER_NAME
 * CRAWLER_QUEUE_AZURE_CONNECTION_STRING
 * CRAWLER_QUEUE_PREFIX
@@ -86,6 +88,12 @@ Note that we only use this in the development environment, not in the production
 ### CRAWLER_INSIGHTS_KEY
 
 We use [Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) to monitor the crawler application. This requires a key and this is where it is kept.
+
+### CRAWLER_LICENSEE_PARALLELISM
+
+This is the maximum number of `licensee` processes to run in parallel. `licensee` is a tool to collect license
+information. The default value is `10` and setting it to a smaller value can reduce CPU spikes and lead to the crawler
+having a more uniform CPU usage.
 
 ### CRAWLER_NAME
 
