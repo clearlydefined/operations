@@ -116,10 +116,10 @@
             "path": "clearlydefined/downloaded/LICENSE",
             "license": "Apache-2.0 AND (ECL-2.0 AND Apache-2.0)",
             "hashes": {
-                "sha1": "6215cb16583ad28f22e1a7c905ee5bbee1044635",
-                "sha256": "e38b0854f4b591f3297571e73c665bd4266e8c8f9c55fb580942e51a4da619a8"
+                "sha1": "39abfb1ed211fe9a9fdef056126133c7eb444f0d",
+                "sha256": "821602941cab0a35e9f461326976dede9239410a988bdcfc88348cc3f57bc6a5"
             },
-            "token": "e38b0854f4b591f3297571e73c665bd4266e8c8f9c55fb580942e51a4da619a8"
+            "token": "821602941cab0a35e9f461326976dede9239410a988bdcfc88348cc3f57bc6a5"
         },
         {
             "path": "lib/net472/NuGet.Protocol.dll",
