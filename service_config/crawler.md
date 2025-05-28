@@ -13,8 +13,9 @@
     - [CRAWLER\_SCANCODE\_PARALLELISM](#crawler_scancode_parallelism)
     - [CRAWLER\_SERVICE\_AUTH\_TOKEN](#crawler_service_auth_token)
     - [CRAWLER\_SERVICE\_URL](#crawler_service_url)
-      - [CRAWLER\_STORE\_PROVIDER](#crawler_store_provider)
+    - [CRAWLER\_STORE\_PROVIDER](#crawler_store_provider)
     - [CRAWLER\_WEBHOOK](#crawler_webhook)
+    - [CRAWLER\_HARVESTS\_QUEUE\_VISIBILITY\_TIMEOUT\_SECONDS](#crawler_harvest_queue_visibility_timeout_seconds)
   - [Docker environmental variables](#docker-environmental-variables)
     - [DOCKER\_ENABLE\_CI](#docker_enable_ci)
     - [HARVEST\_AZBLOB](#harvest_azblob)
@@ -46,6 +47,7 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_STORE_PROVIDER
 * CRAWLER_WEBHOOK_TOKEN
 * CRAWLER_WEBHOOK_URL
+* CRAWLER_HARVESTS_QUEUE_VISIBILITY_TIMEOUT_SECONDS
 * DOCKER_CUSTOM_IMAGE_NAME
 * DOCKER_ENABLE_CI
 * DOCKER_REGISTRY_SERVER_PASSWORD
@@ -131,7 +133,7 @@ It's unclear where this environmental variable is used within the crawler.
 
 We use multiple services to store the crawler's harvests of license information.
 
-If you look at the value of this environmental variable, you will see that it is **"cdDispatch+cd(azblob)+webhook"**
+If you look at the value of this environmental variable, you will see that it is **"cdDispatch+cd(azblob)+webhook"**. In the production crawler Dockerfile,  it is configured as **"cdDispatch+cd(azblob)+azqueue"**.
 
 These are used by [the crawler configuration code](https://github.com/clearlydefined/crawler/blob/32a0d6b59edfda5d3226c50680e4a8338af395cd/config/cdConfig.js).
 
@@ -151,6 +153,10 @@ We use a few different "dispatchers" - which are used to fetch GitHub repos or P
 
 cdDispatch refers to the generic base file that handles calls to the various dispatchers.
 
+**azqueue**
+
+This refers to an Azure Storage Queue used by the crawler to notify a service upon the completion of a tool’s processing. The default queue name is `harvests`. More details on the configuration can be found in the [cdConfig.js file](https://github.com/clearlydefined/crawler/blob/32a0d6b59edfda5d3226c50680e4a8338af395cd/config/cdConfig.js#L95).
+
 ### CRAWLER_WEBHOOK
 
 These environmental variables are used to define the url for the ClearlyDefined service's webhook URL (This is what the crawler calls after it completes a harvest).
@@ -158,6 +164,12 @@ These environmental variables are used to define the url for the ClearlyDefined 
 In Dev the webhook url is "https://dev-api.clearlydefined.io/webhook".
 
 The token is what we use to authenticate to the API (so that only the crawler can call that part of the ClearlyDefined Service api)
+
+### CRAWLER_HARVESTS_QUEUE_VISIBILITY_TIMEOUT_SECONDS
+
+This environment variable is optional and specifically applies to the `azqueue` crawler store provider. It sets the visibility timeout, which determines how long messages remain hidden after being pushed onto the queue.  
+
+The default value is `0`. For production crawlers, this value is explicitly set to `300 seconds` (5 minutes).
 
 ## Docker environmental variables
 
