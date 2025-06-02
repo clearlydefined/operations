@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: MIT
 
 const { deepStrictEqual, strictEqual, ok } = require('assert')
-const { callFetchWithRetry: callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, definition, curation } = require('../testConfig')
+const { createFetcherWithRetry, buildPostOpts } = require('../../../lib/fetch')
+const { devApiBaseUrl, definition, curation, fetchRetry } = require('../testConfig')
+const callFetch = createFetcherWithRetry(fetchRetry)
 
 describe('Validate curation', function () {
   this.timeout(definition.timeout)
 
   //Rest a bit to avoid overloading the servers
-  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
+  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.interval)))
 
   const coordinates = 'maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16'
   const title = curation.title || `test ${coordinates}`

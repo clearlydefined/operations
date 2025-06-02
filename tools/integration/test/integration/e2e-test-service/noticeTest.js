@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: MIT
 
 const { deepStrictEqual } = require('assert')
-const { callFetchWithRetry: callFetch, buildPostOpts } = require('../../../lib/fetch')
-const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition } = require('../testConfig')
+const { createFetcherWithRetry, buildPostOpts } = require('../../../lib/fetch')
+const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition, fetchRetry } = require('../testConfig')
 const nock = require('nock')
 const fs = require('fs')
+const callFetch = createFetcherWithRetry(fetchRetry)
 
 ;(async function () {
   const components = await getComponents()
@@ -13,7 +14,7 @@ const fs = require('fs')
     this.timeout(definition.timeout)
 
     //Rest a bit to avoid overloading the servers
-    afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout / 2)))
+    afterEach(() => new Promise(resolve => setTimeout(resolve, definition.interval)))
 
     before(() => {
       loadFixtures().forEach(([coordinatesString, notice]) => {

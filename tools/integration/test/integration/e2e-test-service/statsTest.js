@@ -1,15 +1,16 @@
 // (c) Copyright 2024, SAP SE and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
-const { callFetchWithRetry: callFetch } = require('../../../lib/fetch')
-const { devApiBaseUrl, definition } = require('../testConfig')
+const { createFetcherWithRetry } = require('../../../lib/fetch')
+const { devApiBaseUrl, definition, fetchRetry } = require('../testConfig')
 const { ok } = require('assert')
+const callFetch = createFetcherWithRetry(fetchRetry)
 
 describe('Test for StatsService', function () {
   this.timeout(definition.timeout * 10)
 
   //Rest a bit to avoid overloading the servers
-  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.timeout)))
+  afterEach(() => new Promise(resolve => setTimeout(resolve, definition.interval)))
 
   it('should retrieve the list of supported stats', async function () {
     const url = `${devApiBaseUrl}/stats`

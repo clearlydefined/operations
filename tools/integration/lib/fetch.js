@@ -4,7 +4,6 @@
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args))
 // TODO: remove this once fetch is available in Node
 const retry = require('async-retry')
-const RETRIES = 2
 
 function buildPostOpts(json) {
   return {
@@ -34,7 +33,6 @@ function verifyResponse(response) {
 
 async function withRetry(retrier, opts = {}) {
   const defaultOpts = {
-    retries: RETRIES,
     onRetry: (err, iAttempt) => {
       console.log(`Retry ${iAttempt} failed: ${err}`)
     }
@@ -45,15 +43,14 @@ async function withRetry(retrier, opts = {}) {
 async function fetchWithRetry(fetcher, retryOpts) {
   const response = await withRetry(async () => {
     const resp = await fetcher()
-    // retry on 5xx
-    if (resp?.status >= 500) verifyResponse(resp)
+    if (resp?.status >= 500 || resp?.status === 429) verifyResponse(resp)
     return resp
   }, retryOpts)
   return verifyResponse(response)
 }
 
-async function callFetchWithRetry(url, fetchOpts) {
-  return fetchWithRetry(() => fetchResponse(url, fetchOpts))
+function createFetcherWithRetry({ maxRetries }) {
+  return (url, fetchOpts) => fetchWithRetry(() => fetchResponse(url, fetchOpts), { retries: maxRetries })
 }
 
-module.exports = { callFetch, buildPostOpts, callFetchWithRetry, fetchWithRetry }
+module.exports = { callFetch, buildPostOpts, createFetcherWithRetry, fetchWithRetry }

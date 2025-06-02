@@ -75,7 +75,7 @@ describe('Test retry fetch', function () {
 async function test(fetcher) {
   let content = '',
     errorMessage = ''
-  const retryOpts = { minTimeout: 10, retry: RETRIES }
+  const retryOpts = { minTimeout: 10, retries: RETRIES }
   try {
     const resp = await fetchWithRetry(fetcher, retryOpts)
     content = await resp.text()
