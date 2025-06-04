@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 const assert = require('assert')
-const { callFetchWithRetry: callFetch } = require('../../../lib/fetch')
-const { devApiBaseUrl, getComponents, origins } = require('../testConfig')
+const { createFetcherWithRetry } = require('../../../lib/fetch')
+const { devApiBaseUrl, getComponents, origins, fetchRetry } = require('../testConfig')
+const callFetch = createFetcherWithRetry(fetchRetry)
 
 const ORIGIN_EXCLUSION_LIST = ['go/golang', 'debsrc/debian', 'maven/mavengoogle']
 const ORIGIN_REVISIONS_EXCLUSION_LIST = ['debsrc/debian']
@@ -18,7 +19,7 @@ const GRADLE_COMPONENT_ENDPOINT = 'gradleplugin/io.github.lognet.grpc-spring-boo
   describe('Validate Origins API Between Dev and Prod', function () {
     this.timeout(origins.timeout)
 
-    afterEach(() => new Promise(resolve => setTimeout(resolve, origins.timeout / 2)))
+    afterEach(() => new Promise(resolve => setTimeout(resolve, origins.interval)))
 
     components.filter(isComponentIncluded).forEach(component => {
       it(`Validates Origins API response for ${component}`, () => validateOriginResponses(component))

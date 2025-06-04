@@ -86,12 +86,17 @@ module.exports = {
     timeout: 1000 * 60 * 60 * 4 // 4 hours for harvesting all the components
   },
   definition: {
-    timeout: 1000 * 60 // for each component
+    timeout: 1000 * 60 * 5, // for each component
+    interval: 1000 * 3 // between requests
   },
   curation: {
     title: 'test maven/mavencentral/org.apache.httpcomponents/httpcore/4.4.16'
   },
   origins: {
-    timeout: 1000 * 60 * 2
+    timeout: 1000 * 60 * 5,
+    interval: 1000 * 3 // between requests
+  },
+  fetchRetry: {
+    maxRetries: 5
   }
 }
