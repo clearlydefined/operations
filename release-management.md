@@ -49,13 +49,7 @@ This process is for production only.  Skip to [Deploy](#deploy) for dev apps.
 
 ## Deploy
 
-The steps to deploy vary by application.  Follow the steps for the application you are deploying.
-
-_NOTE: All apps are transitioning to use GitHub workflows for deploying.  These notes will be changing, so check back here before every release and deploy._
-
-### Service, Website, and Crawler
-
-#### Repository / Azure App
+### Repositories and Azure Apps
 
 The code for the Service app lives in the [clearlydefined/service](https://github.com/clearlydefined/service) repository.  `<Azure App basename>` is `clearlydefined-api`.
 
@@ -63,7 +57,7 @@ The code for the Website app lives in the [clearlydefined/website](https://githu
 
 The code for the Crawler app lives in the [clearlydefined/crawler](https://github.com/clearlydefined/crawler) repository. `<Azure App basename>` is `cdcrawler`.
 
-#### dev deploy
+### dev Deploy
 
 All three apps use the common deployment workflows defined in [operations/.github/workflows](https://github.com/clearlydefined/operations/tree/main/.github/workflows) for dev deploy.
 
@@ -83,9 +77,11 @@ Confirm that the dev health endpoint has the correct version and sha.
 - [website-dev health endpoint](https://clearlydefined-dev.azurewebsites.net/health/)
 - [crawler-dev health endpoint](https://cdcrawler-dev.azurewebsites.net/)
 
-#### prod deploy
+### prod Deploy
 
-At this time, this process is used for the Service and Website only. The Crawler uses Azure DevOps for production deploy.  That process is described in [Crawler Production Deploy](#crawler-production-deploy).
+#### Sevice and Website Production Deploys
+
+At this time, the workflow based process is used for the Service and Website only. The Crawler uses Azure DevOps for production deploy.  That process is described in [Crawler Production Deploy](#crawler-production-deploy).
 
 A deploy workflow is triggered a release is `published`. The `prod` branch will be deployed to `<Azure App basename>-prod` and `<Azure App basename>-prod-europe`.
 
@@ -102,7 +98,7 @@ Confirm that the production health endpoint has the correct version and sha.
 - [service-prod health endpoint](https://api.clearlydefined.io/)
 - [website-prod health endpoint](https://clearlydefined.io/health/) (_NOTE: Not released with healthcheck at this time._)
 
-### Crawler Production Deploy
+#### Crawler Production Deploy
 
 The production crawler uses [Azure DevOps builds](https://dev.azure.com/clearlydefined/ClearlyDefined/_build) for deploy. This section describes that process.
 
