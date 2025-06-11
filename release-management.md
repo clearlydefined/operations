@@ -198,11 +198,3 @@ The second number increments if there is a minor change and no MAJOR changes (Ex
 **PATCH:** _from v2.3.4 to v2.3.5_
 
 The third number increments if there are only trivial changes that do not impact processing  and there aren't any MAJOR or MINOR changes (Examples: bug fixes, documentation changes, fixing typos, etc.)
-
-**Pre-release:**
-
-Pre-releases append a confidence indicator. The initial confidence level (e.g. alpha, beta, rc for release candidate) is assigned without a number.  If an additional release is made at that same confidence level, a sequential number starting at 1 is added after a period.
-
-* alpha (e.g. 3.0.0-alpha, 3.0.0-alpha.1) is the lowest confidence level, typically assigned before all functionality is complete
-* beta (e.g. 3.0.0-beta, 3.0.0-beta-1) is the middle confidence level, typically assigned once all features are complete, but not fully tested
-* rc (e.g. 3.0.0-rc, 3.0.0-rc.1) is a full feature release candidate.  This is used during the final stages of release testing.  It is expected to be feature complete and may become the next published release if testing is good.
