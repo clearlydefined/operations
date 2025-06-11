@@ -137,7 +137,9 @@ Here are some steps to get started:
 5. Verify the notice generation by making a [POST call to /notices](https://api.clearlydefined.io/api-docs/#/notices/post_notices). You can find an example of this call in the `notices` folder of the sample api-test collection.
 6. Check the [website](https://clearlydefined.io/) to ensure that the recently harvested list is populated. You can click on the components listed there to verify their definitions.
 
-## Create Release Notes
+## Appendix
+
+### Create Release Notes
 
 The release notes should follow this basic pattern...
 
@@ -177,7 +179,7 @@ Changes: [v1.0.0...v1.0.1](https://github.com/clearlydefined/service/compare/v1.
 
 ```
 
-## Understanding Semantic Versioning
+### Understanding Semantic Versioning
 
 _If you are not familiar with Semantic Versioning, you are encouraged to read the [official documentation](https://semver.org/) for the full description._
 
