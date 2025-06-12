@@ -49,13 +49,25 @@ This process is for production only.  Skip to [Deploy](#deploy) for dev apps.
 
 ## Deploy
 
-### Repositories and Azure Apps
+### Repositories, Workflows, and Azure Apps
 
-The code for the Service app lives in the [clearlydefined/service](https://github.com/clearlydefined/service) repository.  `<Azure App basename>` is `clearlydefined-api`.
+service
+- code: [clearlydefined/service](https://github.com/clearlydefined/service) repository
+- dev workflow: [build-and-deploy-dev.yml](https://github.com/clearlydefined/service/blob/master/.github/workflows/build-and-deploy-dev.yml)
+- prod workflow: [build-and-deploy-dev.yml](https://github.com/clearlydefined/service/blob/master/.github/workflows/build-and-deploy-prod.yml)
+- basename: `<Azure App basename>` is `clearlydefined-api`
 
-The code for the Website app lives in the [clearlydefined/website](https://github.com/clearlydefined/website) repository.  `<Azure App basename>` is `clearlydefined`.
+website
+- code: [clearlydefined/website](https://github.com/clearlydefined/website) repository
+- dev workflow: [build-and-deploy-dev.yml](https://github.com/clearlydefined/website/blob/master/.github/workflows/build-and-deploy-dev.yml)
+- prod workflow: [build-and-deploy-dev.yml](https://github.com/clearlydefined/website/blob/master/.github/workflows/build-and-deploy-prod.yml)
+- basename: `<Azure App basename>` is `clearlydefined`
 
-The code for the Crawler app lives in the [clearlydefined/crawler](https://github.com/clearlydefined/crawler) repository. `<Azure App basename>` is `cdcrawler`.
+crawler:
+- code: [clearlydefined/crawler](https://github.com/clearlydefined/crawler) repository
+- dev workflow: [build-and-deploy-dev.yml](https://github.com/clearlydefined/crawler/blob/master/.github/workflows/build-and-deploy-dev.yml)
+- prod workflow: [build-and-deploy-dev.yml](https://github.com/clearlydefined/crawler/blob/master/.github/workflows/build-and-deploy-prod.yml)
+- basename: `<Azure App basename>` is `cdcrawler`
 
 ### dev Deploy
 
@@ -71,6 +83,12 @@ You can also deploy manually.  This is commonly used to test a PR branch before 
 - select the branch or tag you want to deploy
 - click `Run workflow` button.
 
+Confirm the ghcr package was created.
+
+- [service-dev package](https://github.com/clearlydefined/service/pkgs/container/service-dev)
+- [website-dev package](https://github.com/clearlydefined/website/pkgs/container/website-dev)
+- [crawler-dev package](https://github.com/clearlydefined/crawler/pkgs/container/crawler-dev)
+
 Confirm that the dev health endpoint has the correct version and sha.
 
 - [service-dev health endpoint](https://dev-api.clearlydefined.io/)
@@ -79,11 +97,9 @@ Confirm that the dev health endpoint has the correct version and sha.
 
 ### prod Deploy
 
-#### Sevice and Website Production Deploys
+All three apps use the common deployment workflows defined in [operations/.github/workflows](https://github.com/clearlydefined/operations/tree/main/.github/workflows) for prod deploy. The Crawler requires an additional step described in [Crawler Production Deploy - Extra Steps](#crawler-production-deploy-extra-steps).
 
-At this time, the workflow based process is used for the Service and Website only. The Crawler uses Azure DevOps for production deploy.  That process is described in [Crawler Production Deploy](#crawler-production-deploy).
-
-A deploy workflow is triggered a release is `published`. The `prod` branch will be deployed to `<Azure App basename>-prod` and `<Azure App basename>-prod-europe`.
+A deploy workflow is triggered when a release is `published`. The `prod` branch will be deployed to `<Azure App basename>-prod` and `<Azure App basename>-prod-europe`.
 
 You can also deploy manually.  **THIS IS UNCOMMON.**  Production is setup to run the latest release.  This might be used if something goes wrong after a new release is deployed to revert to the previous production release.
 
@@ -93,32 +109,28 @@ You can also deploy manually.  **THIS IS UNCOMMON.**  Production is setup to run
 - select the previous known good release's tag
 - click `Run workflow` button.
 
-Confirm that the production health endpoint has the correct version and sha.
+Confirm the ghcr package was created.
+
+- [service-prod package](https://github.com/clearlydefined/service/pkgs/container/service)
+- [website-prod package](https://github.com/clearlydefined/website/pkgs/container/website)
+- [crawler-prod package](https://github.com/clearlydefined/crawler/pkgs/container/crawler)
+
+Additionally, the crawler publishes to Docker Hub.  Verify a tag for the new release was added there.
+
+- [crawler-prod Docker Hub](https://hub.docker.com/r/clearlydefined/crawler/tags) - You should see a TAG named for newly released version.  The latest TAG and the new version's TAG should have the same Digest sha and compressed size.
+
+Confirm that the dev health endpoint has the correct version and sha.
 
 - [service-prod health endpoint](https://api.clearlydefined.io/)
 - [website-prod health endpoint](https://clearlydefined.io/health/) (_NOTE: Not released with healthcheck at this time._)
 
-#### Crawler Production Deploy
+#### Crawler Production Deploy - Extra Steps
 
-The production crawler uses [Azure DevOps builds](https://dev.azure.com/clearlydefined/ClearlyDefined/_build) for deploy. This section describes that process.
+Right now, the last step is to ask staff at MSFT to restart the production crawler. TODO: Working on a better process.
 
-#### prod deploy
-
-- In Azure DevOps, click Pipelines in the left menu
-- Click crawler-prod (Docker Hub) (_in main content area_)
-- Click Run Pipeline button
-- Select ubuntu latest as the Agent Specification
-- Click Run button
-
-Confirm the docker image was built and deployed Docker Hub
-
-- [crawler Docker images](https://hub.docker.com/r/clearlydefined/crawler/tags) - You should see a TAG named for newly released version.
-
-Confirm that the production health endpoint has the correct version and sha.
+Once the final step completes, confirm that the production health endpoint has the correct version and sha.
 
 - [crawler-prod health endpoint](https://clearlydefined-crawler-prod.azurewebsites.net/)
-
-TODO: Is there another step to the production crawler release?  I see the new Docker image, but the health endpoint has the old version.
 
 ## Verification After Deployment
 
