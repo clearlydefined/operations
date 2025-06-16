@@ -122,7 +122,11 @@ Additionally, the crawler publishes to Docker Hub.  Verify a tag for the new rel
 Confirm that the dev health endpoint has the correct version and sha.
 
 - [service-prod health endpoint](https://api.clearlydefined.io/)
-- [website-prod health endpoint](https://clearlydefined.io/health/) (_NOTE: Not released with healthcheck at this time._)
+- [service-prod-europe health endpoint](https://clearlydefined-api-prod-europe.azurewebsites.net/) (_May take a while before you see the update. Try checking back later._)
+
+The website production release does not include the healthcheck.  It will take you to the home page.
+- [website-prod health endpoint](https://clearlydefined.io/health/)
+- [website-prod-europe health endpoint](https://clearlydefined-prod-europe.azurewebsites.net/health/?sort=releaseDate&sortDesc=true) (_May take a while before you see the update.  Try checking back later._)
 
 #### Crawler Production Deploy - Extra Steps
 
