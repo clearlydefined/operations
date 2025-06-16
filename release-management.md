@@ -38,12 +38,12 @@ This process is for production only.  Skip to [Deploy](#deploy) for dev apps.
      * DO NOT CREATE A PR as this causes the histories to be out of sync
      * rebase `prod` on revision... `master` (`git checkout prod && git merge master --ff-only && git push origin prod`) TODO: double check the git commands work, as I do this in Tower.
      * Check that the update was successful by comparing [prod to master](https://github.com/clearlydefined/crawler/compare/prod...master) and [master to prod](https://github.com/clearlydefined/crawler/compare/master...prod).  Both should show "There isn’t anything to compare." and "prod and master are identical." or "master and prod are identical." (_Links are for the crawler.  Use a similar process for the service and website.)
-5. Create a tag
-     * in `prod` branch, create a tag of head commit and name it for the new version (e.g. `v2.4.0`)
-6. Create the release
-     * create a published release using the tag created previously (e.g. `v2.4.0`)
-     * set the release title to the version (e.g. `v2.4.0`)
-     * for the notes, use the full set of release notes created previously
+5. Create the release
+     * click Draft a new release
+     * change Target to `prod`
+     * click Choose a tag and type the tag (e.g. `v2.4.0`) and click + Create new tag: (should show the new tag)
+     * set the Release title to the version (e.g. `v2.4.0`)
+     * for the notes, use the full set of release notes created previously or use the Generate release notes button
      * verify `Set as the latest release` is checked
      * click Publish release
 
