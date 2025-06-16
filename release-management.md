@@ -36,7 +36,7 @@ This process is for production only.  Skip to [Deploy](#deploy) for dev apps.
      * push commit directly to `master` branch (**_This is the only time you should directly push to master_**)
 4. Update code being published
      * DO NOT CREATE A PR as this causes the histories to be out of sync
-     * rebase `prod` on revision... `master` (`git checkout prod && git rebase master && git push origin prod`) TODO: double check the git commands work, as I do this in Tower.
+     * rebase `prod` on revision... `master` (`git checkout prod && git merge master -ff-only && git push origin prod`) TODO: double check the git commands work, as I do this in Tower.
      * Check that the update was successful by comparing [prod to master](https://github.com/clearlydefined/crawler/compare/prod...master) and [master to prod](https://github.com/clearlydefined/crawler/compare/master...prod).  Both should show "There isn’t anything to compare." and "prod and master are identical." or "master and prod are identical." (_Links are for the crawler.  Use a similar process for the service and website.)
 5. Create a tag
      * in `prod` branch, create a tag of head commit and name it for the new version (e.g. `v2.4.0`)
