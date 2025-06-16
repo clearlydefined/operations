@@ -43,7 +43,7 @@ This process is for production only.  Skip to [Deploy](#deploy) for dev apps.
      * change Target to `prod`
      * click Choose a tag and type the tag (e.g. `v2.4.0`) and click + Create new tag: (should show the new tag)
      * set the Release title to the version (e.g. `v2.4.0`)
-     * for the notes, use the full set of release notes created previously or use the Generate release notes button
+     * for the notes, use the full set of release notes created previously (_good for complex releases requiring explanation_) or use the Generate release notes button (_good for short releases that are straight forward_)
      * verify `Set as the latest release` is checked
      * click Publish release
 
