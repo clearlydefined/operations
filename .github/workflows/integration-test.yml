@@ -45,6 +45,18 @@ jobs:
 
       - name: Run tests on tools
         run: npm test
+
+      - name: Check whether to run integration tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.CLEARLYDEFINED_GITHUB_PAT }}
+        run: |
+          HAS_ADMIN=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${{ github.repository }} | jq '.permissions.admin')
+          if [ "$HAS_ADMIN" = "true" ]; then
+              echo "The token has admin rights."
+          else
+              echo "The token does NOT have admin rights."
+              exit 1
+          fi
         
       - name: Trigger harvest and verify completion if required
         if: github.event.inputs.doHarvest == 'true' || github.event.inputs.doHarvest == null || matrix.dynamicCoordinates == 'true'
