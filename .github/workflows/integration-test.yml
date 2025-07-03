@@ -47,19 +47,14 @@ jobs:
         run: npm test
 
       - name: Check whether to run integration tests
-        env:
-          GITHUB_TOKEN: ${{ secrets.CLEARLYDEFINED_GITHUB_PAT }}
+        if: ${{ github.event_name == 'schedule' && github.repository != 'clearlydefined/operations' }}
         run: |
-          HAS_ADMIN=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/${{ github.repository }} | jq '.permissions.admin')
-          if [ "$HAS_ADMIN" = "true" ]; then
-              echo "The token has admin rights."
-          else
-              echo "The token does NOT have admin rights."
-              exit 1
-          fi
-        
+          echo "Repository: ${{ github.repository }}, Event: ${{ github.event_name }}"
+          echo "Running scheduled integration tests only on clearlydefined/operations."
+          exit 1
+
       - name: Trigger harvest and verify completion if required
-        if: github.event.inputs.doHarvest == 'true' || github.event.inputs.doHarvest == null || matrix.dynamicCoordinates == 'true'
+        if: ${{ github.event.inputs.doHarvest == 'true' || github.event.inputs.doHarvest == null || matrix.dynamicCoordinates == 'true' }}
         run: DYNAMIC_COORDINATES=${{ matrix.dynamicCoordinates }} npm run e2e-test-harvest
 
       - name: Verify service functions
