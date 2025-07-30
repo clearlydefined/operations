@@ -46,9 +46,9 @@ jobs:
       run:
         working-directory: ./tools/integration
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4.0.1
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 24
           cache: 'npm'
@@ -70,7 +70,7 @@ jobs:
     outputs:
       vm_ip: ${{ steps.create_vm.outputs.publicIpAddress }}
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       - name: Azure Login
         uses: azure/login@v2.2.0
@@ -200,9 +200,9 @@ jobs:
       run:
         working-directory: ./tools/integration
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4.0.1
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: 24
           cache: 'npm'
@@ -241,7 +241,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       - name: Azure Login
         uses: azure/login@v2.2.0

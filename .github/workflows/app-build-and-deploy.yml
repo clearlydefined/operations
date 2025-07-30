@@ -82,7 +82,7 @@ jobs:
           name: package-lock.json
           path: .
       - name: Checkout this repo
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4
         with:
           repository: 'clearlydefined/operations'
           ref: 'v3.2.0'
