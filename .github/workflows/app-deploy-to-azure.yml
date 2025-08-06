@@ -46,7 +46,7 @@ jobs:
     needs: check-deployable
     steps:
       - name: Login for Azure cli commands
-        uses: azure/login@v2.0.0
+        uses: azure/login@v2.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -71,7 +71,7 @@ jobs:
       # v3.0.1 passes when AZURE_WEBAPP_PUBLISH_PROFILE_PROD isn't set, but should fail.
       # Added secret check above to ensure it is set.
       - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v3.0.1
+        uses: azure/webapps-deploy@v3.0.6
         with:
           app-name: ${{ inputs.azure-webapp-name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
