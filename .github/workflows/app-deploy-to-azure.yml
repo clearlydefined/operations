@@ -46,12 +46,12 @@ jobs:
     needs: check-deployable
     steps:
       - name: Login for Azure cli commands
-        uses: azure/login@v2.3.0
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set DOCKER configs in Azure web app
-        uses: azure/appservice-settings@v1.1.1
+        uses: azure/appservice-settings@1808c4fbba4b8723107948a295d396a5c0e33dcd # v1.1.1
         with:
           app-name: ${{ inputs.azure-webapp-name }}
           app-settings-json: |
@@ -71,7 +71,7 @@ jobs:
       # v3.0.1 passes when AZURE_WEBAPP_PUBLISH_PROFILE_PROD isn't set, but should fail.
       # Added secret check above to ensure it is set.
       - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v3.0.6
+        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d # v3.0.6
         with:
           app-name: ${{ inputs.azure-webapp-name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
