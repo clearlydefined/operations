@@ -23,7 +23,7 @@ jobs:
       is-dev: "${{ env.IS_DEV }}"
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: 'clearlydefined/operations'
           ref: 'v3.2.0'
@@ -44,7 +44,7 @@ jobs:
     if: ${{ needs.confirm-dev.outputs.is-dev != 'true' }}
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: 'clearlydefined/operations'
           ref: 'v3.2.0'
