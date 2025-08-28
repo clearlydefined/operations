@@ -37,7 +37,7 @@ Crawler:
 For details on how ClearlyDefined services are deployed see private repo
 https://github.com/clearlydefined/infrastructure
 
-Runbooks for specific operations [here](https://github.com/clearlydefined/infrastructure/runbooks)
+Runbooks for specific operations [here](https://github.com/clearlydefined/infrastructure/tree/main/runbooks)
 
 ### Build / Deployment
 
