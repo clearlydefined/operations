@@ -1321,11 +1321,6 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/core/tests/test_half.py",
-            "attributions": [
-                "(c), True, True, False, False",
-                "(c), False, False, False, True",
-                "(c), False, False, True, False"
-            ],
             "hashes": {
                 "sha1": "cff768a134d3fc5cd733dd5a409818dde226d865",
                 "sha256": "1e7963ed3e3e900293fb680f6bbfaf36b6ce389eaa7d9a1aab48d6e026c2b51b"
@@ -5295,8 +5290,7 @@
         {
             "path": "lib/python3.6/site-packages/numpy/polynomial/chebyshev.py",
             "attributions": [
-                "(c) Covert Chebyshev",
-                "(c) Multiply a Chebyshev"
+                "(c) Covert Chebyshev"
             ],
             "hashes": {
                 "sha1": "72ab35fa036cad544b0e22320fb5e5b5ffc477fe",
@@ -5305,9 +5299,6 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/polynomial/hermite.py",
-            "attributions": [
-                "(c) Multiply a Hermite"
-            ],
             "hashes": {
                 "sha1": "f660bb56c01afc26905419839e73d6b2ae53f899",
                 "sha256": "d781484d818c0d0cd92ec008bba4f021e4bf121e0eddd4e2cd71d19952dd7402"
@@ -5315,9 +5306,6 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/polynomial/hermite_e.py",
-            "attributions": [
-                "(c) Multiply a Hermite"
-            ],
             "hashes": {
                 "sha1": "bc3ccb79998e46b5250ded3432fe0af692420121",
                 "sha256": "36e5e6f25ad1e6cf32962fdb51abaf814b17d29d3233e130b6f363eacace6ed5"
@@ -5325,9 +5313,6 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/polynomial/laguerre.py",
-            "attributions": [
-                "(c) Multiply a Laguerre"
-            ],
             "hashes": {
                 "sha1": "87042e0d4b3f901ad3c36c0cdaf60e0a6302893e",
                 "sha256": "a3766f8148bd8afa561aa3c893a84200672cf0ff669630313f9e285e941f6223"
@@ -5335,9 +5320,6 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/polynomial/legendre.py",
-            "attributions": [
-                "(c) Multiply a Legendre"
-            ],
             "hashes": {
                 "sha1": "268166c5c4f9f5a4cf34cd0d7f200555af64385c",
                 "sha256": "52f84e9dee92caf04a8f90c8606c9f0fd6eefd170ca800d8e5ecdb56484147cb"
