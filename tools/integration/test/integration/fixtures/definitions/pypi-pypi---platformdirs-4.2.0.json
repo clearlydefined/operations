@@ -38,9 +38,9 @@
     "licensed": {
         "declared": "MIT",
         "toolScore": {
-            "total": 75,
+            "total": 76,
             "declared": 30,
-            "discovered": 0,
+            "discovered": 1,
             "consistency": 15,
             "spdx": 15,
             "texts": 15
@@ -60,9 +60,9 @@
             }
         },
         "score": {
-            "total": 75,
+            "total": 76,
             "declared": 30,
-            "discovered": 0,
+            "discovered": 1,
             "consistency": 15,
             "spdx": 15,
             "texts": 15
@@ -74,6 +74,9 @@
             "license": "MIT",
             "natures": [
                 "license"
+            ],
+            "attributions": [
+                "Copyright (c) 2010-202x The platformdirs developers"
             ],
             "hashes": {
                 "sha1": "f511a8a63af8c6e36004b593478436bbc560ee0c",

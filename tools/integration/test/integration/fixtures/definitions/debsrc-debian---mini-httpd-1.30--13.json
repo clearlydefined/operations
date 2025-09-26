@@ -1,0 +1,537 @@
+{
+  "described": {
+    "releaseDate": "2025-05-12",
+    "urls": {
+      "registry": "http://ftp.debian.org/debian/pool/main/m/mini-httpd",
+      "version": "http://ftp.debian.org/debian/pool/main/m/mini-httpd",
+      "download": "http://ftp.debian.org/debian/pool/main/m/mini-httpd/mini-httpd_1.30.orig.tar.gz"
+    },
+    "sourceLocation": {
+      "type": "debsrc",
+      "provider": "debian",
+      "name": "mini-httpd",
+      "revision": "1.30-13",
+      "url": "http://ftp.debian.org/debian/pool/main/m/mini-httpd"
+    },
+    "hashes": {
+      "sha1": "42b3862ce728f948440378de3b26fd29199febe4",
+      "sha256": "9c4481802af8dde2e164062185c279e9274525c3af93d014fdc0b80cf30bca6e"
+    },
+    "files": 57,
+    "tools": [
+      "clearlydefined/1.3.1",
+      "reuse/3.2.1",
+      "licensee/9.18.1",
+      "scancode/32.6.1"
+    ],
+    "toolScore": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    },
+    "score": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    }
+  },
+  "files": [
+    {
+      "path": "debian/.gitlab-ci.yml",
+      "hashes": {
+        "sha1": "c3126f700ec04e5e58f7c66e82ef09f259a2e86d",
+        "sha256": "a14f57d80cfaad5f454a48122026467d7ff41012b1d7eeeb81ee11ae40d1f6b1"
+      }
+    },
+    {
+      "path": "debian/changelog",
+      "hashes": {
+        "sha1": "16aa2f415c572d73444e59476db1961f09648064",
+        "sha256": "99eafadaf3ea6f8b07787abd358d4485089cf7ddd2d913f0b7a812d5b91e7edc"
+      }
+    },
+    {
+      "path": "debian/control",
+      "hashes": {
+        "sha1": "dbd677600c7abb492a84f073aaada599c70e5ce9",
+        "sha256": "4242d4775f5146e5d390178c5d4fd7eb6a3349c701046fcaf257a6f425434b3c"
+      }
+    },
+    {
+      "path": "debian/copyright",
+      "license": "BSD-2-Clause AND (BSD-2-Clause AND LicenseRef-scancode-unknown-license-reference AND LicenseRef-scancode-public-domain) AND LicenseRef-scancode-warranty-disclaimer",
+      "attributions": [
+        "Copyright 1999-2000 Jef Poskanzer <jef@mail.acme.com>",
+        "Copyright 2006-2015 Marvin Stark <marv@der-marv.de> 2015 Jose",
+        "Copyright 1993-1994 Rob McCool <robm@stanford.edu> 1997 Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "295f4509539e8e9880244d9a3c81c71b585cba3b",
+        "sha256": "74beb76024fb9775fd2c79fc7611205e0416941da7f5917e6292ad6fce7bb7a4"
+      }
+    },
+    {
+      "path": "debian/docs",
+      "hashes": {
+        "sha1": "bccda643456e5eaf6edc2db67a0e22547170a70e",
+        "sha256": "89fcb6479a0741d0a21587bc2a67a6789111ecfbed2be0fd53972db89ff24035"
+      }
+    },
+    {
+      "path": "debian/mini-httpd.default",
+      "hashes": {
+        "sha1": "49018a91b99504b2a53afe6a531e5f553d229a35",
+        "sha256": "e916ca7aa1b49241ea5f0f3456bfe545cfb74c1b3cb402b9b34ae272d9f1ebed"
+      }
+    },
+    {
+      "path": "debian/mini-httpd.init.d",
+      "hashes": {
+        "sha1": "79bde7c4e89f1601a682470f7ed5d5c2d30021db",
+        "sha256": "821dcb7874a0589671e6d670e516ce95b7473fb9d13975345524aa3a8392aa03"
+      }
+    },
+    {
+      "path": "debian/mini-httpd.install",
+      "hashes": {
+        "sha1": "693b02129d67c700580ac10d0988330b115dfb28",
+        "sha256": "886c953747d6bf3b8a1e4985bda1cd55b718fc871085bd722417a9387324c589"
+      }
+    },
+    {
+      "path": "debian/mini-httpd.postinst",
+      "hashes": {
+        "sha1": "9d10364eaaebfc0f3b2e91414f4e2cea409addfb",
+        "sha256": "d789dcc105bf8de30dd0dfb617e11519f411319956a7dbf79b38fb09a7971416"
+      }
+    },
+    {
+      "path": "debian/mini-httpd.service",
+      "hashes": {
+        "sha1": "0786e7835329c3d58aa3f6cccf5d208d842bdb9a",
+        "sha256": "7b3f6e9ef49763ac66fa0400dacf3053e2b74f7685cdb46a36c67cfb2450b44f"
+      }
+    },
+    {
+      "path": "debian/NEWS",
+      "hashes": {
+        "sha1": "cd0cff1f8030ebff70dc858bd516ea3c03f466d7",
+        "sha256": "30df5b5ab011c77cec13f60f1ab0840c01b8f87f7a93c9581c905c3205190908"
+      }
+    },
+    {
+      "path": "debian/rules",
+      "hashes": {
+        "sha1": "9cc9a2b72f2cf411968c1a05b9f79a16e92b66fa",
+        "sha256": "5afe8a95c75079e31c3edde48f8022808ac2ff63f62f89b1d05357fd76ae2ef7"
+      }
+    },
+    {
+      "path": "debian/upstream.changelog",
+      "hashes": {
+        "sha1": "83e056829ddf62ca6ead709bd34797fc0c772fa5",
+        "sha256": "6773570d4d3a43e26dba20412eb44f1b88be29fa7c9e14005c16ddc2e5d815e2"
+      }
+    },
+    {
+      "path": "debian/watch",
+      "hashes": {
+        "sha1": "13958ece5eb4e3e8762bdac6a692be6fd85265ef",
+        "sha256": "c2499fa85c8c1f778885eab235d8ac87964b221721bf51ba0356cdc9a4245d9a"
+      }
+    },
+    {
+      "path": "debian/config/mini-httpd.conf",
+      "hashes": {
+        "sha1": "c2297e18eca5f3ea615c20d31afce77135f9622b",
+        "sha256": "94a3c3b3deeaddaa24afb2f185121ba2fdb0f3d0ee7d840c52dc904adc8eb03e"
+      }
+    },
+    {
+      "path": "debian/html/index.html",
+      "hashes": {
+        "sha1": "24eb14a32b722d745976398b48ab6cc2f556fbc8",
+        "sha256": "0665eff56459b430d4e5e99c58cb0d8aedb4e7dd1d5fe8f9e2dd38e6132252f2"
+      }
+    },
+    {
+      "path": "debian/patches/0001-fix-autobuilders",
+      "hashes": {
+        "sha1": "e351c74f8fe99d386811f95c355a3c1197bb6209",
+        "sha256": "95c4b86f5429e84dc30adcf4c51b3a4b7d9f7a8bbeaf770686e406aec795c2b7"
+      }
+    },
+    {
+      "path": "debian/patches/0002-fix-kfreebsd-support",
+      "hashes": {
+        "sha1": "4ff4d045fa939246b0160f701647264def6a5aa0",
+        "sha256": "d7286842d5004e080e5e79b92c1ec9bdf100f4b407a0bb3a31e3a7900017bbfa"
+      }
+    },
+    {
+      "path": "debian/patches/0003-fix-change-index-document-root",
+      "hashes": {
+        "sha1": "07289f3717a6c10270d55e8a04fab2df85814a80",
+        "sha256": "d1d50cedd8209fe87f69fb5721d8cb8f36d71736e673976788a8eacd66c93f99"
+      }
+    },
+    {
+      "path": "debian/patches/0004-manpage",
+      "attributions": [
+        "Copyright (c) 1999,2000 by Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "0ccb9ba5ef478f9bc61fccc6ac3b2addd666ae0f",
+        "sha256": "6fbff9e6837269f4dc2be0d2bac702bf6f8ba77aa15598c7db1a1429bf7da530"
+      }
+    },
+    {
+      "path": "debian/patches/0005-cgi-php",
+      "hashes": {
+        "sha1": "b46f97e9659f11a81edef8aaccaa846c93800acb",
+        "sha256": "8ff4f52b7f3ef3a82cc7946247b62545ff50d4c5839b15b2d82d012cc332a10c"
+      }
+    },
+    {
+      "path": "debian/patches/0006-fix-makefile",
+      "hashes": {
+        "sha1": "17804593d228eb8952777421604ff056b1d7039d",
+        "sha256": "a921045fea92f8f27251177d0587da0796e90fe7ba53511c11a58c76e0fbc62f"
+      }
+    },
+    {
+      "path": "debian/patches/0007-manpage-hyphen",
+      "hashes": {
+        "sha1": "9e1dfd9ff3fe6d87cd131ffe98eb38ed40b31453",
+        "sha256": "f09a9e0de98c630f30e95c6c0989734ca0b0ac0c57e1dce8c14713c68bbd9001"
+      }
+    },
+    {
+      "path": "debian/patches/0008-fix-ftbfs-kfreebsd-amd64",
+      "hashes": {
+        "sha1": "d7a3293870b71afa1e1d48d5a914b1f7c6f88fa1",
+        "sha256": "607186b51a87ba7405c902a21e98b069c3e8cdf0154e8ef385a777f9efc57135"
+      }
+    },
+    {
+      "path": "debian/patches/0009-fix-nullpointer-dereference",
+      "hashes": {
+        "sha1": "c7f81a93d15afaad18464693014f261dfeb838f4",
+        "sha256": "22462ab4c910efd770f00573e0fac875bf1dbcd423c4f0046579da86a783a19b"
+      }
+    },
+    {
+      "path": "debian/patches/0010-strip-port-numbers-in-vhost",
+      "hashes": {
+        "sha1": "efcf974ee0f8f2d928cd9527359716b206feaae6",
+        "sha256": "1bffa5dab59c028be2159e41e6f752541afbc8e95b5c25ace5549ee6a8a35e98"
+      }
+    },
+    {
+      "path": "debian/patches/0011-fix-typo-in-documentation-maxage",
+      "hashes": {
+        "sha1": "94d50c3bd3e07926ef1ad9e9263013423763e3f9",
+        "sha256": "ea07a560c1dcee15d40faf5732fb8ed3dc4d68cfa143378489a59fe17b76173a"
+      }
+    },
+    {
+      "path": "debian/patches/0012-cgi-nph-response",
+      "hashes": {
+        "sha1": "7f8c3c9052637f5ffa23e17b3846f0128d249199",
+        "sha256": "12735210d69bb30b8014ee6e5f76b01efcc9160b51e3b178b18806a97a76cf0c"
+      }
+    },
+    {
+      "path": "debian/patches/0013-fix-charset-string",
+      "hashes": {
+        "sha1": "38a038ea9cc838f97cd34f6c6f8e69e4989e9ad3",
+        "sha256": "c65e7d8220cf3d765b21d3363c3c2079b60c44ea5f05aa81b3e235d7502c31ce"
+      }
+    },
+    {
+      "path": "debian/patches/0014-silence-cgi-stderr",
+      "hashes": {
+        "sha1": "4d31098c75a46c45ad0b0485b35710cfc7a577f6",
+        "sha256": "3f97f0ab9c2b61a449a744d8bc1489bb23ce0838b8bf77adc3db0bbcafc8dab4"
+      }
+    },
+    {
+      "path": "debian/patches/0015-log-cgi-calls",
+      "hashes": {
+        "sha1": "98967a673a2b6fd0d8cdbc2435f759b64920011a",
+        "sha256": "ff6705238313ffde99f7b45544a6b6931fc2b40f76e8446ecadf74b0159ed5b9"
+      }
+    },
+    {
+      "path": "debian/patches/0016-document-systemd",
+      "hashes": {
+        "sha1": "9cc5743b934b21a17bea68f27cc619172d5cd71d",
+        "sha256": "b4c4007eeedbf1df8efa468f1ce73272476ee47b410718b4b700caae4530f029"
+      }
+    },
+    {
+      "path": "debian/patches/series",
+      "hashes": {
+        "sha1": "d43c784171fa85caa79f9e7464463c196a438d27",
+        "sha256": "a58570b3a1bc28c3f108c58f004b3d9531494ff15e01bf230c3ae7320a0453e0"
+      }
+    },
+    {
+      "path": "debian/source/format",
+      "hashes": {
+        "sha1": "bf84e019118539967c5aa2277d1aa43bef19e0da",
+        "sha256": "473fce26ee8db16aeb7cb164a727fad8291b1b3c25dede05cbc1775eea8e57f3"
+      }
+    },
+    {
+      "path": "debian/upstream/metadata",
+      "hashes": {
+        "sha1": "49aeff4024f470a72466df0444911e3375cd2b7d",
+        "sha256": "5b06b4e1a438feff69adf354568d53054ed4a0af39c7e070193bf29bf0fb8eae"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/FILES",
+      "hashes": {
+        "sha1": "a2e1c30930140cb7d1b1d4d3d4327007777bcfce",
+        "sha256": "1573fc1accc487688a6c2d9d301dae177647b4cff8220489f951a5ceac080219"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/htpasswd.1",
+      "hashes": {
+        "sha1": "29e45473cd7e65d2031ab473867d4adabf7cf0a4",
+        "sha256": "dd7eb3cdccc17efe90a52ee81db01fb6ea85dc830bf46cde3c80793018dec5ac"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/htpasswd.c",
+      "attributions": [
+        "(c) Regents of Univ. of California"
+      ],
+      "hashes": {
+        "sha1": "969e39ebd287d6653e37b3c2f1893569533da1bd",
+        "sha256": "c2352d37c75340f3d19bc420fb8ea1fe8d3f29e9cebfd251320a6b2ac4f8795b"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/index.html",
+      "hashes": {
+        "sha1": "f8b1c7ee39af20aa1a6d313b071db7873c61faa2",
+        "sha256": "737525115c79d2d65bd4022eede5c4588bbb302bc1d2abb8680ea95a0afd11f3"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/Makefile",
+      "hashes": {
+        "sha1": "d5f871e055bc97c113dbed07fadc0f3376962569",
+        "sha256": "aea7e627c97e1af3595e6829d5f40d44f2a41387593ffc5941eefcac5bc3bb62"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/match.c",
+      "license": "BSD-2-Clause",
+      "attributions": [
+        "Copyright (c) 1995,2000 by Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "cfe03ab9443ce6289b8bd3a9401048c09269cc48",
+        "sha256": "732222842fb421c1b28f616cb939d7ce00e3b82c751c32bae58662d507fe107d"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/match.h",
+      "license": "BSD-2-Clause",
+      "attributions": [
+        "Copyright (c) 1995 by Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "5528ea1b2893b14ff1f6f29be5fd06a25a0c5757",
+        "sha256": "7d5350e70b9cfdcd103712260fcff83a64a88d23891ee69b710bd1ac738ffb7c"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/mime_encodings.txt",
+      "hashes": {
+        "sha1": "e97a9be2c2fcee5e73e8b3380d4358261907d1f5",
+        "sha256": "b543519670a494899552119e153bdeb4b3d14c7191b288d82a2396104a65973e"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/mime_types.txt",
+      "hashes": {
+        "sha1": "69b665324724de0a5761f978e5b94644257f5d19",
+        "sha256": "abddc906b88a512436a8ada86e71641323e708d2ddd470a4001e9126ae5ce067"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/mini_httpd.8",
+      "license": "BSD-2-Clause",
+      "attributions": [
+        "Copyright co 1999,2000 by Jef Poskanzer jef at mail.acme.com"
+      ],
+      "hashes": {
+        "sha1": "e60236922c047568aff16323a2864ee9e5113223",
+        "sha256": "df7a9ca348a6c278805bb0271ba4b3e02a55dc6b10f6dcb5bab1fc9ee3b33be6"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/mini_httpd.c",
+      "license": "BSD-2-Clause",
+      "attributions": [
+        "Copyright (c) 1999,2000 by Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "18cab3e72dcec97a14c42ba630196b9c59a9c785",
+        "sha256": "f90d7906466eea19c92e0601f89161061bc3492da9303b4d7bf7bef99c112496"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/mini_httpd.cnf",
+      "hashes": {
+        "sha1": "1dff7e83c855474e28c10c2a0a52f76b54cfd43f",
+        "sha256": "af27bbfeea610080afc6fc3bed2f953bb878582f90b21fc257c7277ce5b36bbf"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/port.h",
+      "hashes": {
+        "sha1": "d7b189eba3998bf0ee15f81ea8ae6731cb178155",
+        "sha256": "48c13e92665f3c9287ed6ad3cf75d233679597b14e23fb7c9100f766f813893d"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/README",
+      "hashes": {
+        "sha1": "71fd2d977787d77a3d475c066d8c004a86dcbb08",
+        "sha256": "3a3da4d03ddcb22c7047623e73782b589ecf71ef1be77cc7bdf0cd9209820204"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/tdate_parse.c",
+      "license": "BSD-2-Clause",
+      "attributions": [
+        "Copyright (c) 1995 by Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "81756db99e7308f800bb2e71bb9790aa6b2e5fda",
+        "sha256": "d4ff5e38a67599101c3a6cb8cf73ac41bda3a49f8730801347f83fae105923d5"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/tdate_parse.h",
+      "license": "BSD-2-Clause",
+      "attributions": [
+        "Copyright (c) 1995 by Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "9ab0db89c6fed473fcad974bb4b85ee8ee22b04d",
+        "sha256": "37e2813864bcf7fcf4ee2b78d136494eb62f6c9757a7dcd7f089f19aeecd845d"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/version.h",
+      "hashes": {
+        "sha1": "ae28906f769f2e1387da56c5ad63132713e8e08a",
+        "sha256": "9e3fe4feedc8d32b7f41fc7c4ea4ace4a23df5c5e6d6b0024dc25b2ef34ec225"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/contrib/redhat-rpm/mini_httpd.init",
+      "hashes": {
+        "sha1": "2b77d030466a595839a842589867d7a9118722da",
+        "sha256": "fffc69a4f12e320cff503b85d3ee9d2c254e5e7175b290146eee977f5dbbd5a9"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/contrib/redhat-rpm/mini_httpd.spec",
+      "attributions": [
+        "Copyright Freely Redistributable Packager Bennett Todd <bet@mordor.net> Group Networking/Daemons"
+      ],
+      "hashes": {
+        "sha1": "127203252df0e48957a9586a46e264aef00527bf",
+        "sha256": "bf0eec5a4d11375e81f8da28af9cfd05f834a7df7d2850e023499c0d267d96a6"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/scripts/500.mini_httpd-rotate",
+      "hashes": {
+        "sha1": "19d6631a3af4d1c9cd51a68bb1e6f28be4bb46c5",
+        "sha256": "316891dcafbe45e9f5d4bcc3d8f9c5821d18f94e6d7fa15682bf10bf5c7747c7"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/scripts/mini_httpd.sh",
+      "hashes": {
+        "sha1": "1840a16433153d12947f860124b5ca1d8a039a8b",
+        "sha256": "4f9dfc17e6e886dfd43a14710e0089354195315337ed54f5883890b7a68f0b2e"
+      }
+    },
+    {
+      "path": "mini_httpd-1.30/scripts/mini_httpd_wrapper",
+      "hashes": {
+        "sha1": "a2a5151ac99025d07bf6b91347083da9afc7eec5",
+        "sha256": "e5b8b676005a62c968a71b004a47de9e83dc91e675c9a0884a2b46f92be881de"
+      }
+    }
+  ],
+  "licensed": {
+    "declared": "BSD-2-Clause",
+    "toolScore": {
+      "total": 48,
+      "declared": 30,
+      "discovered": 3,
+      "consistency": 0,
+      "spdx": 15,
+      "texts": 0
+    },
+    "facets": {
+      "core": {
+        "attribution": {
+          "unknown": 47,
+          "parties": [
+            "(c) Regents of Univ. of California",
+            "Copyright 1999-2000 Jef Poskanzer <jef@mail.acme.com>",
+            "Copyright (c) 1995 by Jef Poskanzer <jef@mail.acme.com>",
+            "Copyright (c) 1995,2000 by Jef Poskanzer <jef@mail.acme.com>",
+            "Copyright (c) 1999,2000 by Jef Poskanzer <jef@mail.acme.com>",
+            "Copyright co 1999,2000 by Jef Poskanzer jef at mail.acme.com",
+            "Copyright 2006-2015 Marvin Stark <marv@der-marv.de> 2015 Jose",
+            "Copyright 1993-1994 Rob McCool <robm@stanford.edu> 1997 Jef Poskanzer <jef@mail.acme.com>",
+            "Copyright Freely Redistributable Packager Bennett Todd <bet@mordor.net> Group Networking/Daemons"
+          ]
+        },
+        "discovered": {
+          "unknown": 50,
+          "expressions": [
+            "BSD-2-Clause",
+            "BSD-2-Clause AND (BSD-2-Clause AND LicenseRef-scancode-unknown-license-reference AND LicenseRef-scancode-public-domain) AND LicenseRef-scancode-warranty-disclaimer"
+          ]
+        },
+        "files": 57
+      }
+    },
+    "score": {
+      "total": 48,
+      "declared": 30,
+      "discovered": 3,
+      "consistency": 0,
+      "spdx": 15,
+      "texts": 0
+    }
+  },
+  "coordinates": {
+    "type": "debsrc",
+    "provider": "debian",
+    "name": "mini-httpd",
+    "revision": "1.30-13"
+  },
+  "_meta": {
+    "schemaVersion": "1.7.0",
+    "updated": "2025-09-16T15:09:30.598Z"
+  },
+  "scores": {
+    "effective": 74,
+    "tool": 74
+  }
+}
