@@ -110,12 +110,13 @@ function deepStrictEqualExpectedEntries(actual, expected) {
   deepStrictEqual(pickedActual, expected)
 }
 
-function compareFileLicense(expectedFiles, f) {
+function isFileEqual(expectedFiles, f) {
   const expected = expectedFiles.get(f.path)
-  const licenseComp = isEqual(normalizeLicenseExpression(f.license), normalizeLicenseExpression(expected.license))
+  const isLicenseEqual = isEqual(normalizeLicenseExpression(f.license), normalizeLicenseExpression(expected.license))
+  if (!isLicenseEqual) return false
   const normResult = omit(f, ['license'])
   const normExpect = omit(expected, ['license'])
-  return !(isEqual(normResult, normExpect) && licenseComp)
+  return isEqual(normResult, normExpect)
 }
 
 function compareFiles(result, expectation) {
@@ -123,7 +124,7 @@ function compareFiles(result, expectation) {
   const expectedFiles = filesToMap(expectation)
   const extraInResult = result.files.filter(f => !expectedFiles.has(f.path))
   const missingInResult = expectation.files.filter(f => !resultFiles.has(f.path))
-  const differentEntries = result.files.filter(f => expectedFiles.has(f.path) && compareFileLicense(expectedFiles, f))
+  const differentEntries = result.files.filter(f => expectedFiles.has(f.path) && !isFileEqual(expectedFiles, f))
   const differences = [...extraInResult, ...missingInResult, ...differentEntries]
   differences.forEach(f => logDifferences(expectedFiles.get(f.path), resultFiles.get(f.path)))
 
