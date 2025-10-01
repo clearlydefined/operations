@@ -8,6 +8,7 @@ const { devApiBaseUrl, prodApiBaseUrl, getComponents, definition, fetchRetry } =
 const nock = require('nock')
 const fs = require('fs')
 const callFetch = createFetcherWithRetry(fetchRetry)
+const { normalizeLicenseExpression } = require('../../../lib/compareDefinitions')
 
 ;(async function () {
   const components = await getComponents()
@@ -89,10 +90,12 @@ function compareDefinition(recomputedDef, expectedDef) {
 }
 
 function compareLicensed(result, expectation) {
-  let actual = omit(result.licensed, ['facets'])
-  let expected = omit(expectation.licensed, ['facets'])
-  actual = { declared: undefined, ...actual }
-  expected = { declared: undefined, ...expected }
+  deepStrictEqual(
+    normalizeLicenseExpression(result.licensed.declared),
+    normalizeLicenseExpression(expectation.licensed.declared)
+  )
+  let actual = omit(result.licensed, ['facets', 'declared'])
+  let expected = omit(expectation.licensed, ['facets', 'declared'])
   deepStrictEqualExpectedEntries(actual, expected)
 }
 
@@ -107,13 +110,21 @@ function deepStrictEqualExpectedEntries(actual, expected) {
   deepStrictEqual(pickedActual, expected)
 }
 
+function isFileEqual(expectedFiles, f) {
+  const expected = expectedFiles.get(f.path)
+  const isLicenseEqual = isEqual(normalizeLicenseExpression(f.license), normalizeLicenseExpression(expected.license))
+  if (!isLicenseEqual) return false
+  const normResult = omit(f, ['license'])
+  const normExpect = omit(expected, ['license'])
+  return isEqual(normResult, normExpect)
+}
+
 function compareFiles(result, expectation) {
   const resultFiles = filesToMap(result)
   const expectedFiles = filesToMap(expectation)
   const extraInResult = result.files.filter(f => !expectedFiles.has(f.path))
   const missingInResult = expectation.files.filter(f => !resultFiles.has(f.path))
-  const differentEntries = result.files.filter(f => expectedFiles.has(f.path) && !isEqual(expectedFiles.get(f.path), f))
-
+  const differentEntries = result.files.filter(f => expectedFiles.has(f.path) && !isFileEqual(expectedFiles, f))
   const differences = [...extraInResult, ...missingInResult, ...differentEntries]
   differences.forEach(f => logDifferences(expectedFiles.get(f.path), resultFiles.get(f.path)))
 

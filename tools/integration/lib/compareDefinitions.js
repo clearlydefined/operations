@@ -1,6 +1,7 @@
 // (c) Copyright 2024, GitHub and ClearlyDefined contributors. Licensed under the MIT license.
 // SPDX-License-Identifier: MIT
 
+const SPDX = require('@clearlydefined/spdx')
 function compareDocuments(staging, production, ignoredKeys, path = '') {
   let differences = {}
   let overallResults = []
@@ -215,4 +216,8 @@ function getType(value) {
   return typeof value
 }
 
-module.exports = { compareDocuments }
+function normalizeLicenseExpression(license) {
+  return license ? SPDX.expand(license).sort() : license
+}
+
+module.exports = { compareDocuments, normalizeLicenseExpression }
