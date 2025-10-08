@@ -4,10 +4,10 @@
     "sourceLocation": {
       "type": "git",
       "provider": "github",
-      "namespace": "igo95862",
+      "namespace": "python-sdbus",
       "name": "python-sdbus",
       "revision": "55d2667f0f7550ebee0b572f0200594ef6c3e93e",
-      "url": "https://github.com/igo95862/python-sdbus/tree/55d2667f0f7550ebee0b572f0200594ef6c3e93e"
+      "url": "https://github.com/python-sdbus/python-sdbus/tree/55d2667f0f7550ebee0b572f0200594ef6c3e93e"
     },
     "urls": {
       "registry": "https://pypi.org/project/sdbus",
