@@ -1,0 +1,217 @@
+{
+  "described": {
+    "releaseDate": "2025-05-12",
+    "sourceLocation": {
+      "type": "debsrc",
+      "provider": "debian",
+      "name": "mini-httpd",
+      "revision": "1.30-13",
+      "url": "http://ftp.debian.org/debian/pool/main/m/mini-httpd"
+    },
+    "urls": {
+      "registry": "http://ftp.debian.org/debian/pool/main/m/mini-httpd",
+      "version": "http://ftp.debian.org/debian/pool/main/m/mini-httpd",
+      "download": "http://ftp.debian.org/debian/pool/main/m/mini-httpd/mini-httpd_1.30-13_armhf.deb"
+    },
+    "hashes": {
+      "sha1": "cc7d1a47b081693764b4b6adfa16f5e7b3a1ff15",
+      "sha256": "d9d46c7754269fefccd2acb33c63c6304ebaa6dd211a99169b0586e94b7298e3"
+    },
+    "files": 17,
+    "tools": [
+      "clearlydefined/1.2.1",
+      "reuse/3.2.1",
+      "licensee/9.18.1",
+      "scancode/32.6.1"
+    ],
+    "toolScore": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    },
+    "score": {
+      "total": 100,
+      "date": 30,
+      "source": 70
+    }
+  },
+  "files": [
+    {
+      "path": "control.tar.xz",
+      "hashes": {
+        "sha1": "dc582f2122db4e9c1eee22ee79cf51e422534906",
+        "sha256": "da9dd7819f2a4f9551cf4900c021572b435480bb678c7c2bc1b2d08ccae07646"
+      }
+    },
+    {
+      "path": "data.tar.xz",
+      "hashes": {
+        "sha1": "e82c677fba7a263fe5be62e4d3afb9bc447d7fb2",
+        "sha256": "4e0601a9347a76692c9926c06a9f7f1a5ed2cc451e3aaf6ef3402159d01a532e"
+      }
+    },
+    {
+      "path": "debian-binary",
+      "hashes": {
+        "sha1": "7959c969e092f2a5a8604e2287807ac5b1b384ad",
+        "sha256": "d526eb4e878a23ef26ae190031b4efd2d58ed66789ac049ea3dbaf74c9df7402"
+      }
+    },
+    {
+      "path": "data/etc/mini-httpd.conf",
+      "hashes": {
+        "sha1": "c2297e18eca5f3ea615c20d31afce77135f9622b",
+        "sha256": "94a3c3b3deeaddaa24afb2f185121ba2fdb0f3d0ee7d840c52dc904adc8eb03e"
+      }
+    },
+    {
+      "path": "data/etc/default/mini-httpd",
+      "hashes": {
+        "sha1": "49018a91b99504b2a53afe6a531e5f553d229a35",
+        "sha256": "e916ca7aa1b49241ea5f0f3456bfe545cfb74c1b3cb402b9b34ae272d9f1ebed"
+      }
+    },
+    {
+      "path": "data/etc/init.d/mini-httpd",
+      "hashes": {
+        "sha1": "79bde7c4e89f1601a682470f7ed5d5c2d30021db",
+        "sha256": "821dcb7874a0589671e6d670e516ce95b7473fb9d13975345524aa3a8392aa03"
+      }
+    },
+    {
+      "path": "data/usr/lib/systemd/system/mini-httpd.service",
+      "hashes": {
+        "sha1": "0786e7835329c3d58aa3f6cccf5d208d842bdb9a",
+        "sha256": "7b3f6e9ef49763ac66fa0400dacf3053e2b74f7685cdb46a36c67cfb2450b44f"
+      }
+    },
+    {
+      "path": "data/usr/sbin/mini_httpd",
+      "hashes": {
+        "sha1": "7868b153e4af8d21abb3ecfd83cbe3c5079bc9c9",
+        "sha256": "9e00cc7dfd18fc12972714e4d0570ae11bb04874f3f2bb5dec614390b1db1218"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/changelog.Debian.gz",
+      "hashes": {
+        "sha1": "b47f7dfa2c5dba21e10bce7ac3947324d44bc60c",
+        "sha256": "9a8ba17a7f09880b3bc956baf15f01c4b0efbfa98c56db181e939bdf05a4f311"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/changelog.gz",
+      "hashes": {
+        "sha1": "e2c7479948369edceb3d22232a37d6cde7822a80",
+        "sha256": "523c96cb1dbfb2ddbda4b58f3e866934fe78a4eb7555a2894d21fee0b96c75db"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/copyright",
+      "license": "BSD-2-Clause AND (BSD-2-Clause AND LicenseRef-scancode-unknown-license-reference AND LicenseRef-scancode-public-domain) AND LicenseRef-scancode-warranty-disclaimer",
+      "attributions": [
+        "Copyright 1999-2000 Jef Poskanzer <jef@mail.acme.com>",
+        "Copyright 2006-2015 Marvin Stark <marv@der-marv.de> 2015 Jose",
+        "Copyright 1993-1994 Rob McCool <robm@stanford.edu> 1997 Jef Poskanzer <jef@mail.acme.com>"
+      ],
+      "hashes": {
+        "sha1": "295f4509539e8e9880244d9a3c81c71b585cba3b",
+        "sha256": "74beb76024fb9775fd2c79fc7611205e0416941da7f5917e6292ad6fce7bb7a4"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/mime_encodings.txt",
+      "hashes": {
+        "sha1": "e97a9be2c2fcee5e73e8b3380d4358261907d1f5",
+        "sha256": "b543519670a494899552119e153bdeb4b3d14c7191b288d82a2396104a65973e"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/mime_types.txt.gz",
+      "hashes": {
+        "sha1": "632f189da1da4d0ddcf57518d6c1b449ad858c7a",
+        "sha256": "33baad4a9eb915bfab7bb1bbc69b04732dd86688c910074cf3f1de3832cbd9cf"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/NEWS.Debian.gz",
+      "hashes": {
+        "sha1": "9036ac8c73d0831746976a136c84caafe5e2e30b",
+        "sha256": "b24236e5cb5382f1db2abc6517b5c1be597cfec3bc78cc48b602c5639ca251b1"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/README",
+      "hashes": {
+        "sha1": "71fd2d977787d77a3d475c066d8c004a86dcbb08",
+        "sha256": "3a3da4d03ddcb22c7047623e73782b589ecf71ef1be77cc7bdf0cd9209820204"
+      }
+    },
+    {
+      "path": "data/usr/share/doc/mini-httpd/examples/index.html",
+      "hashes": {
+        "sha1": "24eb14a32b722d745976398b48ab6cc2f556fbc8",
+        "sha256": "0665eff56459b430d4e5e99c58cb0d8aedb4e7dd1d5fe8f9e2dd38e6132252f2"
+      }
+    },
+    {
+      "path": "data/usr/share/man/man8/mini_httpd.8.gz",
+      "hashes": {
+        "sha1": "314a82e0c76f42aa19736cedb60c19f497d67146",
+        "sha256": "7ef11a2916d4550ecc40db6380246e5383eb3808846fecd1c4f68efc41c13f20"
+      }
+    }
+  ],
+  "licensed": {
+    "declared": "BSD-2-Clause",
+    "toolScore": {
+      "total": 46,
+      "declared": 30,
+      "discovered": 1,
+      "consistency": 0,
+      "spdx": 15,
+      "texts": 0
+    },
+    "facets": {
+      "core": {
+        "attribution": {
+          "unknown": 16,
+          "parties": [
+            "Copyright 1999-2000 Jef Poskanzer <jef@mail.acme.com>",
+            "Copyright 2006-2015 Marvin Stark <marv@der-marv.de> 2015 Jose",
+            "Copyright 1993-1994 Rob McCool <robm@stanford.edu> 1997 Jef Poskanzer <jef@mail.acme.com>"
+          ]
+        },
+        "discovered": {
+          "unknown": 16,
+          "expressions": [
+            "BSD-2-Clause AND (BSD-2-Clause AND LicenseRef-scancode-unknown-license-reference AND LicenseRef-scancode-public-domain) AND LicenseRef-scancode-warranty-disclaimer"
+          ]
+        },
+        "files": 17
+      }
+    },
+    "score": {
+      "total": 46,
+      "declared": 30,
+      "discovered": 1,
+      "consistency": 0,
+      "spdx": 15,
+      "texts": 0
+    }
+  },
+  "coordinates": {
+    "type": "deb",
+    "provider": "debian",
+    "name": "mini-httpd",
+    "revision": "1.30-13_armhf"
+  },
+  "_meta": {
+    "schemaVersion": "1.7.0",
+    "updated": "2025-10-08T12:19:27.304Z"
+  },
+  "scores": {
+    "effective": 73,
+    "tool": 73
+  }
+}

@@ -1853,7 +1853,7 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/distutils/cpuinfo.py",
-            "license": "BSD-3-Clause",
+            "license": "BSD-3-Clause AND BSD-2-Clause AND (BSD-3-Clause AND Python-2.0 AND Apache-2.0)",
             "attributions": [
                 "Copyright 2002 Pearu Peterson"
             ],
@@ -1983,7 +1983,7 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/distutils/system_info.py",
-            "license": "BSD-3-Clause",
+            "license": "BSD-3-Clause AND BSD-2-Clause AND (BSD-3-Clause AND Python-2.0 AND Apache-2.0)",
             "attributions": [
                 "Copyright 2002 Pearu Peterson"
             ],
@@ -2057,7 +2057,7 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/distutils/__pycache__/cpuinfo.cpython-36.pyc",
-            "license": "BSD-3-Clause",
+            "license": "BSD-3-Clause AND BSD-2-Clause AND (BSD-3-Clause AND Python-2.0 AND Apache-2.0)",
             "attributions": [
                 "Copyright 2002 Pearu Peterson"
             ],
@@ -2180,7 +2180,7 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/distutils/__pycache__/system_info.cpython-36.pyc",
-            "license": "BSD-3-Clause",
+            "license": "BSD-3-Clause AND BSD-2-Clause AND (BSD-3-Clause AND Python-2.0 AND Apache-2.0)",
             "attributions": [
                 "Copyright 2002 Pearu Peterson"
             ],
@@ -3147,7 +3147,7 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/f2py/f2py2e.py",
-            "license": "BSD-3-Clause AND LicenseRef-scancode-unknown-license-reference",
+            "license": "BSD-3-Clause AND (BSD-3-Clause AND BSD-2-Clause AND (BSD-3-Clause AND Python-2.0 AND Apache-2.0))",
             "attributions": [
                 "Copyright 1999-2011 Pearu Peterson",
                 "Copyright 1999 - 2011 Pearu Peterson"
@@ -3322,7 +3322,7 @@
         },
         {
             "path": "lib/python3.6/site-packages/numpy/f2py/__pycache__/f2py2e.cpython-36.pyc",
-            "license": "BSD-3-Clause AND LicenseRef-scancode-unknown-license-reference",
+            "license": "BSD-3-Clause AND (BSD-3-Clause AND BSD-2-Clause AND (BSD-3-Clause AND Python-2.0 AND Apache-2.0))",
             "attributions": [
                 "Copyright 1999-2011 Pearu Peterson",
                 "Copyright 1999 - 2011 Pearu Peterson"
