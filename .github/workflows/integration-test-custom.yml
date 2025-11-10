@@ -109,7 +109,7 @@ jobs:
           parameters: vmName="${{ github.event.inputs.vm_name }}" location="${{ github.event.inputs.location }}" sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}"
       
       - name: Wait SSH to become available
-        uses: appleboy/ssh-action@3ca8a7c5359ac6ad91aa47f1946ece1c3b025004 # master
+        uses: appleboy/ssh-action@91f3272fc5907f4699dcf59761eb622a07342f5a # master
         with:
           host: ${{ steps.create_vm.outputs.publicIpAddress }}
           username: azureuser
@@ -127,7 +127,7 @@ jobs:
             exit 1
 
       - name: Install Docker
-        uses: appleboy/ssh-action@3ca8a7c5359ac6ad91aa47f1946ece1c3b025004 # master
+        uses: appleboy/ssh-action@91f3272fc5907f4699dcf59761eb622a07342f5a # master
         with:
           host: ${{ steps.create_vm.outputs.publicIpAddress }}
           username: azureuser
@@ -142,7 +142,7 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Clone Repos and Setup Environment
-        uses: appleboy/ssh-action@3ca8a7c5359ac6ad91aa47f1946ece1c3b025004 # master
+        uses: appleboy/ssh-action@91f3272fc5907f4699dcf59761eb622a07342f5a # master
         env:
           GITHUB_TOKEN: ${{ secrets.IT_GH_ACCESS_TOKEN }}
           REPO_REFS: ${{ inputs.repo_refs }}
