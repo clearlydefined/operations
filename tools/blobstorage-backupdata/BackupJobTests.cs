@@ -173,7 +173,7 @@ public class BackupJobTests
         var mockMongoCollection = new Mock<IMongoCollection<BsonDocument>>();
         
         mockMongoClient.Setup(x => x.GetDatabase("clearlydefined", null)).Returns(mockDatabase.Object);
-        mockDatabase.Setup(x => x.GetCollection<BsonDocument>("definitions-trimmed", null)).Returns(mockMongoCollection.Object);
+        mockDatabase.Setup(x => x.GetCollection<BsonDocument>("definitions-paged", null)).Returns(mockMongoCollection.Object);
         mockMongoCollection
         .Setup(x => x.FindAsync(It.IsAny<FilterDefinition<BsonDocument>>(), It.IsAny<FindOptions<BsonDocument>>(), default))
         .Callback((FilterDefinition<BsonDocument> filter, FindOptions<BsonDocument, BsonDocument> options, CancellationToken token) => {
@@ -302,5 +302,146 @@ public class BackupJobTests
         data.Where(x => x.Key.StartsWith("type/provider/-/name/"))
             .Select(x => BsonDocument.Parse(x.Value))
             .Should().HaveCount(1);
+    }
+    [Test]
+    public void TestFilterFilesWithoutToken_RemovesFilesWithoutToken()
+    {
+        var backupJob = new BackupJob(
+            mockBlobContainerClient.Object,
+            mockMongoClient.Object,
+            DateTime.UtcNow,
+            loggerFactory,
+            new MockFilterRenderer()
+        );
+
+        var data = new Dictionary<string, string?>
+        {
+            { indexPath, "" },
+            { "changes/2023-01-01-00", null },
+            { "npm/npmjs/-/test-package/1.0.0.json", null },
+        };
+        SetupMockBlobClient(mockBlobContainerClient, data);
+
+        var definitionWithFiles = """
+            {
+                "_id": "npm/npmjs/-/test-package/1.0.0",
+                "_meta": {"updated": "2023-01-01T00:00:00Z"},
+                "described": {"files": 5},
+                "files": [
+                    {
+                        "path": "package/LICENSE",
+                        "license": "MIT",
+                        "token": "abc123token"
+                    },
+                    {
+                        "path": "package/README.md",
+                        "license": "MIT",
+                        "token": "def456token"
+                    },
+                    {
+                        "path": "package/index.js"
+                   
+                    },
+                    {
+                        "path": "package/test.js"
+                    }
+                ]
+            }
+            """;
+
+        var bsonDefinitions = new List<BsonDocument> { BsonDocument.Parse(definitionWithFiles) };
+        mockCursor.Initialize(new List<List<BsonDocument>> { bsonDefinitions });
+
+        backupJob.ProcessJob().Wait();
+
+        // Verify the uploaded definition
+        var uploadedDefinition = JObject.Parse(data["npm/npmjs/-/test-package/1.0.0.json"]!);
+        var filesArray = uploadedDefinition["files"] as JArray;
+
+        // Should only contain files with token
+        filesArray.Should().NotBeNull();
+        filesArray.Should().HaveCount(2);
+        filesArray!.All(f => f["token"] != null).Should().BeTrue();
+
+        // Verify the paths of remaining files
+        var remainingPaths = filesArray.Select(f => f["path"]?.ToString()).ToList();
+        remainingPaths.Should().BeEquivalentTo(new[] { "package/LICENSE", "package/README.md" });
+    }
+
+    [Test]
+    public void TestFilterFilesWithoutToken_HandlesNoFilesArray()
+    {
+        var backupJob = new BackupJob(
+            mockBlobContainerClient.Object,
+            mockMongoClient.Object,
+            DateTime.UtcNow,
+            loggerFactory,
+            new MockFilterRenderer()
+        );
+
+        var data = new Dictionary<string, string?>
+        {
+            { indexPath, "" },
+            { "changes/2023-01-01-00", null },
+            { "npm/npmjs/-/no-files/1.0.0.json", null },
+        };
+        SetupMockBlobClient(mockBlobContainerClient, data);
+
+        var definitionWithoutFiles = """
+            {
+                "_id": "npm/npmjs/-/no-files/1.0.0",
+                "_meta": {"updated": "2023-01-01T00:00:00Z"},
+                "described": {"releaseDate": "2023-01-01"}
+            }
+            """;
+
+        var bsonDefinitions = new List<BsonDocument> { BsonDocument.Parse(definitionWithoutFiles) };
+        mockCursor.Initialize(new List<List<BsonDocument>> { bsonDefinitions });
+
+        Assert.DoesNotThrow(() => backupJob.ProcessJob().Wait());
+
+        var uploadedDefinition = JObject.Parse(data["npm/npmjs/-/no-files/1.0.0.json"]!);
+        uploadedDefinition["files"].Should().BeNull();
+    }
+
+    [Test]
+    public void TestFilterFilesWithoutToken_HandlesEmptyFilesArray()
+    {
+        var backupJob = new BackupJob(
+            mockBlobContainerClient.Object,
+            mockMongoClient.Object,
+            DateTime.UtcNow,
+            loggerFactory,
+            new MockFilterRenderer()
+        );
+
+        var data = new Dictionary<string, string?>
+        {
+            { indexPath, "" },
+            { "changes/2023-01-01-00", null },
+            { "npm/npmjs/-/empty-files/1.0.0.json", null },
+        };
+        SetupMockBlobClient(mockBlobContainerClient, data);
+
+        var definitionWithEmptyFiles = """
+            {
+                "_id": "npm/npmjs/-/empty-files/1.0.0",
+                "_meta": {"updated": "2023-01-01T00:00:00Z"},
+                "described": {"files": 0},
+                "files": []
+            }
+            """;
+
+        var bsonDefinitions = new List<BsonDocument>
+        {
+            BsonDocument.Parse(definitionWithEmptyFiles),
+        };
+        mockCursor.Initialize(new List<List<BsonDocument>> { bsonDefinitions });
+
+        backupJob.ProcessJob().Wait();
+
+        var uploadedDefinition = JObject.Parse(data["npm/npmjs/-/empty-files/1.0.0.json"]!);
+        var filesArray = uploadedDefinition["files"] as JArray;
+        filesArray.Should().NotBeNull().And.BeEmpty();
     }
 }

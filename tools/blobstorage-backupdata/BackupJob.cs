@@ -39,7 +39,7 @@ internal sealed class BackupJob
         var existingIndex = await GetIndex();
         var changesIndex = new SortedDictionary<string, List<string>>();
         var database = MongoClient.GetDatabase("clearlydefined", null);
-        var collection = database.GetCollection<BsonDocument>("definitions-trimmed");
+        var collection = database.GetCollection<BsonDocument>("definitions-paged");
 
         // lambda to enable lazy evaluation, avoiding the `IndexOutOfRangeException` exception on empty `existingIndex`
         var beginningDateFilter = () =>
@@ -69,6 +69,21 @@ internal sealed class BackupJob
         var cursor = await collection.FindAsync(filter, findOptions);
 
         await SaveData(cursor, existingIndex, changesIndex);
+    }
+
+    private JObject FilterFilesWithoutToken(JObject definition)
+    {
+        if (definition["files"] is not JArray filesArray)
+        {
+            return definition;
+        }
+
+        var originalCount = filesArray.Count;
+        var filteredFiles = new JArray(filesArray.Where(file => file["token"] != null));
+
+        definition["files"] = filteredFiles;
+
+        return definition;
     }
 
     private async Task SaveData(
@@ -104,6 +119,10 @@ internal sealed class BackupJob
                         {
                             throw new Exception("Failed to deserialize the document.");
                         }
+
+                        // Filter files from files array without token
+                        jObject = FilterFilesWithoutToken(jObject);
+
                         var blobName = jObject.GetBlobName();
                         if (string.IsNullOrWhiteSpace(blobName))
                         {
