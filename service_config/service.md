@@ -34,6 +34,8 @@
     - [HARVEST\_QUEUE\_PROVIDER](#harvest_queue_provider)
     - [HARVEST\_QUEUE\_PREFIX\*\*](#harvest_queue_prefix)
     - [HARVESTER\_PROVIDER](#harvester_provider)
+    - [LOG\_NODE\_HEAPSTATS](#log_node_heapstats)
+    - [LOG\_NODE\_HEAPSTATS\_INTERVAL\_MS](#log_node_heapstats_interval_ms)
     - [MULTIVERSION\_CURATION\_FF](#multiversion_curation_ff)
     - [NODE\_ENV](#node_env)
     - [RATE\_LIMIT\_MAX](#rate_limit_max)
@@ -96,6 +98,8 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * HARVEST_QUEUE_PREFIX
 * HARVEST_QUEUE_PROVIDER
 * HARVESTER_PROVIDER
+* LOG_NODE_HEAPSTATS
+* LOG_NODE_HEAPSTATS_INTERVAL_MS
 * NODE_ENV
 * RATE_LIMIT_MAX
 * RATE_LIMIT_WINDOW
@@ -315,6 +319,28 @@ Important to ensure that any other instances of production crawlers that use the
 ### HARVESTER_PROVIDER
 
 This indicates what type of service we use for harvesting, in this case it's **crawlerQueue**, which corresponds with the [crawlerQueue harvest provider](https://github.com/clearlydefined/service/blob/master/providers/harvest/crawlerQueue.js)
+
+### LOG_NODE_HEAPSTATS
+
+This is an optional flag to `enable` logging of Node's `v8` module's memory usage data using the `getHeapSpaceStatistics` and `getHeapStatistics()` functions.
+
+Value is either `true` or `false`
+> Note: if this env var is not present, it equates to `false`
+> example:
+> `LOG_NODE_HEAPSTATS` = `true`
+
+- [Node.js v8 engine docs - getHeapSpaceStatistics()](https://nodejs.org/docs/v22.12.0/api/v8.html#v8getheapspacestatistics)
+
+- [Node.js v8 engine docs - getHeapStatistics()](https://nodejs.org/docs/v22.12.0/api/v8.html#v8getheapstatistics)
+
+### LOG_NODE_HEAPSTATS_INTERVAL_MS
+
+This is an optional environment variable that sets the interval to log heap statistics (When enabled).
+
+Value is a number in `ms` (`milliseconds`).
+> NOTE: The default value is `30000` ms (`30` seconds)
+> example:
+> `LOG_NODE_HEAPSTATS_INTERVAL_MS` = `10000`
 
 ### MULTIVERSION_CURATION_FF
 
