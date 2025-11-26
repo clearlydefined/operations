@@ -7,6 +7,8 @@
     - [AUTH\_CURATION\_TEAM](#auth_curation_team)
     - [AUTH\_GITHUB\_CLIENT](#auth_github_client)
     - [AUTH\_HARVEST\_TEAM](#auth_harvest_team)
+    - [BATCH_RATE_LIMIT_MAX](#batch_rate_limit_max)
+    - [BATCH_RATE_LIMIT_WINDOW](#batch_rate_limit_window)
     - [CACHING\_PROVIDER](#caching_provider)
     - [CACHING\_REDIS\_SERVICE](#caching_redis_service)
     - [CRAWLER\_API\_AUTH\_TOKEN\*\*](#crawler_api_auth_token)
@@ -97,6 +99,8 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * NODE_ENV
 * RATE_LIMIT_MAX
 * RATE_LIMIT_WINDOW
+* BATCH_RATE_LIMIT_MAX
+* BATCH_RATE_LIMIT_WINDOW
 * SEARCH_AZURE_API_KEY
 * SEARCH_AZURE_SERVICE
 * SEARCH_PROVIDER
@@ -333,6 +337,14 @@ This is the time window we apply the **RATE_LIMIT_MAX** to. This is set to **300
 When we [use this value in the code](https://github.com/clearlydefined/service/blob/67c2c4b16e6313584b7678b9a77d28331ec0c5ba/app.js#L123), we multiply it by 1000, making it 300,000 milliseconds (or 300 seconds).
 
 So, one IP address can only call the ClearlyDefined API 500 times every 300 seconds.
+
+### BATCH_RATE_LIMIT_MAX
+
+Defines the maximum number of requests allowed from a single IP to the batch endpoints within the batch rate limit window.
+
+### BATCH_RATE_LIMIT_WINDOW
+
+Defines the time window (in seconds) used to apply `BATCH_RATE_LIMIT_MAX` for batch endpoints. This value is multiplied by 1000 internally to convert to milliseconds (same as `RATE_LIMIT_WINDOW`)
 
 ### SEARCH_PROVIDER
 
