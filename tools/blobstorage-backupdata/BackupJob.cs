@@ -21,7 +21,7 @@ internal sealed class BackupJob
     private static readonly object LockObject = new();
     private static int counter;
     private const string DateTimeFormat = "yyyy-MM-dd-HH";
-    private const int BatchSize = 1000;
+    private const int BatchSize = 500;
     private const string UpdatedFieldName = "_meta.updated";
     private const string MetaFieldName = "_meta";
 
