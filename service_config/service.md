@@ -33,6 +33,8 @@
     - [HARVEST\_STORE\_PROVIDER](#harvest_store_provider)
     - [HARVEST\_QUEUE\_PROVIDER](#harvest_queue_provider)
     - [HARVEST\_QUEUE\_PREFIX\*\*](#harvest_queue_prefix)
+    - [HARVEST_THROTTLER_PROVIDER](#harvest_throttler_provider)
+    - [HARVEST_THROTTLER_BLACKLIST](#harvest_throttler_blacklist)
     - [HARVESTER\_PROVIDER](#harvester_provider)
     - [LOG\_NODE\_HEAPSTATS](#log_node_heapstats)
     - [LOG\_NODE\_HEAPSTATS\_INTERVAL\_MS](#log_node_heapstats_interval_ms)
@@ -97,6 +99,8 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * HARVEST_AZBLOB_CONTAINER_NAME
 * HARVEST_QUEUE_PREFIX
 * HARVEST_QUEUE_PROVIDER
+* HARVEST_THROTTLER_PROVIDER
+* HARVEST_THROTTLER_BLACKLIST
 * HARVESTER_PROVIDER
 * LOG_NODE_HEAPSTATS
 * LOG_NODE_HEAPSTATS_INTERVAL_MS
@@ -313,8 +317,23 @@ For example, in the dev api we use `cdcrawlerdev` as the prefix for the queues w
 * cdcrawlerdev-later
 * cdcrawlerdev-normal
 * cdcrawlerdev-soon
+* cdcrawlerdev-immediate
 
 Important to ensure that any other instances of production crawlers that use the same storage account use a different prefix for their queues.
+
+### HARVEST_THROTTLER_PROVIDER
+
+This indicates the provider used to throttle harvest requests (extensible).
+
+**Valid values**: `filter` (additional providers may be added in the future)
+**Default**: `filter` (uses ListBasedFilter)
+
+### HARVEST_THROTTLER_BLACKLIST
+
+Defines a blacklist of coordinates that must not be harvested in the `filter` (ListBasedFilter).
+
+**Format**: JSON array string of coordinate paths (for example: `["git/github/org/name", "npm/npmjs/-/lodash"]`)
+**Default**: `""` (empty string results in an empty blacklist; invalid JSON or non-array values are ignored)
 
 ### HARVESTER_PROVIDER
 
