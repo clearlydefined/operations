@@ -64,7 +64,7 @@ const componentsDynamic = async () => {
     const data = await fs.readFile(filePath, 'utf8')
     console.info('Read dynamic components from disk')
     return JSON.parse(data)
-  } catch (err) {
+  } catch {
     // If the file doesn't exist, fetch the data and save it to disk
     const response = await fetch(
       'https://cosmos-query-function-app.azurewebsites.net/api/getrecentdefinitions?days=1&limit=1'

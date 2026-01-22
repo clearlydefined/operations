@@ -4,14 +4,12 @@
 
 1. To execute integration tests, you can use the integration-test.yml GitHub Action. When running on the main branch, all tests committed to that branch will be executed. By default, the integration test suite compares the results from development with the production deployment. You can find the integration test suite at [./test/integration](./test/integration), and you can configure the development and production deployment in [./test/integration/testConfig.js](./test/integration/testConfig.js).
 1. npm scripts triggered in the GitHub Action include:
-
    - e2e-test-harvest: re-triggers and verifies the completion of the harvest for the components specified in [./test/integration/testConfig.js](./test/integration/testConfig.js)
    - e2e-test-service: runs the suite of tests in [./test/integration/e2e-test-service](./test/integration/e2e-test-service) folder. These tests are organized based on the endpoints documented in [Swagger UI](https://api.clearlydefined.io/api-docs/#/).
 
 1. The test configuration is located at [./test/integration/testConfig.js](./test/integration/testConfig.js).
 
    It contains:
-
    - Components to be harvested,
    - Base URLs for the development and production systems, along with polling interval and timeout settings,
    - Current harvest tools. This is used for polling harvest results to check whether the harvest is complete. When scan tools are added or removed during the harvest process, this list needs to be updated as well.
