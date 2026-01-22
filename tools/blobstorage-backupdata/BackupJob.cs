@@ -21,17 +21,19 @@ internal sealed class BackupJob
     private static readonly object LockObject = new();
     private static int counter;
     private const string DateTimeFormat = "yyyy-MM-dd-HH";
-    private const int BatchSize = 500;
+    private const int DefaultBatchSize = 500;
     private const string UpdatedFieldName = "_meta.updated";
     private const string MetaFieldName = "_meta";
+    private readonly int BatchSize;
 
-    public BackupJob(BlobContainerClient blobContainerClient, IMongoClient mongoClient, DateTime now, ILoggerFactory loggerFactory, IFilterRenderer filterRenderer)
+    public BackupJob(BlobContainerClient blobContainerClient, IMongoClient mongoClient, DateTime now, ILoggerFactory loggerFactory, IFilterRenderer filterRenderer, int batchSize = DefaultBatchSize)
     {
         BlobContainerClient = blobContainerClient;
         MongoClient = mongoClient;
         Now = now;
         Logger = loggerFactory.CreateLogger(nameof(BackupJob));
         FilterRenderer = filterRenderer;
+        BatchSize = batchSize;
     }
 
     public async Task ProcessJob()

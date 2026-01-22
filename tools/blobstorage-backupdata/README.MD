@@ -237,6 +237,10 @@ or in plain text otherwise.
 Access to database and blob storage are specified by `MONGO_CONNECTION_STRING`, `BLOB_SERVICE_CONNECTION_STRING`
 and `BLOB_CONTAINER_NAME` environment variables, all of which are mandatory.
 
+The `BATCH_SIZE` environment variable can be used to configure the number of documents fetched per batch from
+the database. This is optional and defaults to 500. Reduce this value if you encounter Cosmos DB response size
+limit errors.
+
 #### Running locally
 It's possible to run `blobstorage-backupdata` locally, either via Docker or directly. You can build Docker image
 using e.g. `docker build ./tools/blobstorage-backupdata -t pcj:latest` and then run via 
