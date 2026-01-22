@@ -223,7 +223,7 @@ public class BackupJobTests
         SetupMockBlobClient(mockBlobContainerClient, data);
 
         var result = backupJob.GetIndex().Result;
-        Assert.AreEqual(changesets, result);
+        result.Should().BeEquivalentTo(changesets);
     }
     [Test]
     public void TestSaveData_HappyCase()
