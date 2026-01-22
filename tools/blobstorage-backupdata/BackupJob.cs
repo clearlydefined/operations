@@ -206,6 +206,7 @@ public class FilterRenderer : IFilterRenderer
 {
     public string RenderFilter(FilterDefinition<BsonDocument> filter, IMongoCollection<BsonDocument> collection)
     {
-        return filter.Render(collection.DocumentSerializer, collection.Settings.SerializerRegistry).ToString();
+        var renderArgs = new RenderArgs<BsonDocument>(collection.DocumentSerializer, collection.Settings.SerializerRegistry);
+        return filter.Render(renderArgs).ToString();
     }
 }
