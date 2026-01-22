@@ -15,9 +15,7 @@ The ScanCode update resulted in regressed fixtures that need to be addressed in 
 3.  pypi/pypi/-/sdbus/0.12.0
 
 - There is a difference in the declared license compared to the previous definition, which seems to be a regression in ScanCode.
-
   - The previous declared license: 'GPL-2.0 AND LGPL-2.0-or-later AND LGPL-2.1-or-later', and here are the tools contributing to this answer:
-
     - licensee: "declared": "GPL-2.0"
     - clearlydefined, "declared": "LGPL-2.0-or-later"
     - scancode v30: "declared": "LGPL-2.1-or-later"
