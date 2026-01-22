@@ -179,7 +179,8 @@ public class BackupJobTests
         .Callback((FilterDefinition<BsonDocument> filter, FindOptions<BsonDocument, BsonDocument> options, CancellationToken token) => {
             string dateFilter1 = "0001-01-01T00:00:00Z";
             string dateFilter2 = "2999-12-31T23:59:59Z";
-            foreach (var f in filter.Render(BsonSerializer.SerializerRegistry.GetSerializer<BsonDocument>(), BsonSerializer.SerializerRegistry).Elements) {
+            var renderArgs = new RenderArgs<BsonDocument>(BsonSerializer.SerializerRegistry.GetSerializer<BsonDocument>(), BsonSerializer.SerializerRegistry);
+            foreach (var f in filter.Render(renderArgs).Elements) {
                 if (f.Name == "_meta.updated") {
                     dateFilter1 = f.Value["$gte"].ToString()!;
                     dateFilter2 = f.Value["$lt"].ToString()!;
