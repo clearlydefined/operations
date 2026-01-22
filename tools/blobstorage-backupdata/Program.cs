@@ -15,10 +15,11 @@ internal sealed class Program
         using ILoggerFactory loggerFactory = CustomLoggerFactory.Create(useJsonLogging);
 
         ILogger logger = loggerFactory.CreateLogger(nameof(Program));
-        logger.LogInformation("Backup job started.");
+        int batchSize = GetOptionalIntEnvironmentVariable("BATCH_SIZE", defaultValue: 500);
+        logger.LogInformation("Backup job started. Batch size: {BatchSize}", batchSize);
         try 
         {
-            var backupJob = CreateBackupJob(loggerFactory);
+            var backupJob = CreateBackupJob(loggerFactory, batchSize);
             await backupJob.ProcessJob();
         }
         catch (Exception e)
@@ -48,12 +49,11 @@ internal sealed class Program
         return result;
     }
 
-    private static BackupJob CreateBackupJob(ILoggerFactory loggerFactory)
+    private static BackupJob CreateBackupJob(ILoggerFactory loggerFactory, int batchSize)
     {
         string mongoClientConnectionString = GetEnvironmentVariable("MONGO_CONNECTION_STRING");
         string blobServiceConnectionString = GetEnvironmentVariable("BLOB_SERVICE_CONNECTION_STRING");
         string blobContainerName = GetEnvironmentVariable("BLOB_CONTAINER_NAME");
-        int batchSize = GetOptionalIntEnvironmentVariable("BATCH_SIZE", defaultValue: 500);
 
         var dbClient = new MongoClient(mongoClientConnectionString);
         var blobOptions = new BlobClientOptions
