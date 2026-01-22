@@ -18,13 +18,13 @@ internal sealed class BackupJob
     private readonly DateTime Now;
     private readonly ILogger Logger;
     private readonly IFilterRenderer FilterRenderer;
+    private readonly int BatchSize;
     private static readonly object LockObject = new();
     private static int counter;
     private const string DateTimeFormat = "yyyy-MM-dd-HH";
     private const int DefaultBatchSize = 500;
     private const string UpdatedFieldName = "_meta.updated";
     private const string MetaFieldName = "_meta";
-    private readonly int BatchSize;
 
     public BackupJob(BlobContainerClient blobContainerClient, IMongoClient mongoClient, DateTime now, ILoggerFactory loggerFactory, IFilterRenderer filterRenderer, int batchSize = DefaultBatchSize)
     {
