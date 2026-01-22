@@ -31,3 +31,8 @@ updates:
       - '/tools/blobstorage-backupdata'
     schedule:
       interval: weekly
+
+  - package-ecosystem: 'dotnet-sdk'
+    directory: '/tools/blobstorage-backupdata'
+    schedule:
+      interval: weekly
