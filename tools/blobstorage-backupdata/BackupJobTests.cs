@@ -8,7 +8,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using Azure.Storage.Blobs.Models;
 using Newtonsoft.Json.Linq;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using MongoDB.Bson.Serialization;
 using System.Globalization;
