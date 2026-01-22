@@ -1,4 +1,4 @@
-﻿namespace BackupData;
+namespace BackupData;
 
 using Azure.Core;
 using Azure.Storage.Blobs;
@@ -15,10 +15,11 @@ internal sealed class Program
         using ILoggerFactory loggerFactory = CustomLoggerFactory.Create(useJsonLogging);
 
         ILogger logger = loggerFactory.CreateLogger(nameof(Program));
-        logger.LogInformation("Backup job started.");
+        int batchSize = GetOptionalIntEnvironmentVariable("BATCH_SIZE", defaultValue: 500);
+        logger.LogInformation("Backup job started. Batch size: {BatchSize}", batchSize);
         try 
         {
-            var backupJob = CreateBackupJob(loggerFactory);
+            var backupJob = CreateBackupJob(loggerFactory, batchSize);
             await backupJob.ProcessJob();
         }
         catch (Exception e)
@@ -38,7 +39,17 @@ internal sealed class Program
         return value;
     }
 
-    private static BackupJob CreateBackupJob(ILoggerFactory loggerFactory)
+    private static int GetOptionalIntEnvironmentVariable(string name, int defaultValue)
+    {
+        string? value = Environment.GetEnvironmentVariable(name);
+        if (string.IsNullOrEmpty(value) || !int.TryParse(value, out int result))
+        {
+            return defaultValue;
+        }
+        return result;
+    }
+
+    private static BackupJob CreateBackupJob(ILoggerFactory loggerFactory, int batchSize)
     {
         string mongoClientConnectionString = GetEnvironmentVariable("MONGO_CONNECTION_STRING");
         string blobServiceConnectionString = GetEnvironmentVariable("BLOB_SERVICE_CONNECTION_STRING");
@@ -59,6 +70,6 @@ internal sealed class Program
         var blobServiceClient = new BlobServiceClient(blobServiceConnectionString, blobOptions);
         var blobContainerClient = blobServiceClient.GetBlobContainerClient(blobContainerName);
 
-        return new BackupJob(blobContainerClient, dbClient, DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc), loggerFactory, new FilterRenderer());
+        return new BackupJob(blobContainerClient, dbClient, DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc), loggerFactory, new FilterRenderer(), batchSize);
     }
 }
