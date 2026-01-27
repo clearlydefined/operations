@@ -15,14 +15,7 @@ describe('Test for StatusService', function () {
   it('should retrieve the list of supported status queries', async function () {
     const url = `${devApiBaseUrl}/status`
     const result = await callFetch(url).then(r => r.json())
-    const expected = [
-      'requestcount',
-      'definitionavailability',
-      'processedperday',
-      'recentlycrawled',
-      'crawlbreakdown',
-      'toolsranperday'
-    ]
+    const expected = ['requestcount', 'processedperday', 'recentlycrawled', 'crawlbreakdown', 'toolsranperday']
     ok(result.length === expected.length)
     expected.forEach(e => ok(result.includes(e)))
   })
