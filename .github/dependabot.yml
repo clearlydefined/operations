@@ -31,6 +31,9 @@ updates:
       - '/tools/blobstorage-backupdata'
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: 'MongoDB.Driver'
+        versions: ['>=3.0.0']
 
   - package-ecosystem: 'dotnet-sdk'
     directory: '/tools/blobstorage-backupdata'
