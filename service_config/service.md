@@ -30,6 +30,7 @@
     - [DOCKER\_ENABLE\_CI](#docker_enable_ci)
     - [HARVEST\_AZBLOB\_CONTAINER\_NAME](#harvest_azblob_container_name)
     - [HARVEST\_AZBLOB\_CONNECTION\_STRING](#harvest_azblob_connection_string)
+    - [HARVEST\_CACHE\_TTL\_IN\_SECONDS](#harvest_cache_ttl_in_seconds)
     - [HARVEST\_STORE\_PROVIDER](#harvest_store_provider)
     - [HARVEST\_QUEUE\_PROVIDER](#harvest_queue_provider)
     - [HARVEST\_QUEUE\_PREFIX\*\*](#harvest_queue_prefix)
@@ -97,6 +98,7 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * DOCKER_REGISTRY_SERVER_USNERMAE
 * HARVEST_AZBLOB_CONNECTION_STRING
 * HARVEST_AZBLOB_CONTAINER_NAME
+* HARVEST_CACHE_TTL_IN_SECONDS
 * HARVEST_QUEUE_PREFIX
 * HARVEST_QUEUE_PROVIDER
 * HARVEST_THROTTLER_PROVIDER
@@ -297,6 +299,11 @@ production **production** blob in the **clearlydefinedprod** Azure Storage Accou
 ### HARVEST_AZBLOB_CONNECTION_STRING
 
 This is the string we use to connect to the Azure Storage Account.
+
+### HARVEST_CACHE_TTL_IN_SECONDS
+
+This is the time-to-live (in seconds) for harvest-tracking cache entries, preventing duplicate harvests for the same coordinates.
+Default **86400** (24 hours). If unset, non-numeric, zero, or negative, the default is used.
 
 ### HARVEST_STORE_PROVIDER
 
