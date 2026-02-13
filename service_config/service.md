@@ -310,8 +310,9 @@ This is the string we use to connect to the Azure Storage Account.
 
 ### HARVEST_CACHE_TTL_IN_SECONDS
 
-This is the time-to-live (in seconds) for harvest-tracking cache entries, preventing duplicate harvests for the same coordinates.
-Default **86400** (24 hours). If unset, non-numeric, zero, or negative, the default is used.
+This is the TTL (in seconds) for harvest-tracking cache entries. It prevents duplicate harvests for coordinates that are already queued or currently being processed.
+Default **86400** (24 hours). If unset or invalid (non-numeric, zero, or negative), the default is applied.
+Use a smaller value in dev or local environments to allow quicker retries for failed components.
 
 ### HARVEST_STORE_PROVIDER
 
