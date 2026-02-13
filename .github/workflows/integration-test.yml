@@ -10,7 +10,7 @@ on:
       dynamicCoordinates:
         description: 'Array of booleans for dynamic coordinates (e.g., [true, false])'
         required: true
-        default: '[true, false]'
+        default: '[false]'
       doHarvest:
         description: "Do harvest and verify completion"
         required: false
