@@ -3,6 +3,7 @@
     - [APPINSIGHTS\_CRAWLER](#appinsights_crawler)
     - [APPINSIGHTS\_INSTRUMENTATIONKEY](#appinsights_instrumentationkey)
     - [APPINSIGHTS\_SERVICE](#appinsights_service)
+    - [APPLICATIONINSIGHTS\_CONNECTION\_STRING](#applicationinsights_connection_string)
     - [ATTACHMENT\_STORE\_PROVIDER](#attachment_store_provider)
     - [AUTH\_CURATION\_TEAM](#auth_curation_team)
     - [AUTH\_GITHUB\_CLIENT](#auth_github_client)
@@ -63,6 +64,7 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * APPINSIGHTS_CRAWLER_APIKEY
 * APPINSIGHTS_CRAWLER_APPLICATIONID
 * APPINSIGHTS_INSTRUMENTATIONKEY
+* APPLICATIONINSIGHTS_CONNECTION_STRING
 * APPINSIGHTS_SERVICE_APIKEY
 * APPINSIGHTS_SERVICE_APPLICATIONID
 * ATTACHMENT_STORE_PROVIDER
@@ -130,6 +132,12 @@ These are used to get information from the Crawler's App Insights setup when the
 ### APPINSIGHTS_INSTRUMENTATIONKEY
 
 This is used by a dependency called Winston. [Winston](https://github.com/winstonjs/winston) is a Node JS logging library. We use an additional dependency, [winston-azure-application-insights](https://www.npmjs.com/package/winston-azure-application-insights) to broadcast the logs to Azure Application Insights. This requires an instrumentation key for our Azure Application Insights set up.
+
+Note: Deprecated for Application Insights 3.x SDK; use `APPLICATIONINSIGHTS_CONNECTION_STRING`.
+
+### APPLICATIONINSIGHTS_CONNECTION_STRING
+
+This is the Application Insights connection string required by the Application Insights 3.x SDK. It replaces `APPINSIGHTS_INSTRUMENTATIONKEY`; if this is not set, telemetry initialization fails.
 
 ### APPINSIGHTS_SERVICE
 
