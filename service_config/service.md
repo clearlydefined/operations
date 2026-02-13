@@ -3,6 +3,7 @@
     - [APPINSIGHTS\_CRAWLER](#appinsights_crawler)
     - [APPINSIGHTS\_INSTRUMENTATIONKEY](#appinsights_instrumentationkey)
     - [APPINSIGHTS\_SERVICE](#appinsights_service)
+    - [APPLICATIONINSIGHTS\_CONNECTION\_STRING](#applicationinsights_connection_string)
     - [ATTACHMENT\_STORE\_PROVIDER](#attachment_store_provider)
     - [AUTH\_CURATION\_TEAM](#auth_curation_team)
     - [AUTH\_GITHUB\_CLIENT](#auth_github_client)
@@ -30,6 +31,7 @@
     - [DOCKER\_ENABLE\_CI](#docker_enable_ci)
     - [HARVEST\_AZBLOB\_CONTAINER\_NAME](#harvest_azblob_container_name)
     - [HARVEST\_AZBLOB\_CONNECTION\_STRING](#harvest_azblob_connection_string)
+    - [HARVEST\_CACHE\_TTL\_IN\_SECONDS](#harvest_cache_ttl_in_seconds)
     - [HARVEST\_STORE\_PROVIDER](#harvest_store_provider)
     - [HARVEST\_QUEUE\_PROVIDER](#harvest_queue_provider)
     - [HARVEST\_QUEUE\_PREFIX\*\*](#harvest_queue_prefix)
@@ -62,6 +64,7 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * APPINSIGHTS_CRAWLER_APIKEY
 * APPINSIGHTS_CRAWLER_APPLICATIONID
 * APPINSIGHTS_INSTRUMENTATIONKEY
+* APPLICATIONINSIGHTS_CONNECTION_STRING
 * APPINSIGHTS_SERVICE_APIKEY
 * APPINSIGHTS_SERVICE_APPLICATIONID
 * ATTACHMENT_STORE_PROVIDER
@@ -97,6 +100,7 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * DOCKER_REGISTRY_SERVER_USNERMAE
 * HARVEST_AZBLOB_CONNECTION_STRING
 * HARVEST_AZBLOB_CONTAINER_NAME
+* HARVEST_CACHE_TTL_IN_SECONDS
 * HARVEST_QUEUE_PREFIX
 * HARVEST_QUEUE_PROVIDER
 * HARVEST_THROTTLER_PROVIDER
@@ -128,6 +132,12 @@ These are used to get information from the Crawler's App Insights setup when the
 ### APPINSIGHTS_INSTRUMENTATIONKEY
 
 This is used by a dependency called Winston. [Winston](https://github.com/winstonjs/winston) is a Node JS logging library. We use an additional dependency, [winston-azure-application-insights](https://www.npmjs.com/package/winston-azure-application-insights) to broadcast the logs to Azure Application Insights. This requires an instrumentation key for our Azure Application Insights set up.
+
+Note: Deprecated for Application Insights 3.x SDK; use `APPLICATIONINSIGHTS_CONNECTION_STRING`.
+
+### APPLICATIONINSIGHTS_CONNECTION_STRING
+
+This is the Application Insights connection string required by the Application Insights 3.x SDK. It replaces `APPINSIGHTS_INSTRUMENTATIONKEY`; if this is not set, telemetry initialization fails.
 
 ### APPINSIGHTS_SERVICE
 
@@ -297,6 +307,12 @@ production **production** blob in the **clearlydefinedprod** Azure Storage Accou
 ### HARVEST_AZBLOB_CONNECTION_STRING
 
 This is the string we use to connect to the Azure Storage Account.
+
+### HARVEST_CACHE_TTL_IN_SECONDS
+
+This is the TTL (in seconds) for harvest-tracking cache entries. It prevents duplicate harvests for coordinates that are already queued or currently being processed.
+Default **86400** (24 hours). If unset or invalid (non-numeric, zero, or negative), the default is applied.
+Use a smaller value in dev or local environments to allow quicker retries for failed components.
 
 ### HARVEST_STORE_PROVIDER
 
