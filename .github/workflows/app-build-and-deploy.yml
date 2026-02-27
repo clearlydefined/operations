@@ -44,10 +44,18 @@ on:
         description: 'postfix to apply to the base name for the primary deploy site (e.g. -prod, -dev)'
         required: true
         type: string
+      primary-verification-url:
+        description: 'URL for primary deploy to an endpoint returning JSON that includes `version` and `sha`'
+        required: false
+        type: string
       secondary-azure-app-name-postfix:
         description: 'postfix to apply to the base name for a secondary deploy site (e.g. -prod-europe, do not specify if no secondary site)'
         type: string
         default: ''
+      secondary-verification-url:
+        description: 'URL for secondary deploy to an endpoint returning JSON that includes `version` and `sha`'
+        required: false
+        type: string
       docker-build-args:
         description: 'optionally pass in build args to the Docker build command (e.g. "MY_VAR=my_value")'
         required: false
@@ -56,7 +64,7 @@ on:
         description: 'optionally pass to publish image to docker-hub'
         required: false
         type: string
-    
+      
 jobs:
   determine-trigger:
     name: Determine if this was triggered by a release or workflow_dispatch
@@ -129,6 +137,44 @@ jobs:
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.azure-app-name-postfix }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
 
+  pause-between-primary-deploy-and-verification:
+    needs: deploy-primary-app-to-azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pause for 3 minutes
+        run: sleep 180  # Sleep for 180 seconds (3 minutes)
+    
+  verify-primary-app:
+    name: Verify primary health endpoint
+    if: ${{inputs.primary-verification-url != '' }}
+    needs: [get-version, pause-between-primary-deploy-and-verification]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          ref: 'elr/verify-health'
+          path: 'operations'
+      - name: Validate primary deploy
+        id: validate-primary
+        shell: bash
+        run: |
+          script_log=$(./operations/scripts/app-workflows/fetch-deploy-info.sh \
+            "${{ inputs.primary-verification-url }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          response=$(echo "$script_log" | tail -n 1)
+          script_log=$(./operations/scripts/app-workflows/validate-deploy.sh \
+            "$response" \
+            "${{ needs.get-version.outputs.version }}" \
+            "${{ github.sha }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          valid=$(echo "$script_log" | tail -n 1)
+          if [ "$valid" != "true" ]; then
+            echo "Validation of primary deploy failed"
+            exit 1
+          fi
+    
   deploy-secondary-app-to-azure:
     name: Deploy to secondary Azure app
     if: ${{ inputs.secondary-azure-app-name-postfix != '' }}
@@ -143,3 +189,41 @@ jobs:
       deploy-env: ${{ inputs.deploy-env }}
       azure-webapp-name: ${{ inputs.azure-app-base-name }}${{ inputs.secondary-azure-app-name-postfix }}
       image-name-with-tag: ${{ needs.build-and-publish-image.outputs.docker-image-name-with-tag }}
+
+  pause-between-secondary-deploy-and-verification:
+    needs: deploy-secondary-app-to-azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pause for 3 minutes
+        run: sleep 180  # Sleep for 180 seconds (3 minutes)
+        
+  verify-secondary-app:
+    name: Verify secondary health endpoint
+    if: ${{ inputs.secondary-azure-app-name-postfix != '' && inputs.secondary-verification-url != '' }}
+    needs: [get-version, pause-between-secondary-deploy-and-verification]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: 'clearlydefined/operations'
+          ref: 'elr/verify-health'
+          path: 'operations'
+      - name: Validate secondary deploy
+        id: validate-secondary
+        shell: bash
+        run: |
+          script_log=$(./operations/scripts/app-workflows/fetch-deploy-info.sh \
+            "${{ inputs.secondary-verification-url }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          response=$(echo "$script_log" | tail -n 1)
+          script_log=$(./operations/scripts/app-workflows/validate-deploy.sh \
+            "$response" \
+            "${{ needs.get-version.outputs.version }}" \
+            "${{ github.sha }}") || (echo "$script_log" && exit 1)
+          echo -e "---- script log\n$script_log\n----"; \
+          valid=$(echo "$script_log" | tail -n 1)
+          if [ "$valid" != "true" ]; then
+            echo "Validation of secondary deploy failed"
+            exit 1
+          fi
