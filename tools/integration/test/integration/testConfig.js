@@ -12,7 +12,7 @@ const prodApiBaseUrl = 'https://api.clearlydefined.io'
 const devApiBaseUrl = getDevApiBaseUrl()
 
 const pollingInterval = 1000 * 60 * 1 // 1 minute
-const pollingMaxTime = 1000 * 60 * 10 // 10 minutes in milliseconds
+const pollingMaxTime = 1000 * 60 * 40 // 40 minutes in milliseconds
 
 //Havest tools to check for harvest completeness
 const harvestTools = ['licensee', 'reuse', 'scancode']
