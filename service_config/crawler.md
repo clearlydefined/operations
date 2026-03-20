@@ -5,7 +5,8 @@
     - [CRAWLER\_AZBLOB\_CONTAINER\_NAME](#crawler_azblob_container_name)
     - [CRAWLER\_GITHUB\_TOKEN](#crawler_github_token)
     - [CRAWLER\_HOST](#crawler_host)
-    - [CRAWLER\_INSIGHTS\_KEY](#crawler_insights_key)
+    - [CRAWLER\_INSIGHTS\_KEY (Deprecated)](#crawler_insights_key)
+    - [CRAWLER\_INSIGHTS\_CONNECTION\_STRING](#crawler_insights_connection_string)
     - [CRAWLER\_LICENSEE\_PARALLELISM](#crawler_licensee_parallelism)
     - [CRAWLER\_NAME](#crawler_name)
     - [CRAWLER\_QUEUE\_PREFIX](#crawler_queue_prefix)
@@ -35,7 +36,8 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_DEADLETTER_PROVIDER
 * CRAWLER_GITHUB_TOKEN
 * CRAWLER_HOST
-* CRAWLER_INSIGHTS_KEY
+* CRAWLER_INSIGHTS_KEY (Deprecated)
+* CRAWLER_INSIGHTS_CONNECTION_STRING
 * CRAWLER_LICENSEE_PARALLELISM
 * CRAWLER_NAME
 * CRAWLER_QUEUE_AZURE_CONNECTION_STRING
@@ -90,6 +92,12 @@ Note that we only use this in the development environment, not in the production
 ### CRAWLER_INSIGHTS_KEY
 
 We use [Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) to monitor the crawler application. This requires a key and this is where it is kept.
+
+Note: Deprecated for Application Insights 3.x SDK; use `CRAWLER_INSIGHTS_CONNECTION_STRING`.
+
+### CRAWLER_INSIGHTS_CONNECTION_STRING
+
+This is the Application Insights connection string required by the Application Insights 3.x SDK. It replaces `CRAWLER_INSIGHTS_KEY`; if this is not set, the logging falls back to console output.
 
 ### CRAWLER_LICENSEE_PARALLELISM
 

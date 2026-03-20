@@ -1,9 +1,10 @@
 - [Service AKA API](#service-aka-api)
   - [Configuration](#configuration)
     - [APPINSIGHTS\_CRAWLER](#appinsights_crawler)
-    - [APPINSIGHTS\_INSTRUMENTATIONKEY](#appinsights_instrumentationkey)
+    - [APPINSIGHTS\_INSTRUMENTATIONKEY (Deprecated)](#appinsights_instrumentationkey)
     - [APPINSIGHTS\_SERVICE](#appinsights_service)
     - [APPLICATIONINSIGHTS\_CONNECTION\_STRING](#applicationinsights_connection_string)
+    - [APPINSIGHTS\_EXPORT\_LOG\_LEVEL](#appinsights_export_log_level)
     - [ATTACHMENT\_STORE\_PROVIDER](#attachment_store_provider)
     - [AUTH\_CURATION\_TEAM](#auth_curation_team)
     - [AUTH\_GITHUB\_CLIENT](#auth_github_client)
@@ -38,6 +39,7 @@
     - [HARVEST\_THROTTLER\_PROVIDER](#harvest_throttler_provider)
     - [HARVEST\_THROTTLER\_BLACKLIST](#harvest_throttler_blacklist)
     - [HARVESTER\_PROVIDER](#harvester_provider)
+    - [LOGGER\_LOG\_TO\_CONSOLE](#logger_log_to_console)
     - [LOG\_NODE\_HEAPSTATS](#log_node_heapstats)
     - [LOG\_NODE\_HEAPSTATS\_INTERVAL\_MS](#log_node_heapstats_interval_ms)
     - [MULTIVERSION\_CURATION\_FF](#multiversion_curation_ff)
@@ -63,8 +65,9 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 
 * APPINSIGHTS_CRAWLER_APIKEY
 * APPINSIGHTS_CRAWLER_APPLICATIONID
-* APPINSIGHTS_INSTRUMENTATIONKEY
+* APPINSIGHTS_INSTRUMENTATIONKEY (Deprecated)
 * APPLICATIONINSIGHTS_CONNECTION_STRING
+* APPINSIGHTS_EXPORT_LOG_LEVEL
 * APPINSIGHTS_SERVICE_APIKEY
 * APPINSIGHTS_SERVICE_APPLICATIONID
 * ATTACHMENT_STORE_PROVIDER
@@ -106,6 +109,7 @@ The environmental variables for the clearlydefined-api-dev App Service include:
 * HARVEST_THROTTLER_PROVIDER
 * HARVEST_THROTTLER_BLACKLIST
 * HARVESTER_PROVIDER
+* LOGGER_LOG_TO_CONSOLE
 * LOG_NODE_HEAPSTATS
 * LOG_NODE_HEAPSTATS_INTERVAL_MS
 * NODE_ENV
@@ -131,6 +135,8 @@ These are used to get information from the Crawler's App Insights setup when the
 
 ### APPINSIGHTS_INSTRUMENTATIONKEY
 
+**Deprecated**: For Application Insights 3.x SDK, use `APPLICATIONINSIGHTS_CONNECTION_STRING`.
+
 This is used by a dependency called Winston. [Winston](https://github.com/winstonjs/winston) is a Node JS logging library. We use an additional dependency, [winston-azure-application-insights](https://www.npmjs.com/package/winston-azure-application-insights) to broadcast the logs to Azure Application Insights. This requires an instrumentation key for our Azure Application Insights set up.
 
 Note: Deprecated for Application Insights 3.x SDK; use `APPLICATIONINSIGHTS_CONNECTION_STRING`.
@@ -138,6 +144,14 @@ Note: Deprecated for Application Insights 3.x SDK; use `APPLICATIONINSIGHTS_CONN
 ### APPLICATIONINSIGHTS_CONNECTION_STRING
 
 This is the Application Insights connection string required by the Application Insights 3.x SDK. It replaces `APPINSIGHTS_INSTRUMENTATIONKEY`; if this is not set, telemetry initialization fails.
+
+### APPINSIGHTS_EXPORT_LOG_LEVEL
+
+Sets the minimum Winston log level that will be processed/exported.
+
+**Format**: Winston level string, typically one of `error`, `warn`, `info`, `verbose`, `debug`, `silly`.
+**Default**: `info` (used when variable is unset).
+**Behavior**: Messages below the configured level are filtered out by Winston. Severity mapping to Application Insights is handled internally.
 
 ### APPINSIGHTS_SERVICE
 
@@ -354,6 +368,14 @@ Defines a blacklist of coordinates that must not be harvested in the `filter` (L
 ### HARVESTER_PROVIDER
 
 This indicates what type of service we use for harvesting, in this case it's **crawlerQueue**, which corresponds with the [crawlerQueue harvest provider](https://github.com/clearlydefined/service/blob/master/providers/harvest/crawlerQueue.js)
+
+### LOGGER_LOG_TO_CONSOLE
+
+Controls whether logs are echoed to stdout/stderr through the Console transport.
+
+**Format**: String boolean, expected value `true` to enable console output (any other value is treated as disabled).
+**Default**: `false` (because runtime checks `LOGGER_LOG_TO_CONSOLE === "true"`).
+**Behavior**: This only affects console echoing. Application Insights export still runs through the logger pipeline.
 
 ### LOG_NODE_HEAPSTATS
 
