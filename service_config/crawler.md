@@ -3,6 +3,7 @@
     - [CRAWLER\_AZBLOB\_CONNECTION\_STRING](#crawler_azblob_connection_string)
     - [Azure Storage Account](#azure-storage-account)
     - [CRAWLER\_AZBLOB\_CONTAINER\_NAME](#crawler_azblob_container_name)
+    - [CRAWLER\_ECHO](#crawler_echo)
     - [CRAWLER\_GITHUB\_TOKEN](#crawler_github_token)
     - [CRAWLER\_HOST](#crawler_host)
     - [CRAWLER\_INSIGHTS\_KEY (Deprecated)](#crawler_insights_key)
@@ -34,6 +35,7 @@ The environmental variables for the cdcrawler-dev App Service include:
 * CRAWLER_AZBLOB_CONNECTION_STRING
 * CRAWLER_AZBLOB_CONTAINER_NAME
 * CRAWLER_DEADLETTER_PROVIDER
+* CRAWLER_ECHO
 * CRAWLER_GITHUB_TOKEN
 * CRAWLER_HOST
 * CRAWLER_INSIGHTS_KEY (Deprecated)
@@ -78,6 +80,16 @@ When the crawler tries to process some request more than N times (possibly 5) an
 In this case, the CRAWLER_DEADLETTER_PROVIDER value is **cd(azblob)**.
 
 Deadletter documents are also stored in the same blob as CRAWLER_AZBLOB. There is a "deadletter" folder within the blob.
+
+### CRAWLER_ECHO
+
+`CRAWLER_ECHO` controls whether the crawler echoes logs to console.
+
+`true` enables console echo. The value accepts boolean `true` or string forms like `true`, `TRUE`, and `True`.
+
+Any other value (including unset) disables console echo.
+
+Default when unset: off (`false`).
 
 ### CRAWLER_GITHUB_TOKEN
 
