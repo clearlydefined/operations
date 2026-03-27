@@ -101,7 +101,7 @@ This is used to identify a group of crawler deployments.
 
 Note that we only use this in the development environment, not in the production environment.
 
-### CRAWLER_INSIGHTS_KEY
+### CRAWLER_INSIGHTS_KEY (Deprecated)
 
 We use [Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) to monitor the crawler application. This requires a key and this is where it is kept.
 
@@ -110,6 +110,7 @@ Note: Deprecated for Application Insights 3.x SDK; use `CRAWLER_INSIGHTS_CONNECT
 ### CRAWLER_INSIGHTS_CONNECTION_STRING
 
 This is the Application Insights connection string required by the Application Insights 3.x SDK. It replaces `CRAWLER_INSIGHTS_KEY`; if this is not set, the logging falls back to console output.
+When `CRAWLER_INSIGHTS_CONNECTION_STRING` is configured, remove `CRAWLER_INSIGHTS_KEY` to avoid duplicate traces (see [crawler issue #751](https://github.com/clearlydefined/crawler/issues/751)).
 
 ### CRAWLER_LICENSEE_PARALLELISM
 
