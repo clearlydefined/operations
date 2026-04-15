@@ -4,6 +4,14 @@ These notes cover how to release and deploy the three primary apps, i.e. [servic
 
 _NOTE: All apps are transitioning to use GitHub actions for deploying.  This documentation will be changing as that effort proceeds, so check back here before every release and deploy._
 
+## Pre-Release: Update SPDX Libraries
+
+Before creating a release, consider updating the SPDX-related libraries used by the service and crawler. These libraries are responsible for correctly identifying SPDX license IDs; outdated versions may cause license expressions to be reported as `NOASSERTION`. Check for updates in the following repositories:
+
+- [clearlydefined/spdx](https://github.com/clearlydefined/spdx/)
+- [clearlydefined/spdx-satisfies.js](https://github.com/clearlydefined/spdx-satisfies.js)
+- [clearlydefined/spdx-expression-parse.js](https://github.com/clearlydefined/spdx-expression-parse.js)
+
 ## Acceptance Test
 
 Before Release and Deploy, follow the acceptance testing recommendations in this section.
@@ -11,6 +19,8 @@ Before Release and Deploy, follow the acceptance testing recommendations in this
 End-to-end integration tests have been implemented to ensure that the functionalities of the [service API](https://api.clearlydefined.io/api-docs/#) work as expected. Further effort is required to enhance the test suite and cover more cases and error handling.
 
 To manually trigger the integration tests, you can use [GitHub Actions in the operations repository](https://github.com/clearlydefined/operations/actions/workflows/integration-test.yml). If you run the tests on the main branch, all the tests committed to that branch will be executed. By default, the integration tests compare the results from the development deployment with the production deployment. You can configure the development and production deployments in testConfig.js.
+
+After running the integration tests, confirm there are no exceptions in the console logs for the dev deployment. Check the log stream for the **clearlydefined-api-dev** Web App and the **cdcrawler-dev** Web App in Azure Portal under Monitoring → Log stream.
 
 The current tests include:
 
@@ -22,7 +32,10 @@ The current tests include:
 - Retrieving curation information through the /curations API.
 - Previewing definitions with curation through the /definitions API.
 - Retrieving attachments through the /attachments API.
-- Generating notices for all component types supported by ClearlyDefined through the POST /notices API (in progress)
+- Generating notices for all component types supported by ClearlyDefined through the POST /notices API
+- Validating origins for supported component types and providers through the /origins API.
+- Retrieving service statistics through the /stats API.
+- Retrieving crawler status metrics through the /status API.
 
 ## Release
 
@@ -135,6 +148,12 @@ Right now, the last step is to ask staff at MSFT to restart the production crawl
 Once the final step completes, confirm that the production health endpoint has the correct version and sha.
 
 - [crawler-prod health endpoint](https://clearlydefined-crawler-prod.azurewebsites.net/)
+
+#### Update Configuration
+
+If the release includes service configuration changes, update the App Service settings for both **clearlydefined-api-prod** and **clearlydefined-api-prod-europe** to keep them in sync.
+
+For crawler configuration changes, communicate the relevant updates to the appropriate stakeholders, as the crawlers are managed separately.
 
 ## Verification After Deployment
 
