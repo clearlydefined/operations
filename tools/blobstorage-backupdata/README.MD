@@ -27,7 +27,7 @@ The files contained in the storage container can be split into two categories:
 ### Definition files
 Definition files are named after ClearlyDefined coordinates with a `.json` extension, e.g.
 `pypi/pypi/-/opentelemetry-api/1.21.0.json`. They are contained in the root directory of the
-`production-snapshots` storage container. They can be read individually, but not listed.
+`changes-notifications` storage container. They can be read individually, but not listed.
 
 Each definition file contain a JSON representation of a ClearlyDefined package definition,
 excluding the `files` part.
