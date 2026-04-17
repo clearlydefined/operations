@@ -1,0 +1,49 @@
+name: Integration Test Service
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # Every day at 2:00am UTC
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tools/integration
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: './tools/integration/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests on tools
+        run: npm test
+
+      - name: Check whether to run integration tests
+        if: ${{ github.repository != 'clearlydefined/operations' }}
+        run: |
+          echo "Repository: ${{ github.repository }}, Event: ${{ github.event_name }}"
+          echo "Running integration tests only on clearlydefined/operations."
+          exit 1
+
+      - name: Verify service functions
+        id: verify-service-functions
+        continue-on-error: true
+        run: DYNAMIC_COORDINATES=false npm run e2e-test-service
+
+      - name: Clean up
+        run: GITHUB_TOKEN=${{ secrets.CLEARLYDEFINED_GITHUB_PAT }} npm run e2e-test-service-cleanup
+
+      - name: Mark build status
+        if: steps.verify-service-functions.outcome == 'failure'
+        run: exit 1
